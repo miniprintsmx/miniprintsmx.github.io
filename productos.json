@@ -294,6 +294,41 @@
         "Figura"
       ],
       "price": "$45.00"
+    },
+    {
+      "id": "calaverita-bunny",
+      "name": "Calaverita Bunny",
+      "sub": "💀 Huesitos Conejo",
+      "cat": "llaveros",
+      "badge": "Llaveros",
+      "c": "var(--teal)",
+      "imgs": [
+        "calaverita-bunny-1"
+      ],
+      "desc": "Es un esqueletito con sonrisa chimuela y unas orejitas moradas de conejo para verse más tierno 🐰💜 Da un poquito de miedo y un muchito de amor. Cuélgalo en tus llaves o en tu mochila, perfecto para Halloween y Día de Muertos 🕯️",
+      "specs": [
+        "Articulado"
+      ],
+      "price": "$55.00"
+    },
+    {
+      "id": "casita-badbunny",
+      "name": "Casita BadBunny",
+      "sub": "Aquí Viven Tus Llaves",
+      "cat": "llaveros",
+      "badge": "Portallaves",
+      "c": "var(--lilac)",
+      "imgs": [
+        "producto-1",
+        "producto-2",
+        "producto-3"
+      ],
+      "desc": "Una casita rosa de pueblo, con techo amarillo, arcos, ventanitas y su puerta de madera 💗 Tiene 5 ganchitos para que tus llaves por fin tengan dónde vivir y nunca más digas “¿alguien vio mis llaves?” 🔑 Perfecta para la entrada de tu casa y para regalar en una inauguración.",
+      "specs": [
+        "Llaves",
+        "BadBunny"
+      ],
+      "price": "$180.00"
     }
   ]
 }
