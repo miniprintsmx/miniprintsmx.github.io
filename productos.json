@@ -275,6 +275,23 @@
         "Figura"
       ],
       "price": "$160.00"
+    },
+    {
+      "id": "gengar",
+      "name": "Gengar",
+      "sub": "Pokemon fantasma",
+      "cat": "figuras",
+      "badge": "Pokemon",
+      "c": "var(--lilac)",
+      "imgs": [
+        "gengar-1",
+        "gengar-2"
+      ],
+      "desc": "Morado, regordete y con la sonrisa más traviesa del catálogo\nPor delante es pura ternura y por detrás trae\nsu espalda llena de picos. Ideal para fans de los fantasmas juguetones y de las travesuras a medianoche",
+      "specs": [
+        "Figura"
+      ],
+      "price": "$45.00"
     }
   ]
 }
