@@ -133,6 +133,24 @@
       "price": "$80.00"
     },
     {
+      "id": "buhito",
+      "name": "Búhito",
+      "sub": "",
+      "cat": "figuras",
+      "badge": "Figuras",
+      "c": "var(--caramel)",
+      "imgs": [
+        "buhito-1",
+        "buhito-2",
+        "buhito-3"
+      ],
+      "desc": "Ojos gigantes, orejitas puntiagudas y un collar de bolitas que le da su toque elegante ✨ Búhito Cacao se queda despierto toda la noche cuidando tu escritorio, tu librero o tu mesita de noche. Sabio, tierno y color chocolate 🍫",
+      "specs": [
+        "Impreso en 3D"
+      ],
+      "price": "$55.00"
+    },
+    {
       "id": "tricerito",
       "name": "Tricerito",
       "sub": "el Dino Llavero",
