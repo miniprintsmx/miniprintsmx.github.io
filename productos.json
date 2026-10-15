@@ -151,6 +151,22 @@
       "price": "$55.00"
     },
     {
+      "id": "spiderman",
+      "name": "Spiderman",
+      "sub": "",
+      "cat": "figuras",
+      "badge": "Figuras",
+      "c": "var(--red)",
+      "imgs": [
+        "spiderman-1"
+      ],
+      "desc": "Cuelga de cabeza desde su telaraña y te mira con esos ojotes blancos como diciendo “todo bajo control” 😎 Rojo, azul y listo para salvar tu escritorio, tu repisa o tu cuarto. El vecino más amigable que vas a tener 🕸️",
+      "specs": [
+        "Impreso en 3D"
+      ],
+      "price": "$250.00"
+    },
+    {
       "id": "tricerito",
       "name": "Tricerito",
       "sub": "el Dino Llavero",
