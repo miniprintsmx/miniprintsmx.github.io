@@ -405,7 +405,8 @@
       "badge": "Llaveros",
       "c": "var(--lilac)",
       "imgs": [
-        "unicornio-1"
+        "unicornio-1",
+        "unicornio-2"
       ],
       "desc": "Blanca como nube, con cuernito amarillo y melena color mango 🥭 Es del mismo estilo que el dino verde: cuerpo por segmentos que se menea en tus manos. Un toque de magia para tu escritorio ✨",
       "specs": [
@@ -428,6 +429,150 @@
         "Articulada"
       ],
       "price": "$20.00"
+    },
+    {
+      "id": "zanahorio",
+      "name": "Zanahorio",
+      "sub": "🥕 El Copetón",
+      "cat": "figuras",
+      "badge": "Miniatura",
+      "c": "#f39a3c",
+      "imgs": [
+        "zanahorio-1"
+      ],
+      "desc": "Una zanahoria con copete verde que parece recién salida de la peluquería 💇 Sonrisita, bracitos abiertos y segmentos apilados para girarlo como quieras. La única verdura que nadie va a dejar en el plato 😄",
+      "specs": [
+        "Miniatura",
+        "Articulada"
+      ],
+      "price": "$20.00"
+    },
+    {
+      "id": "pinzas",
+      "name": "Pinzas",
+      "sub": "🦞La Langostita",
+      "cat": "figuras",
+      "badge": "Miniatura",
+      "c": "var(--red)",
+      "imgs": [
+        "pinzas-1",
+        "pinzas-2",
+        "pinzas-3"
+      ],
+      "desc": "Roja como tomate, con ojotes de sorpresa y dos tenazas listas para saludar 👋 Su cola va por segmentos, así que se mueve y menea en tus manos. Prometemos que no pellizca 😆",
+      "specs": [
+        "Miniatura",
+        "Articulada"
+      ],
+      "price": "$20.00"
+    },
+    {
+      "id": "pokeball-snorlax",
+      "name": "Pokeball Snorlax",
+      "sub": "😴 Gordito Dormilón",
+      "cat": "figuras",
+      "badge": "Pokémon",
+      "c": "var(--lilac)",
+      "imgs": [
+        "pokeball-snorlax-1",
+        "pokeball-snorlax-2",
+        "pokeball-snorlax-3"
+      ],
+      "desc": "Una pokéball azul con panzota color galleta, orejitas, colmillitos y patotas peludas 🐾 El campeón mundial de la siesta convertido en pokéball de colección. Perfecta para los fans que comparten su filosofía: comer, dormir y repetir 💤",
+      "specs": [
+        "Pokémon"
+      ],
+      "price": "$55.00"
+    },
+    {
+      "id": "capi-zen",
+      "name": "Capi Zen",
+      "sub": "🍊 La Capibara con Mandarina",
+      "cat": "figuras",
+      "badge": "Figuras",
+      "c": "var(--caramel)",
+      "imgs": [
+        "capi-zen-1",
+        "capi-zen-2",
+        "capi-zen-3"
+      ],
+      "desc": "Cara de “nada me estresa” y una mandarinita en la cabeza, como debe ser 😌 La reina de la calma llega a tu escritorio para recordarte que todo se resuelve con paciencia y snacks. Su cuerpo va en dos piezas, así que se acomoda en distintas poses 🧡",
+      "specs": [
+        "Articulado"
+      ],
+      "price": "$55.00"
+    },
+    {
+      "id": "michi-fantasma",
+      "name": "Michi Fantasma",
+      "sub": "",
+      "cat": "figuras",
+      "badge": "Figuras",
+      "c": "#cfd6e6",
+      "imgs": [
+        "producto-6",
+        "producto-4",
+        "producto-5",
+        "producto-7"
+      ],
+      "desc": "Un gatito que se puso su sábana para asustar… pero se le asoman las orejas, las patitas y la cola 🐾 Sus ojitos se asoman por los hoyitos y su colita se mueve por segmentos. El disfraz más tierno de Halloween para tu escritorio 🎃",
+      "specs": [
+        "Hallowen"
+      ],
+      "price": "$75.00"
+    },
+    {
+      "id": "cocodrilito-llavero",
+      "name": "Cocodrilito Llavero",
+      "sub": "",
+      "cat": "llaveros",
+      "badge": "Llaveros",
+      "c": "var(--teal)",
+      "imgs": [
+        "producto-9",
+        "producto-8"
+      ],
+      "desc": "Verde, con bolitas grises en la espalda y unos ojitos que no muerden a nadie 😄 Su cuerpo va por segmentos, así que se menea colgado de tus llaves o tu mochila. El único cocodrilo que vas a querer llevar a todos lados 🔑",
+      "specs": [
+        "Llavero",
+        "Articulado"
+      ],
+      "price": "$45.00"
+    },
+    {
+      "id": "cajita-cupcake",
+      "name": "Cajita Cupcake",
+      "sub": "",
+      "cat": "figuras",
+      "badge": "Figuras",
+      "c": "var(--teal)",
+      "imgs": [
+        "producto-10",
+        "producto-11",
+        "producto-12"
+      ],
+      "desc": "Parece postre, pero es caja sorpresa 😋 Quítale el betún con su cerecita y adentro caben tus audífonos, llaves, anillos o lo que quieras guardar. Linda en tu buró y cero calorías 🍒",
+      "specs": [
+        "Almacenamiento"
+      ],
+      "price": "$160.00"
+    },
+    {
+      "id": "organizador-3-en-1",
+      "name": "Organizador 3 en 1",
+      "sub": "Escritorio Zen",
+      "cat": "figuras",
+      "badge": "Figuras",
+      "c": "#cfd6e6",
+      "imgs": [
+        "organizador-3-en-1-1",
+        "organizador-3-en-1-2"
+      ],
+      "desc": "Un vaso para plumas y plumones más dos charolitas para llaves, USB, clips y llaveros 🔑 Diseño acanalado en tonos crema que se ve bonito en cualquier escritorio. Adiós al caos, hola orden con estilo ✨",
+      "specs": [
+        "Penholder"
+      ],
+      "price": "$180.00"
     }
   ]
 }
