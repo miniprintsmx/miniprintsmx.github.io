@@ -242,7 +242,7 @@
     },
     {
       "id": "oscurito",
-      "name": "Lord Oscurito",
+      "name": "DarthVader",
       "sub": "Villano de bolsillo",
       "cat": "oscuro",
       "badge": "Lado oscuro",
@@ -254,13 +254,13 @@
       ],
       "desc": "Viene a conquistar tu escritorio con su sable rojo, su capa y su panel de botones de colores ⚔️ Da miedo… pero cabe en tu mano. Aquí tenemos galletas 🍪",
       "specs": [
-        "Impreso en 3D"
+        "Figura"
       ],
-      "price": ""
+      "price": "$160.00"
     },
     {
       "id": "cuernos",
-      "name": "Cuernos Rojos",
+      "name": "DarthMaul",
       "sub": "Villano de bolsillo",
       "cat": "oscuro",
       "badge": "Lado oscuro",
@@ -272,9 +272,9 @@
       ],
       "desc": "Tatuajes de guerrero, cuernos afilados y un sable rojo de doble filo ⚔️ Viene a imponer respeto en tu repisa… aunque sea mini 🤏",
       "specs": [
-        "Impreso en 3D"
+        "Figura"
       ],
-      "price": ""
+      "price": "$160.00"
     }
   ]
 }
