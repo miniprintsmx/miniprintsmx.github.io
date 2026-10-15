@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src https://fonts.gstatic.com; img-src 'self' data:; connect-src https://firestore.googleapis.com; base-uri 'none'; form-action 'none'">
+<meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src https://fonts.gstatic.com; img-src 'self' data:; connect-src 'none'; base-uri 'none'; form-action 'none'">
 <meta name="referrer" content="strict-origin-when-cross-origin">
 <title>Catálogo MiniPrints</title>
 <style>body{margin:0;font:14px system-ui,sans-serif}img{max-width:100%}[hidden]{display:none!important}:root{padding-top:env(safe-area-inset-top);padding-bottom:env(safe-area-inset-bottom)}</style>
@@ -144,12 +144,6 @@ main{padding-block:28px 48px;scroll-margin-top:calc(env(safe-area-inset-top,0px)
 .photo-link{position:absolute;inset:0;z-index:1;cursor:zoom-in;-webkit-tap-highlight-color:transparent}
 .badge{position:absolute;top:14px;left:14px;z-index:2;pointer-events:none;font:800 .75rem var(--body);letter-spacing:.06em;text-transform:uppercase;
   padding:6px 11px;border-radius:999px;background:var(--c,var(--lime));color:var(--badge-ink)}
-.stock{position:absolute;left:14px;top:48px;z-index:2;pointer-events:none;font:800 .78rem var(--body);letter-spacing:.02em;
-  padding:6px 12px;border-radius:999px;background:#ff9f0a;color:#1d1a2e;box-shadow:0 4px 14px rgba(0,0,0,.18)}
-.stock.is-agotado{background:#1d1a2e;color:#fff}
-.card.is-agotado .frames img{filter:grayscale(.55) brightness(.92)}
-.pd-stock{display:inline-block;margin-left:8px;font:800 .78rem var(--body);padding:5px 11px;border-radius:999px;background:#ff9f0a;color:#1d1a2e;vertical-align:middle}
-.pd-stock.is-agotado{background:var(--ink);color:var(--bg)}
 .zoom{position:absolute;top:12px;right:12px;z-index:2;pointer-events:none;width:36px;height:36px;border-radius:50%;display:grid;place-items:center;
   background:var(--glass);color:var(--glass-ink);opacity:.85;transform:scale(.9);transition:opacity .25s ease,transform .35s var(--spring)}
 .zoom svg{width:18px;height:18px}
@@ -339,11 +333,6 @@ footer{padding-block:22px 92px;color:var(--muted);font-size:.9rem;text-align:cen
 <script>
 // Número de WhatsApp con código de país, solo dígitos (ej. México: 5215512345678). Vacío = WhatsApp deja elegir el chat.
 const WHATSAPP = "525636680455";
-// Avisos de existencias ("Últimas piezas" / "Agotado"): se leen del proyecto público de Firebase
-// miniprints-catalogo, que solo guarda esa marca por producto. Vacío = no se muestran avisos.
-// Cada producto se enlaza por su "inv" (o su "id" si no tiene): es el código que muestra
-// la pieza en el sistema de inventario (Inventario › pieza › "Mostrar en catálogo").
-const AVISOS_PROYECTO = "miniprints-catalogo";
 // Precio visible en cada ficha. Vacío = "Precio por WhatsApp".
 const PRODUCTS = [
   {id:"turbo",name:"Turbo",sub:"el Monstruito Turquesa",cat:"monstruitos",badge:"Monstruitos",c:"var(--teal)",imgs:["turbo-1","turbo-2","turbo-3","turbo-4","banda"],
@@ -401,12 +390,7 @@ const calm = () => motionMQ.matches;
 const canAnimate = () => !calm() && typeof Element.prototype.animate === "function";
 const byId = Object.fromEntries(PRODUCTS.map(p => [p.id, p]));
 const fullName = p => p.name + ", " + p.sub;
-const AVISO = {};   // id de producto → "ultimas" | "agotado"
-const avisoDe = p => AVISO[p.id] || "";
-const waMsg = p => avisoDe(p) === "agotado"
-  ? `¡Hola MiniPrints! 👋 Vi que ${fullName(p)} está agotado. ¿Me avisan cuando vuelva a haber?`
-  : `¡Hola MiniPrints! 👋 Me interesa ${fullName(p)}. ¿Me das precio y disponibilidad?`;
-const waTxt = p => avisoDe(p) === "agotado" ? "Avísame cuando haya" : "Pedir por WhatsApp";
+const waMsg = p => `¡Hola MiniPrints! 👋 Me interesa ${fullName(p)}. ¿Me das precio y disponibilidad?`;
 const imgSrc = s => `img/${s}.jpg`;
 const altFor = (p, j) => fullName(p) + (p.imgs.length > 1 ? ` — foto ${j + 1} de ${p.imgs.length}` : "");
 const ZOOM_ICON = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M14 4h6v6M10 20H4v-6M20 4l-7 7M4 20l7-7"/></svg>';
@@ -434,7 +418,6 @@ function card(p){
       <div class="frames">${p.imgs.map((s,j) => `<img src="${imgSrc(s)}" alt="${altFor(p,j)}" width="1000" height="1000" loading="lazy" decoding="async"${j ? ' aria-hidden="true"' : ' class="on"'}>`).join("")}</div>
       <a class="photo-link" href="#${p.id}" tabindex="-1" aria-hidden="true"></a>
       <span class="badge" style="--c:${p.c}">${p.badge}</span>
-      <span class="stock" hidden></span>
       <span class="zoom" aria-hidden="true">${ZOOM_ICON}</span>
       ${n > 1 ? `<div class="dots">${p.imgs.map((s,j) => `<button type="button" aria-label="Ver foto ${j+1} de ${n} de ${p.name}" aria-current="${j===0}"></button>`).join("")}</div>` : ""}
     </div>
@@ -670,14 +653,7 @@ function fill(p){
   price.innerHTML = priceHTML(p);
   price.className = "price" + (p.price ? "" : " ask");
   const wa = document.getElementById("pdWa");
-  wa.href = waLink(waMsg(p)); wa.innerHTML = WA_ICON + waTxt(p);
-  const a = avisoDe(p), nombre = document.getElementById("pdName");
-  if (a) {
-    const t = document.createElement("span");
-    t.className = "pd-stock" + (a === "agotado" ? " is-agotado" : "");
-    t.textContent = a === "agotado" ? "Agotado" : "Últimas piezas";
-    nombre.insertBefore(t, nombre.querySelector("small"));
-  }
+  wa.href = waLink(waMsg(p)); wa.innerHTML = WA_ICON + "Pedir por WhatsApp";
 }
 
 function openProduct(id, {push = false, trigger = null} = {}){
@@ -743,36 +719,6 @@ dlg.addEventListener("click", e => { if (e.target === dlg && downOnBackdrop) clo
     else { dlg.style.transition = ""; dlg.style.transform = ""; }
   };
   g.addEventListener("pointerup", end); g.addEventListener("pointercancel", end);
-})();
-
-/* ---------- avisos de existencias (solo lectura, otro proyecto de Firebase) ---------- */
-function aplicarAvisos(){
-  PRODUCTS.forEach(p => {
-    const el = document.getElementById("p-" + p.id); if (!el) return;
-    const a = avisoDe(p), tag = el.querySelector(".stock"), btn = el.querySelector(".foot .btn-wa");
-    el.classList.toggle("is-agotado", a === "agotado");
-    tag.hidden = !a; tag.textContent = a === "agotado" ? "Agotado" : a ? "Últimas piezas" : "";
-    tag.classList.toggle("is-agotado", a === "agotado");
-    btn.href = waLink(waMsg(p)); btn.innerHTML = WA_ICON + waTxt(p);
-  });
-  if (dlg.open && current) fill(byId[current]);
-}
-(async function cargarAvisos(){
-  if (!/^[a-z0-9-]{4,40}$/.test(AVISOS_PROYECTO)) return;
-  try {
-    const ctl = new AbortController(), t = setTimeout(() => ctl.abort(), 8000);
-    const r = await fetch(`https://firestore.googleapis.com/v1/projects/${AVISOS_PROYECTO}/databases/(default)/documents/publico/estado`,
-      { signal: ctl.signal, credentials: "omit", cache: "no-store", referrerPolicy: "no-referrer" });
-    clearTimeout(t);
-    if (!r.ok) return;
-    const d = await r.json();
-    const f = (((d.fields || {}).p || {}).mapValue || {}).fields || {};
-    PRODUCTS.forEach(p => {
-      const v = (f[p.inv || p.id] || {}).stringValue;
-      if (v === "ultimas" || v === "agotado") AVISO[p.id] = v;   // cualquier otro valor se ignora
-    });
-    aplicarAvisos();
-  } catch(e) { /* sin avisos: el catálogo se ve igual que siempre */ }
 })();
 
 // Enlaces directos: #turbo abre la ficha de Turbo.
