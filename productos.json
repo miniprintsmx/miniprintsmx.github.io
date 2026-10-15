@@ -1,0 +1,210 @@
+{
+  "categorias": [
+    {
+      "id": "all",
+      "label": "Todos",
+      "title": "Todo el catálogo",
+      "sub": "Personajes listos para salir de la impresora y llegar a tus manos."
+    },
+    {
+      "id": "monstruitos",
+      "label": "Monstruitos",
+      "title": "La banda de monstruitos",
+      "sub": "Rudos por fuera, apapachables por dentro. Elige tu color o llévate a los tres."
+    },
+    {
+      "id": "llaveros",
+      "label": "Llaveros",
+      "title": "Llaveros",
+      "sub": "Para tus llaves, tu mochila o tu bolsa."
+    },
+    {
+      "id": "figuras",
+      "label": "Figuras",
+      "title": "Figuras",
+      "sub": "Para tu escritorio o tu repisa."
+    },
+    {
+      "id": "oscuro",
+      "label": "Lado oscuro",
+      "title": "Villanos de bolsillo",
+      "sub": "Para fans del lado oscuro que no se andan con rodeos."
+    }
+  ],
+  "productos": [
+    {
+      "id": "turbo",
+      "name": "Turbo",
+      "sub": "el Monstruito Turquesa",
+      "cat": "monstruitos",
+      "badge": "Monstruitos",
+      "c": "var(--teal)",
+      "imgs": [
+        "turbo-1",
+        "turbo-2",
+        "turbo-3",
+        "turbo-4",
+        "banda"
+      ],
+      "desc": "Cuernos, colmillo, arete dorado y collar de picos: Turbo se las da de rudo, pero se derrite con un abrazo 🤘 Ideal para tu escritorio o para regalar a alguien con actitud.",
+      "specs": [
+        "Impreso en 3D"
+      ],
+      "price": "$120.00",
+      "was": "$135.00"
+    },
+    {
+      "id": "limon",
+      "name": "Limón Feroz",
+      "sub": "el Monstruito Verde",
+      "cat": "monstruitos",
+      "badge": "Monstruitos",
+      "c": "var(--lime)",
+      "imgs": [
+        "limon-1",
+        "limon-2",
+        "limon-3",
+        "limon-4",
+        "banda"
+      ],
+      "desc": "El más fresco de la banda 🍋 Collar de hojitas, arete dorado y una mirada que dice “no me provoques”… aunque solo quiere sentarse a tu lado. Brilla en cualquier repisa.",
+      "specs": [
+        "Impreso en 3D"
+      ],
+      "price": "$120.00",
+      "was": "$135.00"
+    },
+    {
+      "id": "lavanda",
+      "name": "Lavanda Punk",
+      "sub": "la Monstruita Lila",
+      "cat": "monstruitos",
+      "badge": "Monstruitos",
+      "c": "var(--lilac)",
+      "imgs": [
+        "lavanda-1",
+        "lavanda-2",
+        "lavanda-3",
+        "lavanda-4",
+        "banda"
+      ],
+      "desc": "Dulce por fuera y rebelde por dentro 💥 Lavanda trae collar de picos, arete y un colmillo coqueto. Perfecta para quien es tierno pero no se deja.",
+      "specs": [
+        "Impreso en 3D"
+      ],
+      "price": "$120.00",
+      "was": "$135.00"
+    },
+    {
+      "id": "muuchi",
+      "name": "Muuchi",
+      "sub": "la Vaquita Caramelo",
+      "cat": "figuras",
+      "badge": "Articulada",
+      "c": "var(--caramel)",
+      "imgs": [
+        "muuchi-1",
+        "muuchi-2",
+        "muuchi-3",
+        "muuchi-4"
+      ],
+      "desc": "Ojitos enormes, cachetes rosados y manchitas color caramelo 🍮 Se mueve, camina y se echa a descansar cuando quiera. Imposible no decirle “muuuy bonita” 💕",
+      "specs": [
+        "Impreso en 3D",
+        "Articulada"
+      ],
+      "price": ""
+    },
+    {
+      "id": "tricerito",
+      "name": "Tricerito",
+      "sub": "el Dino Llavero",
+      "cat": "llaveros",
+      "badge": "Llavero",
+      "c": "#f39a3c",
+      "imgs": [
+        "tricerito-1",
+        "tricerito-2"
+      ],
+      "desc": "Tres cuernitos, ojos de botón y una sonrisa que derrite hasta a un meteorito ☄️ Su cuerpo flexible se mueve como si estuviera vivo.",
+      "specs": [
+        "Impreso en 3D",
+        "Flexible",
+        "Con argolla"
+      ],
+      "price": ""
+    },
+    {
+      "id": "cuellito",
+      "name": "Cuellito",
+      "sub": "el Dino Llavero",
+      "cat": "llaveros",
+      "badge": "Llavero",
+      "c": "#4cc36a",
+      "imgs": [
+        "cuellito-1",
+        "cuellito-2"
+      ],
+      "desc": "Cuello largo, sonrisa chiquita y un cuerpo flexible que se mueve con cada paso 💚 Vegetariano, tranquilo y el compañero perfecto para tus llaves.",
+      "specs": [
+        "Impreso en 3D",
+        "Flexible",
+        "Con argolla"
+      ],
+      "price": ""
+    },
+    {
+      "id": "orbita",
+      "name": "Capitán Órbita",
+      "sub": "el Astronauta Llavero",
+      "cat": "llaveros",
+      "badge": "Llavero",
+      "c": "#cfd6e6",
+      "imgs": [
+        "orbita-1"
+      ],
+      "desc": "Listo para despegar contigo a todas partes 🌌 Casco espacial, mochila de propulsión y argolla metálica para llevar tus llaves a otra galaxia.",
+      "specs": [
+        "Impreso en 3D",
+        "Con argolla"
+      ],
+      "price": ""
+    },
+    {
+      "id": "oscurito",
+      "name": "Lord Oscurito",
+      "sub": "Villano de bolsillo",
+      "cat": "oscuro",
+      "badge": "Lado oscuro",
+      "c": "var(--red)",
+      "imgs": [
+        "oscurito-1",
+        "oscurito-2",
+        "oscurito-3"
+      ],
+      "desc": "Viene a conquistar tu escritorio con su sable rojo, su capa y su panel de botones de colores ⚔️ Da miedo… pero cabe en tu mano. Aquí tenemos galletas 🍪",
+      "specs": [
+        "Impreso en 3D"
+      ],
+      "price": ""
+    },
+    {
+      "id": "cuernos",
+      "name": "Cuernos Rojos",
+      "sub": "Villano de bolsillo",
+      "cat": "oscuro",
+      "badge": "Lado oscuro",
+      "c": "var(--red)",
+      "imgs": [
+        "cuernos-1",
+        "cuernos-2",
+        "cuernos-3"
+      ],
+      "desc": "Tatuajes de guerrero, cuernos afilados y un sable rojo de doble filo ⚔️ Viene a imponer respeto en tu repisa… aunque sea mini 🤏",
+      "specs": [
+        "Impreso en 3D"
+      ],
+      "price": ""
+    }
+  ]
+}

@@ -1,0 +1,586 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="robots" content="noindex, nofollow">
+<meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src https://fonts.gstatic.com; img-src 'self' data: blob:; connect-src https://api.github.com; base-uri 'none'; form-action 'none'">
+<meta name="referrer" content="no-referrer">
+<title>Administrar catálogo · MiniPrints</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bagel+Fat+One&family=Figtree:wght@400;600;800&display=swap">
+<style>
+/* Administración del catálogo: misma paleta y logo que el catálogo. Todo se guarda en este
+   repositorio de GitHub (productos.json e img/) con una llave que solo sirve para él. */
+:root{
+  --bg:#f6f4fb; --surface:#ffffff; --ink:#1d1a2e; --muted:#5d5873; --line:#e2ddef; --fill:#ece8f8;
+  --lime:#c8e62b; --teal:#2bbfb3; --lilac:#a99be8; --caramel:#c98a4b; --red:#e2412f;
+  --wa:#1f9d55; --danger:#c62f20; --ok:#1f8a4c; --focus:#6a4fd6; --scrim:rgba(20,16,36,.55);
+  --display:"Bagel Fat One","Arial Black",system-ui,sans-serif;
+  --body:"Figtree",system-ui,-apple-system,"Segoe UI",sans-serif;
+}
+@media (prefers-color-scheme: dark){:root{
+  --bg:#15131f; --surface:#211e30; --ink:#f3f0fb; --muted:#aca6c4; --line:#353049; --fill:#2b2740;
+  --danger:#ff6b5c; --ok:#4fd28a; --focus:#c8e62b; --scrim:rgba(5,4,12,.72); color-scheme:dark }}
+*{box-sizing:border-box}
+[hidden]{display:none!important}
+html{-webkit-text-size-adjust:100%}
+body{margin:0;background:var(--bg);color:var(--ink);font-family:var(--body);font-size:16px;line-height:1.45;-webkit-font-smoothing:antialiased}
+a{color:var(--teal)}
+button,input,select,textarea{font:inherit;color:inherit}
+:focus-visible{outline:3px solid var(--focus);outline-offset:2px}
+.wrap{max-width:760px;margin:0 auto;padding:0 max(16px,env(safe-area-inset-left,0px))}
+
+.top{position:sticky;top:0;z-index:20;background:color-mix(in srgb,var(--bg) 82%,transparent);-webkit-backdrop-filter:blur(18px);backdrop-filter:blur(18px);
+  border-bottom:1px solid var(--line);padding-top:env(safe-area-inset-top,0px)}
+.top .wrap{height:56px;display:flex;align-items:center;justify-content:space-between;gap:12px}
+.logo{font-family:var(--display);font-size:1.3rem;line-height:1;white-space:nowrap}
+.logo .m{color:var(--teal)} .logo small{font-family:var(--body);font-weight:600;font-size:.8rem;color:var(--muted);margin-left:8px}
+@media (max-width:480px){.logo small{display:none}.top .btn-plain{padding:0 8px;font-size:.92rem}}
+.top-acts{display:flex;gap:6px;align-items:center}
+
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;min-height:44px;padding:0 18px;border:0;border-radius:999px;
+  font-weight:600;cursor:pointer;text-decoration:none;-webkit-tap-highlight-color:transparent;white-space:nowrap}
+.btn:active{transform:scale(.97)}
+.btn:disabled{opacity:.45;cursor:default;transform:none}
+.btn-ink{background:var(--ink);color:var(--surface)}
+.btn-wa{background:var(--wa);color:#fff}
+.btn-soft{background:var(--fill);color:var(--ink)}
+.btn-plain{background:none;color:var(--ink);padding:0 12px}
+.btn-danger{background:none;color:var(--danger)}
+.btn svg{width:18px;height:18px;flex:none}
+.icon-btn{width:44px;height:44px;display:grid;place-items:center;border:0;border-radius:50%;background:var(--fill);color:var(--ink);cursor:pointer}
+.icon-btn svg{width:18px;height:18px}
+.icon-btn:disabled{opacity:.35;cursor:default}
+
+h1{font-size:clamp(1.7rem,5vw,2.3rem);font-weight:800;letter-spacing:-.02em;line-height:1.1;margin:28px 0 6px}
+.lead{color:var(--muted);margin:0 0 20px}
+.card{background:var(--surface);border-radius:20px;box-shadow:0 2px 14px rgba(29,26,46,.05)}
+.pad{padding:20px}
+
+/* Entrar */
+.login{max-width:520px;margin:0 auto}
+.steps{margin:0;padding-left:20px;color:var(--muted)} .steps li{margin:6px 0} .steps b{color:var(--ink)}
+label.f{display:block;font-weight:600;font-size:.9rem;margin:16px 0 6px}
+.in{width:100%;min-width:0;min-height:46px;padding:10px 14px;border:0;border-radius:12px;background:var(--fill);font-size:16px}
+textarea.in{min-height:96px;resize:vertical}
+select.in{appearance:none;-webkit-appearance:none;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%238a84a3' stroke-width='2.4' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='m7 10 5 5 5-5'/%3E%3C/svg%3E");
+  background-repeat:no-repeat;background-position:right 12px center;background-size:18px;padding-right:40px}
+.check{display:flex;gap:10px;align-items:center;margin:14px 0 0;font-size:.95rem;color:var(--muted)}
+.check input{width:20px;height:20px;accent-color:var(--teal)}
+.err{color:var(--danger);font-weight:600;margin:12px 0 0} .err:empty{display:none}
+.hint{font-size:.85rem;color:var(--muted);margin:6px 0 0}
+
+/* Barra de publicar */
+.pub{position:sticky;top:calc(env(safe-area-inset-top,0px) + 57px);z-index:15;margin:16px 0;display:flex;align-items:center;justify-content:space-between;gap:12px;
+  padding:10px 10px 10px 18px;border-radius:999px;background:var(--ink);color:var(--surface);box-shadow:0 10px 28px -14px rgba(0,0,0,.5)}
+.pub b{font-variant-numeric:tabular-nums}
+.pub .btn-plain{color:var(--surface)}
+.pub.is-clean{background:var(--surface);color:var(--muted);box-shadow:0 2px 14px rgba(29,26,46,.05)}
+.pub-acts{display:flex;gap:4px}
+
+.tabs{display:flex;gap:8px;margin:8px 0 16px}
+.tab{min-height:44px;padding:0 18px;border-radius:999px;border:0;background:var(--surface);box-shadow:inset 0 0 0 1px var(--line);font-weight:600;cursor:pointer}
+.tab[aria-selected="true"]{background:var(--ink);color:var(--surface);box-shadow:none}
+
+/* Lista de productos */
+.list{display:flex;flex-direction:column}
+.row{display:flex;align-items:center;gap:12px;padding:12px 14px;border-top:1px solid var(--line)}
+.row:first-child{border-top:0}
+.thumb{width:56px;height:56px;flex:none;border-radius:14px;object-fit:cover;background:var(--fill)}
+.row-main{flex:1;min-width:0;display:flex;align-items:center;gap:12px;padding:0;border:0;background:none;text-align:left;cursor:pointer;border-radius:14px}
+.row-main:active{opacity:.6}
+.row-t{flex:1;min-width:0}
+.row-t b{display:block;font-size:1.02rem;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.row-t span{display:block;font-size:.85rem;color:var(--muted);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.row-acts{display:flex;gap:6px;flex:none}
+.row-acts .icon-btn{background:none;box-shadow:inset 0 0 0 1px var(--line)}
+.row .tag-new{display:inline-block;margin-left:6px;font-size:.7rem;font-weight:800;color:var(--ok);vertical-align:middle}
+.empty{padding:36px 20px;text-align:center;color:var(--muted)}
+.add-row{margin-top:14px;width:100%}
+
+/* Editor (hoja) */
+dialog.ed{padding:0;border:0;background:var(--bg);color:var(--ink);width:calc(100% - 16px);max-width:640px;overflow-x:hidden;max-height:calc(100dvh - 16px);margin:auto auto 8px;border-radius:28px;overflow:auto}
+dialog.ed::backdrop{background:var(--scrim)}
+@media (min-width:700px){dialog.ed{margin:auto;max-height:calc(100dvh - 48px)}}
+.ed-head{position:sticky;top:0;z-index:2;display:flex;align-items:center;justify-content:space-between;gap:10px;padding:14px 14px 10px;background:var(--bg)}
+.ed-head h2{margin:0;font-size:1.15rem;font-weight:800;flex:1;text-align:center}
+.ed-body{padding:0 18px 22px}
+.grid2{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:0 12px}
+.money{position:relative} .money span{position:absolute;left:14px;top:50%;transform:translateY(-50%);color:var(--muted);pointer-events:none}
+.money .in{padding-left:28px}
+.colors{display:flex;flex-wrap:wrap;gap:10px}
+.sw{width:40px;height:40px;border-radius:50%;border:0;cursor:pointer;background:var(--c);box-shadow:inset 0 0 0 1px rgba(0,0,0,.12)}
+.sw[aria-pressed="true"]{box-shadow:0 0 0 3px var(--bg),0 0 0 5px var(--ink)}
+.photos{display:grid;grid-template-columns:repeat(auto-fill,minmax(104px,1fr));gap:10px}
+.ph{position:relative;aspect-ratio:1;border-radius:16px;overflow:hidden;background:var(--fill)}
+.ph img{width:100%;height:100%;object-fit:cover;display:block}
+.ph .main{position:absolute;left:6px;top:6px;font-size:.68rem;font-weight:800;padding:3px 8px;border-radius:999px;background:var(--ink);color:var(--surface)}
+.ph-acts{position:absolute;left:0;right:0;bottom:0;display:flex;justify-content:space-between;padding:6px}
+.ph-acts button{width:32px;height:32px;border:0;border-radius:50%;display:grid;place-items:center;background:rgba(255,255,255,.92);color:#1d1a2e;cursor:pointer}
+.ph-acts button:disabled{opacity:.35}
+.ph-acts svg{width:16px;height:16px}
+.ph-add{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:6px;aspect-ratio:1;border-radius:16px;border:2px dashed var(--line);color:var(--muted);cursor:pointer;font-weight:600;font-size:.85rem;text-align:center}
+.ph-add svg{width:24px;height:24px}
+.ph-add input{position:absolute;width:1px;height:1px;opacity:0}
+.ed-foot{display:flex;gap:10px;justify-content:space-between;align-items:center;margin-top:24px;flex-wrap:wrap}
+.ed-foot .btn-ink{flex:1 1 200px}
+
+/* Categorías */
+.cat{padding:16px;border-top:1px solid var(--line)} .cat:first-child{border-top:0}
+.cat-h{display:flex;align-items:center;justify-content:space-between;gap:10px}
+.cat-h b{font-size:1.02rem} .cat-h span{font-size:.85rem;color:var(--muted)}
+.cat .in{margin-top:8px}
+
+.toast{position:fixed;left:50%;bottom:calc(env(safe-area-inset-bottom,0px) + 20px);transform:translateX(-50%);z-index:50;max-width:calc(100% - 32px);
+  padding:12px 18px;border-radius:999px;background:var(--ink);color:var(--surface);font-weight:600;box-shadow:0 10px 30px -10px rgba(0,0,0,.5)}
+.busy{position:fixed;inset:0;z-index:60;display:grid;place-items:center;background:var(--scrim);color:#fff;font-weight:600;text-align:center;padding:24px}
+.foot-note{margin:28px 0 60px;font-size:.85rem;color:var(--muted);text-align:center}
+</style>
+</head>
+<body>
+
+<header class="top">
+  <div class="wrap">
+    <span class="logo"><span class="m">Mini</span>Prints<small>Administrar catálogo</small></span>
+    <div class="top-acts">
+      <a class="btn btn-plain" href="./" target="_blank" rel="noopener">Ver catálogo</a>
+      <button class="btn btn-plain" type="button" id="salir" hidden>Salir</button>
+    </div>
+  </div>
+</header>
+
+<!-- Entrar con la llave de GitHub -->
+<main class="wrap" id="v-login" hidden>
+  <div class="login">
+    <h1>Entrar</h1>
+    <p class="lead">Para guardar cambios en tu catálogo necesitas tu llave de GitHub. Solo sirve para el repositorio del catálogo.</p>
+    <form class="card pad" id="f-login" novalidate>
+      <label class="f" for="token">Llave de GitHub (token)</label>
+      <input class="in" id="token" type="password" autocomplete="off" autocapitalize="off" spellcheck="false" placeholder="github_pat_…" required>
+      <label class="check"><input type="checkbox" id="recordar" checked> Recordar en este dispositivo</label>
+      <p class="err" id="login-err" role="alert"></p>
+      <button class="btn btn-ink" type="submit" style="width:100%;margin-top:16px">Entrar</button>
+    </form>
+    <details class="card pad" style="margin-top:14px">
+      <summary style="font-weight:600;cursor:pointer">¿Cómo saco mi llave?</summary>
+      <ol class="steps">
+        <li>En GitHub abre <b>Settings › Developer settings › Personal access tokens › Fine-grained tokens</b> y toca <b>Generate new token</b>.</li>
+        <li><b>Resource owner:</b> miniprintsmx. <b>Repository access:</b> Only select repositories › miniprintsmx.github.io.</li>
+        <li><b>Permissions › Repository permissions › Contents:</b> Read and write. Nada más.</li>
+        <li>Genera la llave, cópiala y pégala aquí. Guárdala en un lugar seguro: GitHub solo la muestra una vez.</li>
+      </ol>
+    </details>
+  </div>
+</main>
+
+<!-- Administrar -->
+<main class="wrap" id="v-app" hidden>
+  <h1>Tus productos</h1>
+  <p class="lead">Toca un producto para editarlo o quitarlo; usa las flechas para cambiar el orden. Cuando termines, toca <b>Publicar</b>: el catálogo se actualiza en 1 o 2 minutos.</p>
+
+  <div class="pub is-clean" id="pub" role="status">
+    <span id="pub-t">Todo publicado</span>
+    <div class="pub-acts">
+      <button class="btn btn-plain" type="button" id="descartar" hidden>Descartar</button>
+      <button class="btn btn-wa" type="button" id="publicar" disabled>Publicar</button>
+    </div>
+  </div>
+
+  <div class="tabs" role="tablist" aria-label="Secciones">
+    <button class="tab" type="button" role="tab" id="t-prod" aria-selected="true" aria-controls="p-prod">Productos</button>
+    <button class="tab" type="button" role="tab" id="t-cat" aria-selected="false" aria-controls="p-cat">Categorías</button>
+  </div>
+
+  <section id="p-prod" role="tabpanel" aria-labelledby="t-prod">
+    <div class="card list" id="lista"></div>
+    <button class="btn btn-ink add-row" type="button" id="nuevo"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" aria-hidden="true"><path d="M12 5v14M5 12h14"/></svg>Agregar producto</button>
+  </section>
+
+  <section id="p-cat" role="tabpanel" aria-labelledby="t-cat" hidden>
+    <div class="card" id="cats"></div>
+    <button class="btn btn-soft add-row" type="button" id="nueva-cat">Agregar categoría</button>
+  </section>
+
+  <p class="foot-note">Los cambios se guardan en el repositorio <b>miniprintsmx.github.io</b>. Este catálogo no tiene ninguna conexión con tu sistema MiniPrints.</p>
+</main>
+
+<!-- Editor de producto -->
+<dialog class="ed" id="ed" aria-labelledby="ed-t">
+  <form id="f-ed" novalidate>
+    <div class="ed-head">
+      <button class="icon-btn" type="button" id="ed-x" aria-label="Cerrar sin guardar"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" aria-hidden="true"><path d="M6 6l12 12M18 6 6 18"/></svg></button>
+      <h2 id="ed-t">Producto</h2>
+      <span style="width:44px"></span>
+    </div>
+    <div class="ed-body">
+      <label class="f" for="e-name">Nombre *</label>
+      <input class="in" id="e-name" maxlength="60" required placeholder="Ej: Turbo">
+      <label class="f" for="e-sub">Subtítulo</label>
+      <input class="in" id="e-sub" maxlength="80" placeholder="Ej: el Monstruito Turquesa">
+
+      <div class="grid2">
+        <div><label class="f" for="e-cat">Categoría</label><select class="in" id="e-cat"></select></div>
+        <div><label class="f" for="e-badge">Etiqueta</label><input class="in" id="e-badge" maxlength="24" placeholder="Ej: Llavero"></div>
+      </div>
+
+      <span class="f" style="display:block;font-weight:600;font-size:.9rem;margin:16px 0 8px" id="e-color-l">Color de la etiqueta</span>
+      <div class="colors" id="e-colors" role="group" aria-labelledby="e-color-l"></div>
+
+      <span class="f" style="display:block;font-weight:600;font-size:.9rem;margin:18px 0 8px" id="e-ph-l">Fotos * <span class="hint" style="display:inline">· la primera es la principal</span></span>
+      <div class="photos" id="e-photos" role="group" aria-labelledby="e-ph-l"></div>
+      <p class="hint">Se recortan cuadradas (1000 × 1000) desde el centro. Usa fotos con el producto centrado.</p>
+
+      <label class="f" for="e-desc">Descripción</label>
+      <textarea class="in" id="e-desc" maxlength="400" placeholder="Qué es, cómo es, para qué sirve…"></textarea>
+      <label class="f" for="e-specs">Características</label>
+      <input class="in" id="e-specs" maxlength="120" placeholder="Separadas por coma: Impreso en 3D, Flexible, Con argolla">
+
+      <div class="grid2">
+        <div><label class="f" for="e-price">Precio</label><div class="money"><span>$</span><input class="in" id="e-price" type="number" inputmode="decimal" min="0" step="0.5" placeholder="Vacío = por WhatsApp"></div></div>
+        <div><label class="f" for="e-was">Precio anterior</label><div class="money"><span>$</span><input class="in" id="e-was" type="number" inputmode="decimal" min="0" step="0.5" placeholder="Opcional"></div></div>
+      </div>
+      <p class="hint">Si pones precio anterior, se muestra tachado junto al precio.</p>
+
+      <p class="err" id="ed-err" role="alert"></p>
+      <div class="ed-foot">
+        <button class="btn btn-danger" type="button" id="ed-del">Eliminar producto</button>
+        <button class="btn btn-ink" type="submit">Guardar</button>
+      </div>
+    </div>
+  </form>
+</dialog>
+
+<div class="toast" id="toast" role="status" hidden></div>
+<div class="busy" id="busy" hidden><span id="busy-t">Publicando…</span></div>
+
+<script>
+"use strict";
+const OWNER = "miniprintsmx", REPO = "miniprintsmx.github.io", BRANCH = "main", API = "https://api.github.com";
+const KEY = "mpcat_token";
+const PROTEGIDAS = new Set(["banda"]);   // foto de la portada: nunca se borra
+const COLORES = [
+  ["var(--teal)", "#2bbfb3", "Turquesa"], ["var(--lime)", "#c8e62b", "Lima"], ["var(--lilac)", "#a99be8", "Lila"],
+  ["var(--caramel)", "#c98a4b", "Caramelo"], ["var(--red)", "#e2412f", "Rojo"], ["#f39a3c", "#f39a3c", "Naranja"],
+  ["#4cc36a", "#4cc36a", "Verde"], ["#cfd6e6", "#cfd6e6", "Plata"]
+];
+const $ = id => document.getElementById(id);
+const esc = t => String(t ?? "").replace(/[&<>"']/g, c => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" })[c]);
+const ICO = {
+  up: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m6 15 6-6 6 6"/></svg>',
+  down: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m6 9 6 6 6-6"/></svg>',
+  left: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m15 6-6 6 6 6"/></svg>',
+  right: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m9 6 6 6-6 6"/></svg>',
+  x: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" aria-hidden="true"><path d="M6 6l12 12M18 6 6 18"/></svg>',
+  edit: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 20h4L19 9l-4-4L4 16z"/></svg>',
+  plus: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" aria-hidden="true"><path d="M12 5v14M5 12h14"/></svg>'
+};
+
+/* ---------- llave ---------- */
+const leerLlave = () => { try { return sessionStorage.getItem(KEY) || localStorage.getItem(KEY) || ""; } catch (e) { return ""; } };
+function guardarLlave(t, recordar) {
+  try { sessionStorage.setItem(KEY, t); if (recordar) localStorage.setItem(KEY, t); else localStorage.removeItem(KEY); } catch (e) {}
+}
+function borrarLlave() { try { sessionStorage.removeItem(KEY); localStorage.removeItem(KEY); } catch (e) {} }
+let TOKEN = "";
+
+async function gh(path, opts = {}) {
+  const r = await fetch(API + path, {
+    ...opts, cache: "no-store", credentials: "omit", referrerPolicy: "no-referrer",
+    headers: { "Authorization": "Bearer " + TOKEN, "Accept": "application/vnd.github+json", "X-GitHub-Api-Version": "2022-11-28", ...(opts.body ? { "Content-Type": "application/json" } : {}), ...(opts.headers || {}) }
+  });
+  if (!r.ok) { const e = new Error("GitHub " + r.status); e.status = r.status; try { e.info = await r.json(); } catch (_) {} throw e; }
+  return r.status === 204 ? null : r.json();
+}
+const repo = p => `/repos/${OWNER}/${REPO}${p}`;
+const b64ToText = b => new TextDecoder().decode(Uint8Array.from(atob(b.replace(/\n/g, "")), c => c.charCodeAt(0)));
+const textToB64 = t => { const bytes = new TextEncoder().encode(t); let s = ""; for (let i = 0; i < bytes.length; i += 0x8000) s += String.fromCharCode.apply(null, bytes.subarray(i, i + 0x8000)); return btoa(s); };
+
+/* ---------- estado ---------- */
+let base = null;           // { categorias, productos } tal como está publicado
+let datos = null;          // borrador
+let imgsRepo = new Set();  // nombres (sin .jpg) que existen en img/
+const nuevas = new Map();  // nombre → { blob, url } fotos por subir
+let sucio = false;
+
+const clon = o => JSON.parse(JSON.stringify(o));
+function marcar() { sucio = JSON.stringify(datos) !== JSON.stringify(base) || nuevas.size > 0 && usadasNuevas().length > 0; pintarPub(); }
+const usadas = () => new Set(datos.productos.flatMap(p => p.imgs));
+const usadasNuevas = () => [...nuevas.keys()].filter(n => usadas().has(n));
+const fotoUrl = n => nuevas.has(n) ? nuevas.get(n).url : `img/${encodeURIComponent(n)}.jpg`;
+
+function cambiosTexto() {
+  const a = new Map(base.productos.map(p => [p.id, JSON.stringify(p)])), b = new Map(datos.productos.map(p => [p.id, JSON.stringify(p)]));
+  let n = 0;
+  b.forEach((v, k) => { if (!a.has(k) || a.get(k) !== v) n++; });
+  a.forEach((v, k) => { if (!b.has(k)) n++; });
+  if (JSON.stringify(datos.categorias) !== JSON.stringify(base.categorias)) n++;
+  if (!n && datos.productos.map(p => p.id).join() !== base.productos.map(p => p.id).join()) n = 1;
+  return n;
+}
+function pintarPub() {
+  const n = sucio ? Math.max(1, cambiosTexto()) : 0;
+  $("pub").classList.toggle("is-clean", !n);
+  $("pub-t").innerHTML = n ? `<b>${n}</b> cambio${n !== 1 ? "s" : ""} sin publicar` : "Todo publicado";
+  $("publicar").disabled = !n; $("descartar").hidden = !n;
+}
+function toast(t) { const el = $("toast"); el.textContent = t; el.hidden = false; clearTimeout(toast._t); toast._t = setTimeout(() => el.hidden = true, 3200); }
+function ocupado(t) { $("busy-t").textContent = t || ""; $("busy").hidden = !t; }
+
+/* ---------- cargar ---------- */
+async function cargar() {
+  ocupado("Cargando tu catálogo…");
+  try {
+    const f = await gh(repo(`/contents/productos.json?ref=${BRANCH}`));
+    base = JSON.parse(b64ToText(f.content));
+    base.categorias = base.categorias || []; base.productos = base.productos || [];
+    try { imgsRepo = new Set((await gh(repo(`/contents/img?ref=${BRANCH}`))).filter(x => x.type === "file" && /\.jpg$/i.test(x.name)).map(x => x.name.replace(/\.jpg$/i, ""))); } catch (e) { imgsRepo = new Set(); }
+    datos = clon(base); nuevas.forEach(v => URL.revokeObjectURL(v.url)); nuevas.clear(); sucio = false;
+    pintarTodo(); pintarPub();
+  } finally { ocupado(""); }
+}
+
+/* ---------- lista ---------- */
+const catLabel = id => (datos.categorias.find(c => c.id === id) || {}).label || "Sin categoría";
+function pintarTodo() { pintarLista(); pintarCats(); }
+function pintarLista() {
+  const el = $("lista"), ps = datos.productos;
+  if (!ps.length) { el.innerHTML = '<div class="empty">Aún no hay productos. Toca <b>Agregar producto</b>.</div>'; return; }
+  const viejos = new Set(base.productos.map(p => p.id));
+  el.innerHTML = ps.map((p, i) => `<div class="row">
+      <button class="row-main" type="button" data-a="edit" data-i="${i}" aria-label="Editar ${esc(p.name)}">
+        <img class="thumb" src="${esc(fotoUrl(p.imgs[0]))}" alt="">
+        <span class="row-t"><b>${esc(p.name)}${viejos.has(p.id) ? "" : '<span class="tag-new">NUEVO</span>'}</b><span>${esc(catLabel(p.cat))} · ${esc(p.price || "Precio por WhatsApp")}</span></span>
+      </button>
+      <div class="row-acts">
+        <button class="icon-btn" type="button" data-a="up" data-i="${i}" aria-label="Subir ${esc(p.name)}" ${i ? "" : "disabled"}>${ICO.up}</button>
+        <button class="icon-btn" type="button" data-a="down" data-i="${i}" aria-label="Bajar ${esc(p.name)}" ${i < ps.length - 1 ? "" : "disabled"}>${ICO.down}</button>
+      </div>
+    </div>`).join("");
+}
+$("lista").addEventListener("click", e => {
+  const b = e.target.closest("[data-a]"); if (!b) return;
+  const i = Number(b.dataset.i), ps = datos.productos;
+  if (b.dataset.a === "edit") return abrirEditor(i);
+  const j = b.dataset.a === "up" ? i - 1 : i + 1;
+  if (j < 0 || j >= ps.length) return;
+  [ps[i], ps[j]] = [ps[j], ps[i]]; pintarLista(); marcar();
+});
+$("nuevo").addEventListener("click", () => abrirEditor(-1));
+
+/* ---------- editor ---------- */
+let edIdx = -1, edFotos = [], edColor = COLORES[0][0];
+const slug = t => String(t || "").normalize("NFD").replace(/[̀-ͯ]/g, "").toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/^-+|-+$/g, "").slice(0, 40) || "producto";
+const aNumero = t => { const n = parseFloat(String(t || "").replace(/[^0-9.]/g, "")); return isFinite(n) ? n : ""; };
+const aPrecio = n => n === "" || n == null ? "" : "$" + Number(n).toLocaleString("en-US", { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+
+function abrirEditor(i) {
+  edIdx = i;
+  const p = i >= 0 ? datos.productos[i] : { name: "", sub: "", cat: (datos.categorias.find(c => c.id !== "all") || {}).id || "", badge: "", c: COLORES[0][0], imgs: [], desc: "", specs: ["Impreso en 3D"], price: "" };
+  $("ed-t").textContent = i >= 0 ? "Editar producto" : "Nuevo producto";
+  $("e-name").value = p.name || ""; $("e-sub").value = p.sub || "";
+  $("e-cat").innerHTML = datos.categorias.filter(c => c.id !== "all").map(c => `<option value="${esc(c.id)}">${esc(c.label)}</option>`).join("");
+  $("e-cat").value = p.cat || "";
+  $("e-badge").value = p.badge || ""; $("e-badge").placeholder = catLabel($("e-cat").value);
+  edColor = p.c || COLORES[0][0]; pintarColores();
+  edFotos = [...(p.imgs || [])]; pintarFotos();
+  $("e-desc").value = p.desc || ""; $("e-specs").value = (p.specs || []).join(", ");
+  $("e-price").value = aNumero(p.price); $("e-was").value = aNumero(p.was);
+  $("ed-del").hidden = i < 0; $("ed-err").textContent = "";
+  $("ed").showModal(); $("ed").scrollTop = 0;
+}
+$("e-cat").addEventListener("change", () => { $("e-badge").placeholder = catLabel($("e-cat").value); });
+function pintarColores() {
+  const propios = COLORES.some(c => c[0] === edColor) ? COLORES : [...COLORES, [edColor, edColor, "Actual"]];
+  $("e-colors").innerHTML = propios.map(([v, hex, n]) => `<button type="button" class="sw" style="--c:${esc(hex)}" data-c="${esc(v)}" aria-pressed="${v === edColor}" aria-label="${esc(n)}"></button>`).join("");
+}
+$("e-colors").addEventListener("click", e => { const b = e.target.closest("[data-c]"); if (b) { edColor = b.dataset.c; pintarColores(); } });
+function pintarFotos() {
+  $("e-photos").innerHTML = edFotos.map((n, i) => `<div class="ph">
+      <img src="${esc(fotoUrl(n))}" alt="Foto ${i + 1}">
+      ${i ? "" : '<span class="main">Principal</span>'}
+      <div class="ph-acts">
+        <button type="button" data-f="izq" data-i="${i}" aria-label="Mover foto ${i + 1} antes" ${i ? "" : "disabled"}>${ICO.left}</button>
+        <button type="button" data-f="quitar" data-i="${i}" aria-label="Quitar foto ${i + 1}">${ICO.x}</button>
+        <button type="button" data-f="der" data-i="${i}" aria-label="Mover foto ${i + 1} después" ${i < edFotos.length - 1 ? "" : "disabled"}>${ICO.right}</button>
+      </div>
+    </div>`).join("") + `<label class="ph-add">${ICO.plus}Agregar fotos<input type="file" id="e-files" accept="image/*" multiple></label>`;
+}
+$("e-photos").addEventListener("click", e => {
+  const b = e.target.closest("[data-f]"); if (!b) return;
+  const i = Number(b.dataset.i);
+  if (b.dataset.f === "quitar") edFotos.splice(i, 1);
+  else { const j = b.dataset.f === "izq" ? i - 1 : i + 1; [edFotos[i], edFotos[j]] = [edFotos[j], edFotos[i]]; }
+  pintarFotos();
+});
+$("e-photos").addEventListener("change", async e => {
+  if (e.target.id !== "e-files") return;
+  const files = [...e.target.files]; if (!files.length) return;
+  const id = edIdx >= 0 ? datos.productos[edIdx].id : slug($("e-name").value);
+  ocupado("Preparando fotos…");
+  try {
+    for (const f of files) {
+      const blob = await cuadrada(f);
+      const n = nombreLibre(id);
+      nuevas.set(n, { blob, url: URL.createObjectURL(blob) });
+      edFotos.push(n);
+    }
+  } catch (err) { toast("No se pudo leer una de las fotos. Prueba con JPG o PNG."); }
+  ocupado(""); pintarFotos();
+});
+function nombreLibre(id) {
+  const ocupados = new Set([...imgsRepo, ...nuevas.keys(), ...usadas(), ...edFotos]);
+  let k = 1; while (ocupados.has(`${id}-${k}`)) k++;
+  return `${id}-${k}`;
+}
+// Recorte cuadrado desde el centro a 1000 × 1000, JPG
+async function cuadrada(file) {
+  const url = URL.createObjectURL(file);
+  try {
+    const img = await new Promise((res, rej) => { const im = new Image(); im.onload = () => res(im); im.onerror = rej; im.src = url; });
+    const lado = Math.min(img.naturalWidth, img.naturalHeight), S = Math.min(1000, lado);
+    const cv = document.createElement("canvas"); cv.width = cv.height = S;
+    const cx = cv.getContext("2d"); cx.fillStyle = "#fff"; cx.fillRect(0, 0, S, S);
+    cx.drawImage(img, (img.naturalWidth - lado) / 2, (img.naturalHeight - lado) / 2, lado, lado, 0, 0, S, S);
+    return await new Promise((res, rej) => cv.toBlob(b => b ? res(b) : rej(new Error("toBlob")), "image/jpeg", 0.86));
+  } finally { URL.revokeObjectURL(url); }
+}
+$("ed-x").addEventListener("click", () => $("ed").close());
+$("f-ed").addEventListener("submit", e => {
+  e.preventDefault();
+  const name = $("e-name").value.trim();
+  if (!name) { $("ed-err").textContent = "Ponle un nombre al producto."; return $("e-name").focus(); }
+  if (!edFotos.length) { $("ed-err").textContent = "Agrega al menos una foto."; return; }
+  const price = aNumero($("e-price").value), was = aNumero($("e-was").value);
+  const prev = edIdx >= 0 ? datos.productos[edIdx] : null;
+  let id = prev ? prev.id : slug(name);
+  if (!prev) { const ids = new Set(datos.productos.map(p => p.id)); let k = 2, b = id; while (ids.has(id)) id = `${b}-${k++}`; }
+  const p = {
+    id, name, sub: $("e-sub").value.trim(), cat: $("e-cat").value, badge: $("e-badge").value.trim() || catLabel($("e-cat").value),
+    c: edColor, imgs: [...edFotos], desc: $("e-desc").value.trim(),
+    specs: $("e-specs").value.split(",").map(s => s.trim()).filter(Boolean).slice(0, 6), price: aPrecio(price)
+  };
+  if (price !== "" && was !== "" && was > price) p.was = aPrecio(was);
+  if (prev) datos.productos[edIdx] = p; else datos.productos.push(p);
+  $("ed").close(); pintarLista(); marcar();
+  toast(prev ? "Cambios guardados. Toca Publicar para subirlos." : "Producto agregado. Toca Publicar para subirlo.");
+});
+$("ed-del").addEventListener("click", () => {
+  const p = datos.productos[edIdx]; if (!p) return;
+  if (!confirm(`¿Eliminar "${p.name}" del catálogo? Se quitará al publicar.`)) return;
+  datos.productos.splice(edIdx, 1); $("ed").close(); pintarLista(); marcar();
+  toast("Producto quitado. Toca Publicar para aplicarlo.");
+});
+
+/* ---------- categorías ---------- */
+function pintarCats() {
+  const uso = id => datos.productos.filter(p => p.cat === id).length;
+  $("cats").innerHTML = datos.categorias.map((c, i) => `<div class="cat">
+      <div class="cat-h"><b>${c.id === "all" ? "Todos (página principal)" : esc(c.label)}</b><span>${c.id === "all" ? datos.productos.length + " productos" : uso(c.id) + " producto" + (uso(c.id) !== 1 ? "s" : "")}</span></div>
+      ${c.id === "all" ? "" : `<label class="f" for="c-l-${i}">Nombre del filtro</label><input class="in" id="c-l-${i}" data-c="${i}" data-k="label" maxlength="24" value="${esc(c.label)}">`}
+      <label class="f" for="c-t-${i}">Título</label><input class="in" id="c-t-${i}" data-c="${i}" data-k="title" maxlength="60" value="${esc(c.title || "")}">
+      <label class="f" for="c-s-${i}">Texto</label><input class="in" id="c-s-${i}" data-c="${i}" data-k="sub" maxlength="140" value="${esc(c.sub || "")}">
+      ${c.id === "all" ? "" : `<button class="btn btn-danger" type="button" data-del="${i}" style="margin-top:8px;padding:0" ${uso(c.id) ? "disabled title='Tiene productos'" : ""}>Eliminar categoría${uso(c.id) ? " (mueve antes sus productos)" : ""}</button>`}
+    </div>`).join("");
+}
+$("cats").addEventListener("input", e => { const el = e.target.closest("[data-c]"); if (!el) return; datos.categorias[Number(el.dataset.c)][el.dataset.k] = el.value; marcar(); });
+$("cats").addEventListener("change", () => pintarLista());
+$("cats").addEventListener("click", e => {
+  const b = e.target.closest("[data-del]"); if (!b) return;
+  const c = datos.categorias[Number(b.dataset.del)];
+  if (!confirm(`¿Eliminar la categoría "${c.label}"?`)) return;
+  datos.categorias.splice(Number(b.dataset.del), 1); pintarCats(); marcar();
+});
+$("nueva-cat").addEventListener("click", () => {
+  const label = (prompt("Nombre de la nueva categoría (ej: Llaveros):") || "").trim().slice(0, 24);
+  if (!label) return;
+  let id = slug(label), k = 2, b = id; const ids = new Set(datos.categorias.map(c => c.id));
+  while (ids.has(id) || id === "all") id = `${b}-${k++}`;
+  datos.categorias.push({ id, label, title: label, sub: "" }); pintarCats(); marcar();
+});
+["t-prod", "t-cat"].forEach(t => $(t).addEventListener("click", () => {
+  const prod = t === "t-prod";
+  $("t-prod").setAttribute("aria-selected", prod); $("t-cat").setAttribute("aria-selected", !prod);
+  $("p-prod").hidden = !prod; $("p-cat").hidden = prod;
+}));
+
+/* ---------- publicar: un solo cambio en GitHub con todo ---------- */
+function blobB64(blob) { return new Promise((res, rej) => { const r = new FileReader(); r.onload = () => res(String(r.result).split(",")[1]); r.onerror = rej; r.readAsDataURL(blob); }); }
+async function publicar() {
+  const sinFoto = datos.productos.find(p => !p.imgs.length); if (sinFoto) return toast(`"${sinFoto.name}" no tiene fotos.`);
+  ocupado("Publicando…");
+  try {
+    const ref = await gh(repo(`/git/ref/heads/${BRANCH}`));
+    const padre = ref.object.sha, com = await gh(repo(`/git/commits/${padre}`));
+    const tree = [];
+    const usar = usadas();
+    for (const n of usadasNuevas()) {
+      $("busy-t").textContent = `Subiendo foto ${n}…`;
+      const b = await gh(repo("/git/blobs"), { method: "POST", body: JSON.stringify({ content: await blobB64(nuevas.get(n).blob), encoding: "base64" }) });
+      tree.push({ path: `img/${n}.jpg`, mode: "100644", type: "blob", sha: b.sha });
+    }
+    // Fotos que dejaron de usarse (de productos quitados o fotos quitadas)
+    const antes = new Set(base.productos.flatMap(p => p.imgs));
+    const borrar = [...antes].filter(n => !usar.has(n) && !PROTEGIDAS.has(n) && imgsRepo.has(n));
+    borrar.forEach(n => tree.push({ path: `img/${n}.jpg`, mode: "100644", type: "blob", sha: null }));
+    $("busy-t").textContent = "Guardando productos…";
+    const json = JSON.stringify(datos, null, 2) + "\n";
+    const jb = await gh(repo("/git/blobs"), { method: "POST", body: JSON.stringify({ content: textToB64(json), encoding: "base64" }) });
+    tree.push({ path: "productos.json", mode: "100644", type: "blob", sha: jb.sha });
+    const t = await gh(repo("/git/trees"), { method: "POST", body: JSON.stringify({ base_tree: com.tree.sha, tree }) });
+    const c = await gh(repo("/git/commits"), { method: "POST", body: JSON.stringify({ message: "Catálogo: cambios desde la administración", tree: t.sha, parents: [padre] }) });
+    await gh(repo(`/git/refs/heads/${BRANCH}`), { method: "PATCH", body: JSON.stringify({ sha: c.sha, force: false }) });
+    usadasNuevas().forEach(n => imgsRepo.add(n)); borrar.forEach(n => imgsRepo.delete(n));
+    base = clon(datos); [...nuevas.keys()].filter(n => !usar.has(n)).forEach(n => { URL.revokeObjectURL(nuevas.get(n).url); nuevas.delete(n); });
+    sucio = false; pintarTodo(); pintarPub();
+    toast("¡Publicado! El catálogo se actualiza en 1 o 2 minutos.");
+  } catch (e) {
+    console.error(e);
+    toast(e.status === 401 ? "Tu llave ya no es válida. Sal y entra con una nueva."
+      : e.status === 403 || e.status === 404 ? "Tu llave no tiene permiso para guardar en el catálogo."
+      : e.status === 409 || e.status === 422 ? "El catálogo cambió en otro lado. Recarga la página e inténtalo de nuevo."
+      : "No se pudo publicar. Revisa tu conexión e inténtalo de nuevo.");
+  } finally { ocupado(""); }
+}
+$("publicar").addEventListener("click", publicar);
+$("descartar").addEventListener("click", () => {
+  if (!confirm("¿Descartar todos los cambios sin publicar?")) return;
+  datos = clon(base); nuevas.forEach(v => URL.revokeObjectURL(v.url)); nuevas.clear(); sucio = false; pintarTodo(); pintarPub();
+});
+addEventListener("beforeunload", e => { if (sucio) { e.preventDefault(); e.returnValue = ""; } });
+
+/* ---------- entrar / salir ---------- */
+async function entrar(token, recordar) {
+  TOKEN = token;
+  const r = await gh(repo(""));
+  if (!r.permissions || !r.permissions.push) { const e = new Error("sin permiso"); e.status = 403; throw e; }
+  if (recordar !== undefined) guardarLlave(token, recordar);
+  $("v-login").hidden = true; $("v-app").hidden = false; $("salir").hidden = false;
+  await cargar();
+}
+$("f-login").addEventListener("submit", async e => {
+  e.preventDefault();
+  const t = $("token").value.trim(); $("login-err").textContent = "";
+  if (!t) return $("login-err").textContent = "Pega tu llave.";
+  ocupado("Revisando tu llave…");
+  try { await entrar(t, $("recordar").checked); $("token").value = ""; }
+  catch (err) {
+    TOKEN = "";
+    $("login-err").textContent = err.status === 401 ? "La llave no es válida o ya venció."
+      : err.status === 403 || err.status === 404 ? "La llave no tiene acceso de escritura al repositorio miniprintsmx.github.io."
+      : "No se pudo conectar con GitHub. Revisa tu internet.";
+  } finally { ocupado(""); }
+});
+$("salir").addEventListener("click", () => {
+  if (sucio && !confirm("Tienes cambios sin publicar. ¿Salir de todos modos?")) return;
+  sucio = false; borrarLlave(); TOKEN = ""; location.reload();
+});
+(async function () {
+  const t = leerLlave();
+  if (!t) { $("v-login").hidden = false; return; }
+  try { await entrar(t); }
+  catch (e) { if (e.status === 401 || e.status === 403 || e.status === 404) borrarLlave(); TOKEN = ""; $("v-login").hidden = false; ocupado(""); }
+})();
+</script>
+</body>
+</html>
