@@ -244,8 +244,8 @@
       "id": "oscurito",
       "name": "DarthVader",
       "sub": "Villano de bolsillo",
-      "cat": "oscuro",
-      "badge": "Lado oscuro",
+      "cat": "figuras",
+      "badge": "Starwars",
       "c": "var(--red)",
       "imgs": [
         "oscurito-1",
@@ -254,7 +254,8 @@
       ],
       "desc": "Viene a conquistar tu escritorio con su sable rojo, su capa y su panel de botones de colores ⚔️ Da miedo… pero cabe en tu mano. Aquí tenemos galletas 🍪",
       "specs": [
-        "Figura"
+        "Figura",
+        "Articulada"
       ],
       "price": "$160.00"
     },
@@ -262,8 +263,8 @@
       "id": "cuernos",
       "name": "DarthMaul",
       "sub": "Villano de bolsillo",
-      "cat": "oscuro",
-      "badge": "Lado oscuro",
+      "cat": "figuras",
+      "badge": "Starwars",
       "c": "var(--red)",
       "imgs": [
         "cuernos-1",
@@ -272,7 +273,8 @@
       ],
       "desc": "Tatuajes de guerrero, cuernos afilados y un sable rojo de doble filo ⚔️ Viene a imponer respeto en tu repisa… aunque sea mini 🤏",
       "specs": [
-        "Figura"
+        "Figura",
+        "Articulada"
       ],
       "price": "$160.00"
     },
