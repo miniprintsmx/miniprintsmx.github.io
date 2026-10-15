@@ -412,6 +412,22 @@
         "Articulada"
       ],
       "price": "$55.00"
+    },
+    {
+      "id": "platanin",
+      "name": "Platanin",
+      "sub": "🍌 El Plátano Feliz",
+      "cat": "figuras",
+      "badge": "Miniatura",
+      "c": "var(--teal)",
+      "imgs": [
+        "platanin-1"
+      ],
+      "desc": "Un platanito sonriente con su cabito café y bracitos listos para un abrazo 🤗 Está hecho por segmentos apilados, así que puedes girarlo y ponerlo en mil poses. Una dosis de buen humor para tu escritorio 😄",
+      "specs": [
+        "Articulada"
+      ],
+      "price": "$20.00"
     }
   ]
 }
