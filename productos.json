@@ -97,10 +97,10 @@
     },
     {
       "id": "muuchi",
-      "name": "Muuchi",
-      "sub": "la Vaquita Caramelo",
+      "name": "Vaquita",
+      "sub": "",
       "cat": "figuras",
-      "badge": "Articulada",
+      "badge": "Figuras",
       "c": "var(--caramel)",
       "imgs": [
         "muuchi-1",
@@ -110,10 +110,9 @@
       ],
       "desc": "Ojitos enormes, cachetes rosados y manchitas color caramelo 🍮 Se mueve, camina y se echa a descansar cuando quiera. Imposible no decirle “muuuy bonita” 💕",
       "specs": [
-        "Impreso en 3D",
         "Articulada"
       ],
-      "price": ""
+      "price": "$35.00"
     },
     {
       "id": "tricerito",
