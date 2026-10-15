@@ -68,7 +68,7 @@ a:focus-visible,button:focus-visible,[tabindex]:focus-visible{outline:3px solid 
 .js.intro .brand .l{animation:drop .8s var(--spring) calc(120ms + var(--i,0) * 55ms) backwards}
 .js.intro .tag{animation:rise .6s var(--out) .6s backwards}
 .js.intro .hero-cta{animation:rise .6s var(--out) .75s backwards}
-.js.intro .hero-img{animation:figIn .9s var(--spring) .25s backwards}
+.js.intro .hero-img{animation:rise .9s var(--out) .5s backwards}
 .js.intro .sticker{animation:stick .95s ease-out 1.05s backwards}
 @keyframes drop{from{opacity:0;transform:translateY(-.7em) rotate(-10deg) scale(.6)}to{opacity:1;transform:none}}
 @keyframes rise{from{opacity:0;transform:translateY(14px)}to{opacity:1;transform:none}}
@@ -253,38 +253,136 @@ footer{padding-block:22px 92px;color:var(--muted);font-size:.9rem;text-align:cen
   .btn:hover,.card:hover,.fab:hover{transform:none!important}
   .card:hover .frames img{scale:1}
 }
+
+/* ─────────────────────────────────────────────────
+   Apariencia de tienda: barra fija translúcida, portada centrada, tarjetas limpias.
+   Mismos colores y el logo con su tipografía (Bagel Fat One); el resto en Figtree.
+───────────────────────────────────────────────── */
+:root{--glass-bar:rgba(255,255,255,.78);--hair:rgba(29,26,46,.10);--ink-2:#45405a;--accent:var(--teal)}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){--glass-bar:rgba(21,19,31,.78);--hair:rgba(255,255,255,.10);--ink-2:#cfc9e4}}
+:root[data-theme="dark"]{--glass-bar:rgba(21,19,31,.78);--hair:rgba(255,255,255,.10);--ink-2:#cfc9e4}
+body{background-image:none;-webkit-font-smoothing:antialiased;letter-spacing:-.005em}
+.wrap{max-width:1040px}
+
+/* Barra superior */
+.top{position:sticky;top:0;z-index:30;background:var(--glass-bar);-webkit-backdrop-filter:saturate(180%) blur(20px);backdrop-filter:saturate(180%) blur(20px);
+  border-bottom:1px solid var(--hair);padding-top:env(safe-area-inset-top,0px)}
+.top-in{height:52px;display:flex;align-items:center;justify-content:space-between;gap:16px}
+.top-logo{font-family:var(--display);font-size:1.35rem;line-height:1;text-decoration:none;white-space:nowrap}
+.top-logo .m,.foot-logo .m{color:var(--teal)} .top-logo .p,.foot-logo .p{color:var(--ink)}
+.top-logo .dot{color:var(--lime);-webkit-text-stroke:1.5px var(--ink);paint-order:stroke}
+.top-links{display:flex;gap:22px;font-size:.82rem;font-weight:600}
+.top-links a{color:var(--ink-2);text-decoration:none;padding:12px 0}
+.top-links a:hover{color:var(--ink)}
+@media (max-width:520px){.top-links a[href="#pedidos"]{display:none}.top-links{gap:16px}}
+
+/* Portada centrada */
+.hero{background:var(--surface);padding-block:64px 0;text-align:center;overflow:hidden}
+.hero .wrap{display:block}
+.eyebrow{margin:0 0 10px;font-weight:800;font-size:1.15rem;color:var(--teal)}
+.brand{font-size:clamp(3.4rem,11vw,6.6rem)}
+.tag{margin:14px auto 0;max-width:30ch;font-size:clamp(1.2rem,2.6vw,1.65rem);line-height:1.25;color:var(--ink);font-weight:400}
+.hero-cta{justify-content:center;gap:18px;margin-top:26px}
+.btn{font-weight:600;font-size:1.02rem;min-height:44px;padding:0 22px}
+.btn:hover{transform:none;filter:brightness(1.06)}
+.btn-ink{background:var(--ink);color:var(--surface)}
+.btn-light{background:#fff;color:#1d1a2e}
+.btn-link{display:inline-flex;align-items:center;gap:8px;min-height:44px;font-weight:600;font-size:1.02rem;color:var(--wa);text-decoration:none}
+.btn-link:hover{text-decoration:underline;text-underline-offset:4px}
+.btn-link svg{width:20px;height:20px;flex:none}
+.btn-link .chev{width:9px;height:14px}
+.hero-img{margin:44px auto 0;max-width:880px}
+.hero-img img{border-radius:32px 32px 0 0;transform:none;box-shadow:none;animation:none;aspect-ratio:16/10;object-position:center 60%}
+
+/* Catálogo */
+main{padding-block:84px 40px;scroll-margin-top:calc(env(safe-area-inset-top,0px) + 52px)}
+.sec-title{font-family:var(--body);font-weight:800;font-size:clamp(2rem,4.6vw,3rem);line-height:1.08;letter-spacing:-.02em;margin:0}
+.sec-sub{margin:10px 0 0;font-size:1.15rem;color:var(--muted)}
+.bar{position:static;background:none;border:0;margin:28px 0 30px}
+#filters{position:relative;display:flex;gap:10px;overflow-x:auto;padding:2px;scrollbar-width:none}
+#filters::-webkit-scrollbar{display:none}
+.chip{min-height:44px;padding:0 18px;font-weight:600;font-size:.92rem;background:var(--surface);box-shadow:inset 0 0 0 1px var(--line)}
+.chip:hover{background:var(--surface);box-shadow:inset 0 0 0 1px var(--muted)}
+.grid{gap:20px}
+.card{border-radius:20px;box-shadow:0 2px 14px rgba(29,26,46,.05)}
+@media (hover:hover) and (pointer:fine){
+  .card:hover{transform:perspective(1000px) rotateX(var(--rx,0deg)) rotateY(var(--ry,0deg)) translateY(-4px);box-shadow:0 18px 40px -22px var(--shadow)}
+}
+.photo{background-color:var(--surface)}
+.photo .badge{display:none}
+.body{padding:18px 24px 24px;gap:8px}
+.kicker{margin:0;font-size:.8rem;font-weight:800;letter-spacing:.02em;color:var(--c,var(--teal));filter:saturate(1.2) brightness(.82)}
+.name{font-family:var(--body);font-weight:800;font-size:1.35rem;letter-spacing:-.015em;line-height:1.15}
+.name small{font-weight:500;font-size:.95rem}
+.name-link:hover .nm{text-decoration:underline 2px currentColor}
+.desc{font-size:.92rem;line-height:1.45;color:var(--muted)}
+.specs li{font-weight:600;font-size:.76rem;border-radius:999px;padding:4px 10px}
+.foot{padding-top:12px}
+.price{font-weight:700;font-size:1.05rem}
+.btn-wa{box-shadow:none}
+
+/* Ficha de producto */
+.pd-name{font-family:var(--body);font-weight:800;letter-spacing:-.02em}
+.pd-foot{border-top:1px solid var(--line)}
+
+/* Cómo pedir: tres pasos sobre fondo claro */
+.how{background:transparent;color:var(--ink);padding-block:24px 0}
+.how h2{font-family:var(--body);font-weight:800;font-size:clamp(1.6rem,3.4vw,2.2rem);letter-spacing:-.02em}
+.steps li{background:var(--surface);border-radius:20px;padding:20px;box-shadow:0 2px 14px rgba(29,26,46,.05)}
+.steps li::before{font-family:var(--display);background:var(--lime);color:#1d1a2e}
+.steps span{color:var(--muted);opacity:1}
+#phoneLine{color:var(--muted)}
+.how .btn-ghost{color:var(--ink);box-shadow:inset 0 0 0 2px var(--ink)}
+
+/* Pedidos especiales */
+.custom{padding-block:48px 88px}
+.custom-in{background:#1d1a2e;color:#f6f4fb;border-radius:28px;padding:clamp(40px,6vw,72px) 24px;text-align:center}
+.custom h2{margin:0;font-weight:800;font-size:clamp(1.7rem,4vw,2.5rem);line-height:1.1;letter-spacing:-.02em}
+.custom p{margin:12px auto 26px;max-width:34ch;font-size:1.15rem;line-height:1.4;color:#c9c3de}
+
+/* Pie */
+footer{padding:0;text-align:left;border-top:1px solid var(--line)}
+.foot-in{display:flex;justify-content:space-between;flex-wrap:wrap;gap:12px;padding-block:20px 96px;font-size:.82rem;color:var(--muted)}
+.foot-logo{font-family:var(--display);font-weight:400}
+footer a{color:var(--ink-2);text-decoration:none} footer a:hover{text-decoration:underline}
+@media (max-width:760px){.hero{padding-top:44px}.hero-img img{aspect-ratio:4/3}}
 </style>
 </head>
 <body>
 
 <script>document.documentElement.classList.add("js","intro");setTimeout(function(){document.documentElement.classList.remove("intro")},3200);</script>
 
-<header class="hero">
+<header class="top">
+  <nav class="top-in wrap" aria-label="Principal">
+    <a class="top-logo" href="#inicio" aria-label="MiniPrints, inicio"><span class="m">Mini</span><span class="p">Prints</span><span class="dot">.</span></a>
+    <div class="top-links">
+      <a href="#catalogo">Catálogo</a>
+      <a href="#pedidos">Pedidos especiales</a>
+      <a class="js-wa" data-msg="¡Hola MiniPrints! 👋 Quiero información sobre sus figuras." href="#">Contacto</a>
+    </div>
+  </nav>
+</header>
+
+<section class="hero" id="inicio">
   <div class="wrap">
-    <div>
-      <h1 class="brand"><span class="sr-only">MiniPrints</span><span aria-hidden="true"><span class="w m"><span class="l" style="--i:0">M</span><span class="l" style="--i:1">i</span><span class="l" style="--i:2">n</span><span class="l" style="--i:3">i</span></span><span class="w p"><span class="l" style="--i:4">P</span><span class="l" style="--i:5">r</span><span class="l" style="--i:6">i</span><span class="l" style="--i:7">n</span><span class="l" style="--i:8">t</span><span class="l" style="--i:9">s</span><span class="l dot" style="--i:10">.</span></span></span></h1>
-      <p class="tag">Figuras y llaveros <strong>impresos en 3D</strong> con mucha actitud. Elige tu favorito y pídelo directo por WhatsApp.</p>
-      <div class="hero-cta">
-        <a class="btn btn-wa js-wa" data-msg="¡Hola MiniPrints! 👋 Quiero ver su catálogo." href="#">
-          <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 2a10 10 0 0 0-8.6 15.1L2 22l5-1.3A10 10 0 1 0 12 2Zm0 18.2c-1.5 0-3-.4-4.2-1.2l-.3-.2-3 .8.8-2.9-.2-.3A8.2 8.2 0 1 1 12 20.2Zm4.5-6.1c-.2-.1-1.5-.7-1.7-.8-.2-.1-.4-.1-.6.1l-.8 1c-.1.2-.3.2-.5.1a6.7 6.7 0 0 1-3.3-2.9c-.2-.4.2-.4.7-1.3.1-.2 0-.3 0-.4l-.8-1.8c-.2-.5-.4-.4-.6-.4h-.5c-.2 0-.4.1-.7.3-.2.3-.9.9-.9 2.2s.9 2.5 1 2.7c.1.2 1.8 2.8 4.4 3.9 1.6.7 2.3.8 3.1.6.5-.1 1.5-.6 1.7-1.2.2-.6.2-1.1.2-1.2-.1-.1-.3-.2-.5-.3Z"/></svg>
-          Escríbenos por WhatsApp
-        </a>
-        <a class="btn btn-ghost" href="#catalogo">Ver productos</a>
-      </div>
+    <p class="eyebrow">Impreso en 3D</p>
+    <h1 class="brand"><span class="sr-only">MiniPrints</span><span aria-hidden="true"><span class="w m"><span class="l" style="--i:0">M</span><span class="l" style="--i:1">i</span><span class="l" style="--i:2">n</span><span class="l" style="--i:3">i</span></span><span class="w p"><span class="l" style="--i:4">P</span><span class="l" style="--i:5">r</span><span class="l" style="--i:6">i</span><span class="l" style="--i:7">n</span><span class="l" style="--i:8">t</span><span class="l" style="--i:9">s</span><span class="l dot" style="--i:10">.</span></span></span></h1>
+    <p class="tag">Figuras y llaveros con mucha actitud. Elige tu favorito y pídelo directo por WhatsApp.</p>
+    <div class="hero-cta">
+      <a class="btn btn-ink" href="#catalogo">Ver catálogo</a>
+      <a class="btn-link js-wa" data-msg="¡Hola MiniPrints! 👋 Quiero ver su catálogo." href="#"><svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 2a10 10 0 0 0-8.6 15.1L2 22l5-1.3A10 10 0 1 0 12 2Zm0 18.2c-1.5 0-3-.4-4.2-1.2l-.3-.2-3 .8.8-2.9-.2-.3A8.2 8.2 0 1 1 12 20.2Zm4.5-6.1c-.2-.1-1.5-.7-1.7-.8-.2-.1-.4-.1-.6.1l-.8 1c-.1.2-.3.2-.5.1a6.7 6.7 0 0 1-3.3-2.9c-.2-.4.2-.4.7-1.3.1-.2 0-.3 0-.4l-.8-1.8c-.2-.5-.4-.4-.6-.4h-.5c-.2 0-.4.1-.7.3-.2.3-.9.9-.9 2.2s.9 2.5 1 2.7c.1.2 1.8 2.8 4.4 3.9 1.6.7 2.3.8 3.1.6.5-.1 1.5-.6 1.7-1.2.2-.6.2-1.1.2-1.2-.1-.1-.3-.2-.5-.3Z"/></svg>Escríbenos por WhatsApp<svg class="chev" viewBox="0 0 10 16" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M2 2l6 6-6 6"/></svg></a>
     </div>
     <div class="hero-img">
       <img id="heroImg" src="img/banda.jpg" alt="Tres monstruitos impresos en 3D en turquesa, verde limón y lila, con cuernos blancos y collares de picos" width="1000" height="1000" decoding="async" fetchpriority="high">
-      <span class="sticker">¡Hechos a mano! 🤘</span>
     </div>
   </div>
-</header>
-
-<nav class="bar" aria-label="Filtrar productos"><div class="wrap" id="filters"><span class="chip-ind" aria-hidden="true"></span></div></nav>
+</section>
 
 <main id="catalogo">
   <div class="wrap">
-    <h2 class="sec-title" id="secTitle">Todo el catálogo</h2>
-    <p class="sec-sub" id="secSub"></p>
+    <h2 class="sec-title">Explora la colección.</h2>
+    <p class="sec-sub"><span id="secTitle" class="sr-only">Todo el catálogo</span><span id="secSub"></span></p>
+    <nav class="bar" aria-label="Filtrar productos"><div id="filters"><span class="chip-ind" aria-hidden="true"></span></div></nav>
     <div class="grid" id="grid"></div>
   </div>
 </main>
@@ -301,7 +399,22 @@ footer{padding-block:22px 92px;color:var(--muted);font-size:.9rem;text-align:cen
   </div>
 </section>
 
-<footer>MiniPrints · Figuras y llaveros impresos en 3D</footer>
+<section class="custom" id="pedidos">
+  <div class="wrap">
+    <div class="custom-in">
+      <h2>¿Buscas algo que no está aquí?</h2>
+      <p>Cuéntanos qué figura quieres y te cotizamos una pieza a tu medida.</p>
+      <a class="btn btn-light js-wa" data-msg="¡Hola MiniPrints! 👋 Quiero cotizar una figura personalizada." href="#">Hablar por WhatsApp</a>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <div class="wrap foot-in">
+    <span>© 2026 <b class="foot-logo"><span class="m">Mini</span><span class="p">Prints</span></b> · Figuras y llaveros impresos en 3D</span>
+    <a class="js-wa" data-msg="¡Hola MiniPrints! 👋" href="#">WhatsApp</a>
+  </div>
+</footer>
 
 <a class="fab js-wa" id="fab" data-msg="¡Hola MiniPrints! 👋 Quiero ver su catálogo." href="#" aria-label="Escríbenos por WhatsApp"></a>
 
@@ -422,6 +535,7 @@ function card(p){
       ${n > 1 ? `<div class="dots">${p.imgs.map((s,j) => `<button type="button" aria-label="Ver foto ${j+1} de ${n} de ${p.name}" aria-current="${j===0}"></button>`).join("")}</div>` : ""}
     </div>
     <div class="body">
+      <p class="kicker" style="--c:${p.c}">${p.badge}</p>
       <h3 class="name"><a class="name-link" href="#${p.id}"><span class="nm">${p.name}</span><small>${p.sub}</small><span class="sr-only">: ver detalles y fotos</span></a></h3>
       <p class="desc">${p.desc}</p>
       <ul class="specs">${p.specs.map(s=>`<li>${s}</li>`).join("")}</ul>
