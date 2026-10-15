@@ -189,6 +189,25 @@
       "price": ""
     },
     {
+      "id": "abejita",
+      "name": "Abejita",
+      "sub": "",
+      "cat": "llaveros",
+      "badge": "Llavero",
+      "c": "#f2c230",
+      "imgs": [
+        "abejita-1",
+        "abejita-2"
+      ],
+      "desc": "Gordita, rayadita y con alitas blancas listas para despegar 🍯 Abejita Zum no pica, solo te acompaña a todos lados colgada de tus llaves o tu mochila. ¡Tu día va a estar más dulce que la miel! 💛",
+      "specs": [
+        "Impreso en 3D",
+        "Con argolla"
+      ],
+      "price": "$35.00",
+      "was": "$45.00"
+    },
+    {
       "id": "orbita",
       "name": "Capitán Órbita",
       "sub": "el Astronauta Llavero",
