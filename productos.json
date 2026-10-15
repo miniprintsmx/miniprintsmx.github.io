@@ -396,6 +396,22 @@
         "Animalitos"
       ],
       "price": "$35.00"
+    },
+    {
+      "id": "unicornio",
+      "name": "Unicornio",
+      "sub": "🦄 Nubecita, la Unicornia Flexi",
+      "cat": "llaveros",
+      "badge": "Llaveros",
+      "c": "var(--lilac)",
+      "imgs": [
+        "unicornio-1"
+      ],
+      "desc": "Blanca como nube, con cuernito amarillo y melena color mango 🥭 Es del mismo estilo que el dino verde: cuerpo por segmentos que se menea en tus manos. Un toque de magia para tu escritorio ✨",
+      "specs": [
+        "Articulada"
+      ],
+      "price": "$55.00"
     }
   ]
 }
