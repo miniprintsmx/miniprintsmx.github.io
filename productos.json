@@ -361,6 +361,41 @@
         "Coleccionable"
       ],
       "price": "$220.00"
+    },
+    {
+      "id": "stego",
+      "name": "Stego",
+      "sub": "Dino Flexi",
+      "cat": "llaveros",
+      "badge": "Llaveros",
+      "c": "#4cc36a",
+      "imgs": [
+        "stego-2",
+        "stego-1",
+        "stego-3"
+      ],
+      "desc": "Verde menta, con piquitos blancos en la espalda y una sonrisita que no se le quita 😊 Su cuerpo va por segmentos, así que se mueve y se menea en tus manos. Ideal para tu escritorio o para jugar mientras piensas 🌿",
+      "specs": [
+        "Articulada"
+      ],
+      "price": "$45.00"
+    },
+    {
+      "id": "coquito",
+      "name": "Coquito",
+      "sub": "🐒 El Monito Ojitos",
+      "cat": "figuras",
+      "badge": "Figuras",
+      "c": "var(--caramel)",
+      "imgs": [
+        "coquito-1"
+      ],
+      "desc": "Copetito parado, colita enroscada y unos ojotes que te convencen de llevártelo 🥺 Su textura parece madera tallada, pero es todo impreso. Ponlo en tu escritorio y deja que te eche porras con esa mirada 🍌",
+      "specs": [
+        "Articulada",
+        "Animalitos"
+      ],
+      "price": "$35.00"
     }
   ]
 }
