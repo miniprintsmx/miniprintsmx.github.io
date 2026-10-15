@@ -115,6 +115,24 @@
       "price": "$35.00"
     },
     {
+      "id": "ajolotito",
+      "name": "Ajolotito",
+      "sub": "",
+      "cat": "figuras",
+      "badge": "Figuras",
+      "c": "#f08cae",
+      "imgs": [
+        "ajolotito-1",
+        "ajolotito-2"
+      ],
+      "desc": "Rosita, con branquias moradas de peinado fabuloso y una carita que siempre está sonriendo 😊 Es articulado: mueve la cola, las patitas y el cuerpo como si nadara en tu mano 🌊 Un pedacito de Xochimilco para tu escritorio.",
+      "specs": [
+        "Impreso en 3D",
+        "Articulado"
+      ],
+      "price": "$80.00"
+    },
+    {
       "id": "tricerito",
       "name": "Tricerito",
       "sub": "el Dino Llavero",
