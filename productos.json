@@ -323,6 +323,44 @@
         "BadBunny"
       ],
       "price": "$180.00"
+    },
+    {
+      "id": "ptero",
+      "name": "Ptero",
+      "sub": "🦖 Ptero, el Dino Volador",
+      "cat": "figuras",
+      "badge": "Miniatura",
+      "c": "var(--teal)",
+      "imgs": [
+        "ptero-3",
+        "ptero-1",
+        "ptero-2"
+      ],
+      "desc": "Azul cielo, con su cresta en la cabeza, ojitos redondos y una sonrisita que conquista 🩵 Su cuerpo por segmentos se mueve como si fuera a despegar en cualquier momento. El más aventurero de la familia jurásica ☁️",
+      "specs": [
+        "Minis",
+        "Articulada"
+      ],
+      "price": "$15.00"
+    },
+    {
+      "id": "pokeball-charmander",
+      "name": "Pokéball - Charmander",
+      "sub": "Charmander dormilon",
+      "cat": "figuras",
+      "badge": "Pokeball",
+      "c": "#f39a3c",
+      "imgs": [
+        "pokeball-charmander-1",
+        "pokeball-charmander-2",
+        "pokeball-charmander-3"
+      ],
+      "desc": "Abre la pokéball y sorpresa: adentro está un charmander tomando su siestita, con su colita de fuego encendida 😴 Viene con su base para lucirlo en tu escritorio o repisa. El regalo perfecto para los que crecieron coleccionando monstruitos de bolsillo ✨",
+      "specs": [
+        "Pokémon",
+        "Coleccionable"
+      ],
+      "price": "$220.00"
     }
   ]
 }
