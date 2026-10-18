@@ -261,9 +261,9 @@
       "badge": "Starwars",
       "c": "var(--red)",
       "imgs": [
+        "cuernos-3",
         "cuernos-1",
-        "cuernos-2",
-        "cuernos-3"
+        "cuernos-2"
       ],
       "desc": "Tatuajes de guerrero, cuernos afilados y un sable rojo de doble filo ⚔️ Viene a imponer respeto en tu repisa… aunque sea mini 🤏",
       "specs": [
