@@ -573,6 +573,40 @@
         "Penholder"
       ],
       "price": "$180.00"
+    },
+    {
+      "id": "ondas-atardecer",
+      "name": "Ondas Atardecer",
+      "sub": "",
+      "cat": "figuras",
+      "badge": "Figuras",
+      "c": "var(--red)",
+      "imgs": [
+        "ondas-atardecer-1"
+      ],
+      "desc": "Un cubo de ondas que cambia de rosa a naranja según cómo le pegue la luz 🌅 Pura vibra retro para tu escritorio, repisa o buró. De esas piezas que todos preguntan “¿y eso dónde lo compraste?” 😎",
+      "specs": [
+        "Penholder"
+      ],
+      "price": "$100.00"
+    },
+    {
+      "id": "sapo-gloton-portaplumas",
+      "name": "Sapo Glotón Portaplumas",
+      "sub": "",
+      "cat": "figuras",
+      "badge": "Figuras",
+      "c": "#4cc36a",
+      "imgs": [
+        "sapo-gloton-portaplumas-1",
+        "sapo-gloton-portaplumas-3",
+        "sapo-gloton-portaplumas-4"
+      ],
+      "desc": "Un sapo con la boca bien abierta que se traga todos tus plumones y colores 🖍️ Se abraza la panza como si ya hubiera comido de más, y su color va de azul a verde y amarillo. Orden en tu escritorio con mucha personalidad 😂",
+      "specs": [
+        "Penholder"
+      ],
+      "price": "$120.00"
     }
   ]
 }
