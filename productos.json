@@ -607,6 +607,24 @@
         "Penholder"
       ],
       "price": "$120.00"
+    },
+    {
+      "id": "hipopotamito",
+      "name": "Hipopótamito",
+      "sub": "",
+      "cat": "llaveros",
+      "badge": "Llaveros",
+      "c": "#cfd6e6",
+      "imgs": [
+        "hipopotamito-1",
+        "hipopotamito-2"
+      ],
+      "desc": "Gordito, gris y con una sonrisita que te alegra el día 😊 Su cuerpo va por segmentos, así que se menea colgado de tus llaves, y por detrás tiene una colita chiquita que es lo más tierno 🍑 Pequeño pero con mucha presencia 💪",
+      "specs": [
+        "Llavero",
+        "Articulada"
+      ],
+      "price": "$45.00"
     }
   ]
 }
