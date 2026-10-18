@@ -377,6 +377,65 @@ footer a{color:var(--ink-2);text-decoration:none} footer a:hover{text-decoration
   .dots button[aria-current="true"]::before{width:14px;margin-left:-7px}
   .photo .badge{display:none}
 }
+
+/* Pedido (carrito) */
+.btn-add{background:var(--ink);color:var(--surface);position:relative}
+.btn-add svg{width:20px;height:20px;flex:none}
+.btn-add.is-in{background:var(--teal);color:#0f1f1e}
+.add-n{position:absolute;top:-6px;right:-6px;min-width:20px;height:20px;padding:0 5px;border-radius:999px;background:var(--red);color:#fff;font:800 .72rem/20px var(--body);text-align:center;box-shadow:0 0 0 2px var(--surface)}
+@media (min-width:701px){.foot .btn-add{flex:1 1 100%;min-width:0;white-space:nowrap;font-size:.86rem;padding:0 10px;gap:6px}.foot .btn-add svg{width:17px;height:17px}}
+@media (max-width:700px){
+  .foot .btn-add{width:40px;height:40px;min-height:40px;padding:0;flex:none;border-radius:50%}
+  .foot .btn-add .wa-t{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}
+}
+.pd-foot .btn-add{flex:1 1 220px}
+.pd-foot .btn-add small{font-weight:600;opacity:.75;margin-left:4px}
+.pd-ask{flex:1 1 100%;text-align:center;font-weight:600;font-size:.92rem;color:var(--wa);text-decoration:none;padding:6px 0}
+.pd-ask:hover{text-decoration:underline}
+.fab.is-hidden{opacity:0!important;visibility:hidden!important}
+.cart-fab{position:fixed;z-index:21;right:max(16px,env(safe-area-inset-right,0px));bottom:max(16px,env(safe-area-inset-bottom,0px));
+  display:flex;align-items:center;gap:10px;min-height:56px;padding:0 10px 0 18px;border:0;border-radius:999px;cursor:pointer;
+  background:var(--ink);color:var(--surface);font:800 1rem var(--body);box-shadow:0 14px 30px -12px var(--shadow)}
+.cart-fab svg{width:22px;height:22px}
+.cart-fab b{min-width:34px;height:34px;padding:0 8px;border-radius:999px;display:grid;place-items:center;background:var(--lime);color:#1d1a2e;font-variant-numeric:tabular-nums}
+.cart-fab:active{transform:scale(.96)}
+.cart{padding:0;border:0;color:var(--ink);background:var(--bg);width:min(560px,calc(100% - 16px));max-height:calc(100dvh - 24px);margin:auto auto 8px;border-radius:28px;overflow:auto;box-shadow:0 -12px 40px -12px var(--shadow)}
+.cart::backdrop{background:var(--scrim)}
+@media (min-width:700px){.cart{margin:auto}}
+.cart-head{position:sticky;top:0;z-index:2;display:flex;align-items:center;justify-content:space-between;padding:18px 18px 10px 22px;background:var(--bg)}
+.cart-head h2{margin:0;font-weight:800;font-size:1.4rem;letter-spacing:-.02em}
+.cart-x{width:44px;height:44px;border:0;border-radius:50%;display:grid;place-items:center;background:var(--chip);color:var(--ink);cursor:pointer}
+.cart-x svg{width:18px;height:18px}
+.cart-body{padding:0 18px}
+.cart-list{list-style:none;margin:0;padding:0;background:var(--surface);border-radius:20px;overflow:hidden}
+.cart-list:empty{display:none}
+.cart-it{display:flex;align-items:center;gap:12px;padding:12px 14px;border-top:1px solid var(--line)}
+.cart-it:first-child{border-top:0}
+.cart-it img{width:52px;height:52px;flex:none;border-radius:14px;object-fit:cover;background:var(--photo)}
+.cart-it-t{flex:1;min-width:0;display:flex;flex-direction:column}
+.cart-it-t b{font-size:1rem;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.cart-it-t span{font-size:.85rem;color:var(--muted)}
+.cart-step{display:flex;align-items:center;gap:2px;background:var(--chip);border-radius:999px;padding:2px;flex:none}
+.cart-step button{width:36px;height:36px;border:0;border-radius:50%;background:none;color:var(--ink);font:800 1.15rem var(--body);cursor:pointer;display:grid;place-items:center}
+.cart-step button svg{width:17px;height:17px}
+.cart-step button:disabled{opacity:.35}
+.cart-step span{min-width:22px;text-align:center;font-weight:800;font-variant-numeric:tabular-nums}
+.cart-empty{margin:4px 0 8px;color:var(--muted);text-align:center;padding:24px 8px}
+.cart-total{display:flex;flex-wrap:wrap;align-items:baseline;justify-content:space-between;gap:4px 12px;margin:14px 6px 4px;font-size:1.05rem}
+.cart-total:empty{display:none}
+.cart-total b{font-size:1.4rem;font-variant-numeric:tabular-nums}
+.cart-total small{flex:1 1 100%;color:var(--muted);font-size:.85rem}
+.cart-f{display:block;margin:14px 0 0}
+.cart-f span{display:block;font-weight:600;font-size:.88rem;margin:0 0 6px 4px}
+.cart-f input,.cart-f textarea{width:100%;border:0;border-radius:14px;background:var(--surface);box-shadow:inset 0 0 0 1px var(--line);padding:12px 14px;font:1rem var(--body);color:var(--ink);resize:vertical}
+.cart-f input:focus,.cart-f textarea:focus{outline:none;box-shadow:inset 0 0 0 2px var(--teal)}
+.cart-foot{position:sticky;bottom:0;display:flex;flex-direction:column;align-items:stretch;gap:6px;padding:14px 18px max(16px,env(safe-area-inset-bottom,0px));background:var(--bg)}
+.cart-foot .btn-wa{min-height:52px;font-size:1rem;white-space:nowrap;padding:0 16px}
+.cart-foot .btn-wa.is-off{opacity:.45;pointer-events:none}
+.cart-clear{border:0;background:none;color:var(--muted);font:600 .9rem var(--body);padding:10px;cursor:pointer}
+.toast{position:fixed;left:50%;bottom:calc(max(16px,env(safe-area-inset-bottom,0px)) + 72px);transform:translateX(-50%);z-index:40;max-width:calc(100% - 32px);
+  padding:10px 16px;border-radius:999px;background:var(--ink);color:var(--surface);font-weight:600;font-size:.92rem;box-shadow:0 10px 26px -10px var(--shadow);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+@media print{.cart-fab,.toast{display:none!important}}
 </style>
 </head>
 <body>
@@ -427,9 +486,9 @@ footer a{color:var(--ink-2);text-decoration:none} footer a:hover{text-decoration
   <div class="wrap">
     <h2>¿Cómo pido el mío?</h2>
     <ol class="steps">
-      <li><div><b>Elige tu favorito</b><span>Toca “Pedir por WhatsApp” en el producto que te guste.</span></div></li>
-      <li><div><b>Mándanos el mensaje</b><span>Se abre WhatsApp con el nombre del producto ya escrito.</span></div></li>
-      <li><div><b>Coordinamos</b><span>Te confirmamos precio, color y entrega por el chat.</span></div></li>
+      <li><div><b>Arma tu pedido</b><span>Toca “Agregar” en los productos que te gusten. Puedes llevar varios.</span></div></li>
+      <li><div><b>Envíalo por WhatsApp</b><span>En “Ver pedido” toca “Hacer pedido por WhatsApp”: el mensaje ya va escrito con todo.</span></div></li>
+      <li><div><b>Coordinamos</b><span>Te confirmamos disponibilidad, color y entrega por el chat.</span></div></li>
     </ol>
     <p id="phoneLine" hidden>Nuestro WhatsApp: <span class="phone" id="phone"></span></p>
   </div>
@@ -445,12 +504,34 @@ footer a{color:var(--ink-2);text-decoration:none} footer a:hover{text-decoration
   </div>
 </section>
 
+<div class="toast" id="toast" role="status" hidden></div>
+
 <footer>
   <div class="wrap foot-in">
     <span>© 2026 <b class="foot-logo"><span class="m">Mini</span><span class="p">Prints</span></b> · Figuras y llaveros impresos en 3D</span>
     <a class="js-wa" data-msg="¡Hola MiniPrints! 👋" href="#">WhatsApp</a>
   </div>
 </footer>
+
+<button type="button" class="cart-fab" id="cartFab" hidden aria-haspopup="dialog"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5.5 8h13l-1 12h-11z"/><path d="M9 8V6.5a3 3 0 0 1 6 0V8"/><path d="M12 11.5v5M9.5 14h5"/></svg><span>Ver pedido</span><b id="cartN">0</b></button>
+
+<dialog class="cart" id="cart" aria-labelledby="cartT">
+  <div class="cart-head">
+    <h2 id="cartT">Tu pedido</h2>
+    <button class="cart-x" id="cartX" type="button" aria-label="Cerrar"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" aria-hidden="true"><path d="M6 6l12 12M18 6 6 18"/></svg></button>
+  </div>
+  <div class="cart-body">
+    <ul class="cart-list" id="cartList"></ul>
+    <p class="cart-empty" id="cartEmpty">Tu pedido está vacío. Toca <b>Agregar</b> en los productos que te gusten.</p>
+    <div class="cart-total" id="cartTotal"></div>
+    <label class="cart-f"><span>Tu nombre (opcional)</span><input id="cartName" maxlength="60" autocomplete="name"></label>
+    <label class="cart-f"><span>Notas (opcional)</span><textarea id="cartNote" maxlength="300" rows="2" placeholder="Colores, fecha de entrega, si es regalo…"></textarea></label>
+  </div>
+  <div class="cart-foot">
+    <a class="btn btn-wa" id="cartSend" target="_blank" rel="noopener" href="#"></a>
+    <button type="button" class="cart-clear" id="cartClear">Vaciar pedido</button>
+  </div>
+</dialog>
 
 <a class="fab js-wa" id="fab" data-msg="¡Hola MiniPrints! 👋 Quiero ver su catálogo." href="#" aria-label="Escríbenos por WhatsApp"></a>
 
@@ -474,7 +555,7 @@ footer a{color:var(--ink-2);text-decoration:none} footer a:hover{text-decoration
       <h2 class="pd-name" id="pdName"></h2>
       <p class="pd-desc" id="pdDesc"></p>
       <ul class="specs" id="pdSpecs"></ul>
-      <div class="pd-foot"><span class="price" id="pdPrice"></span><a class="btn btn-wa" id="pdWa" target="_blank" rel="noopener" href="#"></a></div>
+      <div class="pd-foot"><span class="price" id="pdPrice"></span><button type="button" class="btn btn-add" id="pdAdd"></button><a class="pd-ask" id="pdWa" target="_blank" rel="noopener" href="#"></a></div>
     </div>
   </div>
 </dialog>
@@ -494,6 +575,7 @@ let CATS = [];   // categorías de productos.json
 
 const waLink = msg => "https://wa.me/" + WHATSAPP + "?text=" + encodeURIComponent(msg);
 const WA_ICON = document.querySelector(".js-wa svg").outerHTML;
+const BAG_ICON = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5.5 8h13l-1 12h-11z"/><path d="M9 8V6.5a3 3 0 0 1 6 0V8"/><path d="M12 11.5v5M9.5 14h5"/></svg>';
 const fab = document.getElementById("fab");
 fab.innerHTML = WA_ICON;
 document.querySelectorAll(".js-wa").forEach(a => { a.href = waLink(a.dataset.msg); a.target = "_blank"; a.rel = "noopener"; });
@@ -566,7 +648,7 @@ function card(p){
       <ul class="specs">${p.specs.map(s=>`<li>${h(s)}</li>`).join("")}</ul>
       <div class="foot">
         <span class="price ${p.price ? "" : "ask"}">${priceHTML(p)}</span>
-        <a class="btn btn-wa" target="_blank" rel="noopener" href="${waLink(waMsg(p))}" aria-label="Pedir ${h(p.name)} por WhatsApp">${WA_ICON}<span class="wa-t">Pedir por WhatsApp</span></a>
+        <button type="button" class="btn btn-add" data-add="${p.id}" aria-label="Agregar ${h(p.name)} al pedido">${BAG_ICON}<span class="wa-t">Agregar al pedido</span><b class="add-n" hidden></b></button>
       </div>
     </div>`;
   const photo = el.querySelector(".photo");
@@ -743,6 +825,83 @@ if (document.fonts && document.fonts.ready) document.fonts.ready.then(() => plac
   }, {passive:true});
 })();
 
+/* ---------- pedido (carrito): se guarda solo en este dispositivo ---------- */
+const PEDIDO = "mp-pedido";
+let pedido = {};
+try { const g = JSON.parse(localStorage.getItem(PEDIDO) || "{}"); Object.keys(g).forEach(id => { const n = Math.min(99, parseInt(g[id], 10) || 0); if (byId[id] && n > 0) pedido[id] = n; }); } catch(e) {}
+const numPrecio = p => { const n = parseFloat(String(p.price || "").replace(/[^0-9.]/g, "")); return isFinite(n) && n > 0 ? n : 0; };
+const dinero = n => "$" + n.toLocaleString("es-MX", { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+const piezas = () => Object.values(pedido).reduce((a, b) => a + b, 0);
+function guardarPedido(){ try { localStorage.setItem(PEDIDO, JSON.stringify(pedido)); } catch(e) {} }
+function pintarAgregar(btn, id, grande){
+  const n = pedido[id] || 0, p = byId[id];
+  if (grande) { btn.innerHTML = BAG_ICON + (n ? `Agregar otro <small>(${n} en tu pedido)</small>` : "Agregar al pedido"); btn.dataset.add = id; return; }
+  const b = btn.querySelector(".add-n"); b.hidden = !n; b.textContent = n;
+  btn.classList.toggle("is-in", n > 0);
+  btn.setAttribute("aria-label", n ? `Agregar otro ${p.name} (llevas ${n})` : `Agregar ${p.name} al pedido`);
+}
+function pintarPedido(){
+  const n = piezas();
+  document.getElementById("cartN").textContent = n;
+  const cf = document.getElementById("cartFab"); cf.hidden = !n; cf.setAttribute("aria-label", `Ver pedido, ${n} pieza${n !== 1 ? "s" : ""}`);
+  fab.classList.toggle("is-hidden", n > 0);
+  grid.querySelectorAll("[data-add]").forEach(b => pintarAgregar(b, b.dataset.add));
+  if (dlg.open && current) pintarAgregar(document.getElementById("pdAdd"), current, true);
+  const ids = Object.keys(pedido);
+  document.getElementById("cartList").innerHTML = ids.map(id => { const p = byId[id], q = pedido[id], u = numPrecio(p);
+    return `<li class="cart-it">
+      <img src="${h(imgSrc(p.imgs[0]))}" alt="" width="1000" height="1000">
+      <div class="cart-it-t"><b>${h(p.name)}</b><span>${u ? dinero(u) + " c/u" : "Precio por confirmar"}</span></div>
+      <div class="cart-step" role="group" aria-label="Cantidad de ${h(p.name)}">
+        <button type="button" data-q="-1" data-id="${id}" aria-label="${q > 1 ? "Quitar uno" : "Quitar del pedido"}">${q > 1 ? "−" : '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" aria-hidden="true"><path d="M5 7h14M10 7V5h4v2M7 7l1 12h8l1-12"/></svg>'}</button>
+        <span>${q}</span>
+        <button type="button" data-q="1" data-id="${id}" aria-label="Agregar uno" ${q >= 99 ? "disabled" : ""}>+</button>
+      </div>
+    </li>`; }).join("");
+  document.getElementById("cartEmpty").hidden = ids.length > 0;
+  const total = ids.reduce((s, id) => s + numPrecio(byId[id]) * pedido[id], 0), sinPrecio = ids.filter(id => !numPrecio(byId[id])).length;
+  document.getElementById("cartTotal").innerHTML = ids.length ? `<span>${n} pieza${n !== 1 ? "s" : ""}</span><b>${dinero(total)}</b>${sinPrecio ? `<small>+ ${sinPrecio} producto${sinPrecio !== 1 ? "s" : ""} con precio por confirmar</small>` : ""}` : "";
+  const send = document.getElementById("cartSend");
+  send.innerHTML = WA_ICON + "Hacer pedido por WhatsApp";
+  send.toggleAttribute("aria-disabled", !ids.length); send.classList.toggle("is-off", !ids.length);
+  send.href = ids.length ? waLink(mensajePedido()) : "#";
+  document.getElementById("cartClear").hidden = !ids.length;
+}
+function mensajePedido(){
+  const ids = Object.keys(pedido);
+  const lineas = ids.map(id => { const p = byId[id], q = pedido[id], u = numPrecio(p);
+    return `• ${q} × ${fullName(p).replace(/, $/, "")}` + (u ? ` — ${dinero(u)} c/u = ${dinero(u * q)}` : " — precio por confirmar"); });
+  const total = ids.reduce((s, id) => s + numPrecio(byId[id]) * pedido[id], 0), sinPrecio = ids.some(id => !numPrecio(byId[id]));
+  const nombre = document.getElementById("cartName").value.trim(), nota = document.getElementById("cartNote").value.trim();
+  const m = ["¡Hola MiniPrints! 👋 Quiero hacer este pedido:", "", ...lineas, "",
+    `Total: ${dinero(total)}${sinPrecio ? " + productos por cotizar" : ""} (${piezas()} pieza${piezas() !== 1 ? "s" : ""})`];
+  if (nombre) m.push(`Nombre: ${nombre}`);
+  if (nota) m.push(`Notas: ${nota}`);
+  m.push("", "¿Me confirman disponibilidad y entrega? 🙌");
+  return m.join("\n");
+}
+function cambiar(id, d){
+  const n = Math.max(0, Math.min(99, (pedido[id] || 0) + d));
+  if (n) pedido[id] = n; else delete pedido[id];
+  guardarPedido(); pintarPedido();
+}
+let toastT = 0;
+function aviso(t){ const el = document.getElementById("toast"); el.textContent = t; el.hidden = false; clearTimeout(toastT); toastT = setTimeout(() => { el.hidden = true; }, 2200); }
+grid.addEventListener("click", e => { const b = e.target.closest("[data-add]"); if (!b) return; e.preventDefault(); cambiar(b.dataset.add, 1);
+  aviso(`${byId[b.dataset.add].name} agregado · ${piezas()} en tu pedido`);
+  if (canAnimate()) document.getElementById("cartFab").animate([{transform:"scale(1)"},{transform:"scale(1.12)"},{transform:"scale(1)"}], {duration:320}); });
+document.getElementById("pdAdd").addEventListener("click", e => { const id = e.currentTarget.dataset.add; cambiar(id, 1); aviso(`${byId[id].name} agregado · ${piezas()} en tu pedido`); });
+const cart = document.getElementById("cart");
+document.getElementById("cartFab").addEventListener("click", () => { pintarPedido(); if (typeof cart.showModal === "function") { cart.showModal(); root.classList.add("modal-open"); } });
+document.getElementById("cartX").addEventListener("click", () => cart.close());
+cart.addEventListener("close", () => root.classList.remove("modal-open"));
+cart.addEventListener("click", e => { if (e.target === cart) cart.close(); });
+document.getElementById("cartList").addEventListener("click", e => { const b = e.target.closest("[data-q]"); if (b) cambiar(b.dataset.id, Number(b.dataset.q)); });
+["cartName", "cartNote"].forEach(id => document.getElementById(id).addEventListener("input", () => { const s = document.getElementById("cartSend"); if (Object.keys(pedido).length) s.href = waLink(mensajePedido()); }));
+document.getElementById("cartSend").addEventListener("click", e => { if (!Object.keys(pedido).length) e.preventDefault(); });
+document.getElementById("cartClear").addEventListener("click", () => { if (!confirm("¿Vaciar tu pedido?")) return; pedido = {}; guardarPedido(); pintarPedido(); });
+addEventListener("storage", e => { if (e.key === PEDIDO) { try { pedido = JSON.parse(e.newValue || "{}"); } catch(_) { pedido = {}; } pintarPedido(); } });
+
 /* ---------- botón flotante ---------- */
 const hero = document.querySelector(".hero");
 const setFab = v => fab.classList.toggle("show", v);
@@ -803,7 +962,8 @@ function fill(p){
   price.innerHTML = priceHTML(p);
   price.className = "price" + (p.price ? "" : " ask");
   const wa = document.getElementById("pdWa");
-  wa.href = waLink(waMsg(p)); wa.innerHTML = WA_ICON + "Pedir por WhatsApp";
+  wa.href = waLink(waMsg(p)); wa.textContent = "¿Dudas? Pregunta por WhatsApp";
+  pintarAgregar(document.getElementById("pdAdd"), p.id, true);
 }
 
 function openProduct(id, {push = false, trigger = null} = {}){
@@ -884,6 +1044,7 @@ function syncHash(){
 }
 addEventListener("hashchange", syncHash);
 syncHash();
+pintarPedido();
 }
 </script>
 
