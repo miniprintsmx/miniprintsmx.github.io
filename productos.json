@@ -23,6 +23,18 @@
       "label": "Figuras",
       "title": "Figuras",
       "sub": "Para tu escritorio o tu repisa."
+    },
+    {
+      "id": "miniaturas",
+      "label": "Miniaturas",
+      "title": "Miniaturas",
+      "sub": "Chiquitas, articuladas y llenas de personalidad. Caben en la palma de tu mano."
+    },
+    {
+      "id": "penholders",
+      "label": "Penholders",
+      "title": "Penholders",
+      "sub": "Para tus plumas, plumones y colores: orden con estilo en tu escritorio."
     }
   ],
   "productos": [
@@ -328,7 +340,7 @@
       "id": "ptero",
       "name": "Ptero",
       "sub": "🦖 Ptero, el Dino Volador",
-      "cat": "figuras",
+      "cat": "miniaturas",
       "badge": "Miniatura",
       "c": "var(--teal)",
       "imgs": [
@@ -418,7 +430,7 @@
       "id": "platanin",
       "name": "Platanin",
       "sub": "🍌 El Plátano Feliz",
-      "cat": "figuras",
+      "cat": "miniaturas",
       "badge": "Miniatura",
       "c": "var(--teal)",
       "imgs": [
@@ -434,7 +446,7 @@
       "id": "zanahorio",
       "name": "Zanahorio",
       "sub": "🥕 El Copetón",
-      "cat": "figuras",
+      "cat": "miniaturas",
       "badge": "Miniatura",
       "c": "#f39a3c",
       "imgs": [
@@ -451,7 +463,7 @@
       "id": "pinzas",
       "name": "Pinzas",
       "sub": "🦞La Langostita",
-      "cat": "figuras",
+      "cat": "miniaturas",
       "badge": "Miniatura",
       "c": "var(--red)",
       "imgs": [
@@ -561,7 +573,7 @@
       "id": "organizador-3-en-1",
       "name": "Organizador 3 en 1",
       "sub": "Escritorio Zen",
-      "cat": "figuras",
+      "cat": "penholders",
       "badge": "Figuras",
       "c": "#cfd6e6",
       "imgs": [
@@ -578,7 +590,7 @@
       "id": "ondas-atardecer",
       "name": "Ondas Atardecer",
       "sub": "",
-      "cat": "figuras",
+      "cat": "penholders",
       "badge": "Figuras",
       "c": "var(--red)",
       "imgs": [
@@ -594,7 +606,7 @@
       "id": "sapo-gloton-portaplumas",
       "name": "Sapo Glotón Portaplumas",
       "sub": "",
-      "cat": "figuras",
+      "cat": "penholders",
       "badge": "Figuras",
       "c": "#4cc36a",
       "imgs": [
