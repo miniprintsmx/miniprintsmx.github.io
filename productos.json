@@ -39,6 +39,44 @@
   ],
   "productos": [
     {
+      "id": "oscurito",
+      "name": "DarthVader",
+      "sub": "Villano de bolsillo",
+      "cat": "figuras",
+      "badge": "Starwars",
+      "c": "var(--red)",
+      "imgs": [
+        "oscurito-1",
+        "oscurito-2",
+        "oscurito-3"
+      ],
+      "desc": "Viene a conquistar tu escritorio con su sable rojo, su capa y su panel de botones de colores ⚔️ Da miedo… pero cabe en tu mano. Aquí tenemos galletas 🍪",
+      "specs": [
+        "Figura",
+        "Articulada"
+      ],
+      "price": "$160.00"
+    },
+    {
+      "id": "cuernos",
+      "name": "DarthMaul",
+      "sub": "Villano de bolsillo",
+      "cat": "figuras",
+      "badge": "Starwars",
+      "c": "var(--red)",
+      "imgs": [
+        "cuernos-3",
+        "cuernos-1",
+        "cuernos-2"
+      ],
+      "desc": "Tatuajes de guerrero, cuernos afilados y un sable rojo de doble filo ⚔️ Viene a imponer respeto en tu repisa… aunque sea mini 🤏",
+      "specs": [
+        "Figura",
+        "Articulada"
+      ],
+      "price": "$160.00"
+    },
+    {
       "id": "turbo",
       "name": "Turbo",
       "sub": "el Monstruito Turquesa",
@@ -102,6 +140,41 @@
       "was": "$135.00"
     },
     {
+      "id": "spiderman",
+      "name": "Spiderman",
+      "sub": "",
+      "cat": "figuras",
+      "badge": "Figuras",
+      "c": "var(--red)",
+      "imgs": [
+        "spiderman-1"
+      ],
+      "desc": "Cuelga de cabeza desde su telaraña y te mira con esos ojotes blancos como diciendo “todo bajo control” 😎 Rojo, azul y listo para salvar tu escritorio, tu repisa o tu cuarto. El vecino más amigable que vas a tener 🕸️",
+      "specs": [
+        "Impreso en 3D"
+      ],
+      "price": "$250.00"
+    },
+    {
+      "id": "pokeball-charmander",
+      "name": "Pokéball - Charmander",
+      "sub": "Charmander dormilon",
+      "cat": "figuras",
+      "badge": "Pokeball",
+      "c": "#f39a3c",
+      "imgs": [
+        "pokeball-charmander-1",
+        "pokeball-charmander-2",
+        "pokeball-charmander-3"
+      ],
+      "desc": "Abre la pokéball y sorpresa: adentro está un charmander tomando su siestita, con su colita de fuego encendida 😴 Viene con su base para lucirlo en tu escritorio o repisa. El regalo perfecto para los que crecieron coleccionando monstruitos de bolsillo ✨",
+      "specs": [
+        "Pokémon",
+        "Coleccionable"
+      ],
+      "price": "$220.00"
+    },
+    {
       "id": "muuchi",
       "name": "Vaquita",
       "sub": "",
@@ -155,41 +228,6 @@
         "Impreso en 3D"
       ],
       "price": "$55.00"
-    },
-    {
-      "id": "spiderman",
-      "name": "Spiderman",
-      "sub": "",
-      "cat": "figuras",
-      "badge": "Figuras",
-      "c": "var(--red)",
-      "imgs": [
-        "spiderman-1"
-      ],
-      "desc": "Cuelga de cabeza desde su telaraña y te mira con esos ojotes blancos como diciendo “todo bajo control” 😎 Rojo, azul y listo para salvar tu escritorio, tu repisa o tu cuarto. El vecino más amigable que vas a tener 🕸️",
-      "specs": [
-        "Impreso en 3D"
-      ],
-      "price": "$250.00"
-    },
-    {
-      "id": "tricerito",
-      "name": "Tricerito",
-      "sub": "el Dino Llavero",
-      "cat": "llaveros",
-      "badge": "Llavero",
-      "c": "#f39a3c",
-      "imgs": [
-        "tricerito-1",
-        "tricerito-2"
-      ],
-      "desc": "Tres cuernitos, ojos de botón y una sonrisa que derrite hasta a un meteorito ☄️ Su cuerpo flexible se mueve como si estuviera vivo.",
-      "specs": [
-        "Impreso en 3D",
-        "Flexible",
-        "Con argolla"
-      ],
-      "price": ""
     },
     {
       "id": "cuellito",
@@ -247,42 +285,23 @@
       "price": ""
     },
     {
-      "id": "oscurito",
-      "name": "DarthVader",
-      "sub": "Villano de bolsillo",
-      "cat": "figuras",
-      "badge": "Starwars",
-      "c": "var(--red)",
+      "id": "tricerito",
+      "name": "Tricerito",
+      "sub": "el Dino Llavero",
+      "cat": "llaveros",
+      "badge": "Llavero",
+      "c": "#f39a3c",
       "imgs": [
-        "oscurito-1",
-        "oscurito-2",
-        "oscurito-3"
+        "tricerito-1",
+        "tricerito-2"
       ],
-      "desc": "Viene a conquistar tu escritorio con su sable rojo, su capa y su panel de botones de colores ⚔️ Da miedo… pero cabe en tu mano. Aquí tenemos galletas 🍪",
+      "desc": "Tres cuernitos, ojos de botón y una sonrisa que derrite hasta a un meteorito ☄️ Su cuerpo flexible se mueve como si estuviera vivo.",
       "specs": [
-        "Figura",
-        "Articulada"
+        "Impreso en 3D",
+        "Flexible",
+        "Con argolla"
       ],
-      "price": "$160.00"
-    },
-    {
-      "id": "cuernos",
-      "name": "DarthMaul",
-      "sub": "Villano de bolsillo",
-      "cat": "figuras",
-      "badge": "Starwars",
-      "c": "var(--red)",
-      "imgs": [
-        "cuernos-3",
-        "cuernos-1",
-        "cuernos-2"
-      ],
-      "desc": "Tatuajes de guerrero, cuernos afilados y un sable rojo de doble filo ⚔️ Viene a imponer respeto en tu repisa… aunque sea mini 🤏",
-      "specs": [
-        "Figura",
-        "Articulada"
-      ],
-      "price": "$160.00"
+      "price": ""
     },
     {
       "id": "gengar",
@@ -354,25 +373,6 @@
         "Articulada"
       ],
       "price": "$15.00"
-    },
-    {
-      "id": "pokeball-charmander",
-      "name": "Pokéball - Charmander",
-      "sub": "Charmander dormilon",
-      "cat": "figuras",
-      "badge": "Pokeball",
-      "c": "#f39a3c",
-      "imgs": [
-        "pokeball-charmander-1",
-        "pokeball-charmander-2",
-        "pokeball-charmander-3"
-      ],
-      "desc": "Abre la pokéball y sorpresa: adentro está un charmander tomando su siestita, con su colita de fuego encendida 😴 Viene con su base para lucirlo en tu escritorio o repisa. El regalo perfecto para los que crecieron coleccionando monstruitos de bolsillo ✨",
-      "specs": [
-        "Pokémon",
-        "Coleccionable"
-      ],
-      "price": "$220.00"
     },
     {
       "id": "stego",
