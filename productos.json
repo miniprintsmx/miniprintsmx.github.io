@@ -348,7 +348,7 @@
         "ptero-1",
         "ptero-2"
       ],
-      "desc": "Azul cielo, con su cresta en la cabeza, ojitos redondos y una sonrisita que conquista 🩵 Su cuerpo por segmentos se mueve como si fuera a despegar en cualquier momento. El más aventurero de la familia jurásica ☁️",
+      "desc": "Azul cielo, con su cresta en la cabeza, ojitos redondos y una sonrisita que conquista 🩵 Su cuerpo por segmentos se mueve como si fuera a despegar en cualquier momento. El más aventurero de la familia jurásica ☁️\n\n📏 3.51cm.",
       "specs": [
         "Minis",
         "Articulada"
@@ -436,7 +436,7 @@
       "imgs": [
         "platanin-1"
       ],
-      "desc": "Un platanito sonriente con su cabito café y bracitos listos para un abrazo 🤗 Está hecho por segmentos apilados, así que puedes girarlo y ponerlo en mil poses. Una dosis de buen humor para tu escritorio 😄",
+      "desc": "Un platanito sonriente con su cabito café y bracitos listos para un abrazo 🤗 Está hecho por segmentos apilados, así que puedes girarlo y ponerlo en mil poses. Una dosis de buen humor para tu escritorio 😄\n\n📏 3.51cm.",
       "specs": [
         "Articulada"
       ],
@@ -452,7 +452,7 @@
       "imgs": [
         "zanahorio-1"
       ],
-      "desc": "Una zanahoria con copete verde que parece recién salida de la peluquería 💇 Sonrisita, bracitos abiertos y segmentos apilados para girarlo como quieras. La única verdura que nadie va a dejar en el plato 😄",
+      "desc": "Una zanahoria con copete verde que parece recién salida de la peluquería 💇 Sonrisita, bracitos abiertos y segmentos apilados para girarlo como quieras. La única verdura que nadie va a dejar en el plato 😄\n\n📏 3.51cm.",
       "specs": [
         "Miniatura",
         "Articulada"
@@ -471,12 +471,30 @@
         "pinzas-2",
         "pinzas-3"
       ],
-      "desc": "Roja como tomate, con ojotes de sorpresa y dos tenazas listas para saludar 👋 Su cola va por segmentos, así que se mueve y menea en tus manos. Prometemos que no pellizca 😆",
+      "desc": "Roja como tomate, con ojotes de sorpresa y dos tenazas listas para saludar 👋 Su cola va por segmentos, así que se mueve y menea en tus manos. Prometemos que no pellizca 😆\n\n📏 3.51cm.",
       "specs": [
         "Miniatura",
         "Articulada"
       ],
       "price": "$20.00"
+    },
+    {
+      "id": "mini-darth-maul",
+      "name": "Mini Darth Maul",
+      "sub": "",
+      "cat": "miniaturas",
+      "badge": "Miniatura",
+      "c": "var(--red)",
+      "imgs": [
+        "mini-darth-maul-1",
+        "mini-darth-maul-2",
+        "mini-darth-maul-3"
+      ],
+      "desc": "¡El villano más rudo de la galaxia, ahora en versión miniatura! 🌌 Con su cara roja y negra, sus cuernitos blancos y su túnica negra, se ve bravo pero bien coleccionable 🔥 Perfecto para tu escritorio o tu repisa.\n\n📏 3.51cm.",
+      "specs": [
+        "Miniatura"
+      ],
+      "price": ""
     },
     {
       "id": "pokeball-snorlax",
