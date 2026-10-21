@@ -486,15 +486,16 @@
       "badge": "Miniatura",
       "c": "var(--red)",
       "imgs": [
-        "mini-darth-maul-1",
         "mini-darth-maul-2",
-        "mini-darth-maul-3"
+        "mini-darth-maul-3",
+        "mini-darth-maul-1"
       ],
       "desc": "¡El villano más rudo de la galaxia, ahora en versión miniatura! 🌌 Con su cara roja y negra, sus cuernitos blancos y su túnica negra, se ve bravo pero bien coleccionable 🔥 Perfecto para tu escritorio o tu repisa.\n\n📏 3.51cm.",
       "specs": [
-        "Miniatura"
+        "Miniatura",
+        "Articulada"
       ],
-      "price": ""
+      "price": "$25.00"
     },
     {
       "id": "pokeball-snorlax",
