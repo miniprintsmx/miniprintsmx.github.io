@@ -123,6 +123,18 @@ dialog.ed::backdrop{background:var(--scrim)}
 .ph-add{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:6px;aspect-ratio:1;border-radius:16px;border:2px dashed var(--line);color:var(--muted);cursor:pointer;font-weight:600;font-size:.85rem;text-align:center}
 .ph-add svg{width:24px;height:24px}
 .ph-add input{position:absolute;width:1px;height:1px;opacity:0}
+/* Variantes */
+.vars{display:flex;flex-direction:column;gap:10px}
+.var{background:var(--surface);border-radius:18px;padding:14px;box-shadow:0 2px 14px rgba(29,26,46,.05)}
+.var-h{display:flex;align-items:center;justify-content:space-between;gap:8px;font-weight:700}
+.var-h .btn-danger{min-height:36px;padding:0 6px;font-size:.9rem}
+.var .in{margin-top:8px}
+.var-l{display:block;font-size:.85rem;font-weight:600;color:var(--muted);margin:12px 0 6px}
+.var-ph{display:flex;flex-wrap:wrap;gap:8px}
+.var-ph button{position:relative;width:64px;height:64px;padding:0;border:0;border-radius:12px;overflow:hidden;background:var(--fill);cursor:pointer;opacity:.45;transition:opacity .15s,box-shadow .15s}
+.var-ph button img{width:100%;height:100%;object-fit:cover;display:block}
+.var-ph button[aria-pressed="true"]{opacity:1;box-shadow:0 0 0 3px var(--bg),0 0 0 5px var(--ink)}
+.var-ph button[aria-pressed="true"]::after{content:"✓";position:absolute;right:4px;top:4px;width:20px;height:20px;border-radius:50%;background:var(--ink);color:var(--surface);font-size:.75rem;font-weight:800;display:grid;place-items:center}
 .ed-foot{display:flex;gap:10px;justify-content:space-between;align-items:center;margin-top:24px;flex-wrap:wrap}
 .ed-foot .btn-ink{flex:1 1 200px}
 
@@ -230,6 +242,11 @@ dialog.ed::backdrop{background:var(--scrim)}
       <span class="f" style="display:block;font-weight:600;font-size:.9rem;margin:18px 0 8px" id="e-ph-l">Fotos * <span class="hint" style="display:inline">· la primera es la principal</span></span>
       <div class="photos" id="e-photos" role="group" aria-labelledby="e-ph-l"></div>
       <p class="hint">Se recortan cuadradas (1000 × 1000) desde el centro. Usa fotos con el producto centrado.</p>
+
+      <span class="f" style="display:block;font-weight:600;font-size:.9rem;margin:18px 0 4px">Variantes <span class="hint" style="display:inline">· opcional</span></span>
+      <p class="hint" style="margin:0 0 10px">Úsalas cuando el mismo modelo viene en versiones (otra cola, otro color…). El cliente elige una y el pedido dice cuál. Primero sube todas las fotos arriba y luego marca cuáles son de cada variante.</p>
+      <div class="vars" id="e-vars"></div>
+      <button class="btn btn-soft" type="button" id="e-var-add" style="margin-top:10px;width:100%">Agregar variante</button>
 
       <label class="f" for="e-desc">Descripción</label>
       <textarea class="in" id="e-desc" maxlength="400" placeholder="Qué es, cómo es, para qué sirve…"></textarea>
@@ -350,7 +367,7 @@ function pintarLista() {
   el.innerHTML = ps.map((p, i) => `<div class="row">
       <button class="row-main" type="button" data-a="edit" data-i="${i}" aria-label="Editar ${esc(p.name)}">
         <img class="thumb" src="${esc(fotoUrl(p.imgs[0]))}" alt="">
-        <span class="row-t"><b>${esc(p.name)}${viejos.has(p.id) ? "" : '<span class="tag-new">NUEVO</span>'}</b><span>${esc(catLabel(p.cat))} · ${esc(p.price || "Precio por WhatsApp")}</span></span>
+        <span class="row-t"><b>${esc(p.name)}${viejos.has(p.id) ? "" : '<span class="tag-new">NUEVO</span>'}</b><span>${esc(catLabel(p.cat))} · ${esc(p.price || "Precio por WhatsApp")}${(p.variantes || []).length ? ` · ${p.variantes.length} variantes` : ""}</span></span>
       </button>
       <div class="row-acts">
         <button class="icon-btn" type="button" data-a="up" data-i="${i}" aria-label="Subir ${esc(p.name)}" ${i ? "" : "disabled"}>${ICO.up}</button>
@@ -369,7 +386,7 @@ $("lista").addEventListener("click", e => {
 $("nuevo").addEventListener("click", () => abrirEditor(-1));
 
 /* ---------- editor ---------- */
-let edIdx = -1, edFotos = [], edColor = COLORES[0][0];
+let edIdx = -1, edFotos = [], edColor = COLORES[0][0], edVars = [];
 const slug = t => String(t || "").normalize("NFD").replace(/[̀-ͯ]/g, "").toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/^-+|-+$/g, "").slice(0, 40) || "producto";
 const aNumero = t => { const n = parseFloat(String(t || "").replace(/[^0-9.]/g, "")); return isFinite(n) ? n : ""; };
 const aPrecio = n => n === "" || n == null ? "" : "$" + Number(n).toLocaleString("en-US", { minimumFractionDigits: 2, maximumFractionDigits: 2 });
@@ -383,6 +400,7 @@ function abrirEditor(i) {
   $("e-cat").value = p.cat || "";
   $("e-badge").value = p.badge || ""; $("e-badge").placeholder = catLabel($("e-cat").value);
   edColor = p.c || COLORES[0][0]; pintarColores();
+  edVars = (p.variantes || []).map(v => ({ id: v.id, nombre: v.nombre || "", nota: v.nota || "", imgs: [...(v.imgs || [])] }));
   edFotos = [...(p.imgs || [])]; pintarFotos();
   $("e-desc").value = p.desc || ""; $("e-specs").value = (p.specs || []).join(", ");
   $("e-price").value = aNumero(p.price); $("e-was").value = aNumero(p.was);
@@ -405,7 +423,37 @@ function pintarFotos() {
         <button type="button" data-f="der" data-i="${i}" aria-label="Mover foto ${i + 1} después" ${i < edFotos.length - 1 ? "" : "disabled"}>${ICO.right}</button>
       </div>
     </div>`).join("") + `<label class="ph-add">${ICO.plus}Agregar fotos<input type="file" id="e-files" accept="image/*" multiple></label>`;
+  pintarVars();
 }
+function pintarVars() {
+  edVars.forEach(v => { v.imgs = edFotos.filter(n => v.imgs.includes(n)); });   // mismo orden que arriba
+  $("e-vars").innerHTML = edVars.map((v, i) => `<div class="var">
+      <div class="var-h"><span>Variante ${i + 1}</span><button class="btn btn-danger" type="button" data-v="quitar" data-i="${i}">Quitar</button></div>
+      <input class="in" data-v="nombre" data-i="${i}" maxlength="40" value="${esc(v.nombre)}" placeholder="Nombre. Ej: 🔗 Cola Cadenita" aria-label="Nombre de la variante ${i + 1}">
+      <input class="in" data-v="nota" data-i="${i}" maxlength="80" value="${esc(v.nota)}" placeholder="Detalle (opcional). Ej: cola recta de eslabones" aria-label="Detalle de la variante ${i + 1}">
+      <span class="var-l">Toca sus fotos</span>
+      <div class="var-ph">${edFotos.length ? edFotos.map((n, j) => `<button type="button" data-v="foto" data-i="${i}" data-n="${esc(n)}" aria-pressed="${v.imgs.includes(n)}" aria-label="Foto ${j + 1}"><img src="${esc(fotoUrl(n))}" alt=""></button>`).join("") : '<span class="hint" style="margin:0">Primero agrega fotos arriba.</span>'}</div>
+    </div>`).join("");
+  $("e-var-add").textContent = edVars.length ? "Agregar otra variante" : "Agregar variantes";
+}
+$("e-var-add").addEventListener("click", () => {
+  const n = edVars.length ? 1 : 2;   // una sola variante no sirve: la primera vez se crean dos
+  for (let k = 0; k < n; k++) edVars.push({ id: "", nombre: "", nota: "", imgs: [] });
+  pintarVars();
+  const ins = $("e-vars").querySelectorAll('[data-v="nombre"]'); ins[ins.length - n].focus();
+});
+$("e-vars").addEventListener("input", e => { const t = e.target; if (t.dataset.v === "nombre" || t.dataset.v === "nota") edVars[Number(t.dataset.i)][t.dataset.v] = t.value; });
+$("e-vars").addEventListener("click", e => {
+  const b = e.target.closest("button[data-v]"); if (!b) return;
+  const v = edVars[Number(b.dataset.i)];
+  if (b.dataset.v === "quitar") {
+    if (edVars.length === 2 && !confirm("Con una sola variante no hay nada que elegir, así que se quitan las dos. ¿Continuar?")) return;
+    edVars.splice(Number(b.dataset.i), 1); if (edVars.length < 2) edVars = [];
+  } else if (b.dataset.v === "foto") {
+    const n = b.dataset.n; v.imgs = v.imgs.includes(n) ? v.imgs.filter(x => x !== n) : [...v.imgs, n];
+  }
+  pintarVars();
+});
 $("e-photos").addEventListener("click", e => {
   const b = e.target.closest("[data-f]"); if (!b) return;
   const i = Number(b.dataset.i);
@@ -461,10 +509,17 @@ $("f-ed").addEventListener("submit", e => {
     specs: $("e-specs").value.split(",").map(s => s.trim()).filter(Boolean).slice(0, 6), price: aPrecio(price)
   };
   if (price !== "" && was !== "" && was > price) p.was = aPrecio(was);
-  // Variantes (ej. Zarigüeya): se conservan; si quitas fotos, se quitan también de su variante.
-  if (prev && Array.isArray(prev.variantes)) {
-    const vs = prev.variantes.map(v => ({ ...v, imgs: (v.imgs || []).filter(n => edFotos.includes(n)) })).filter(v => v.imgs.length);
-    if (vs.length > 1) p.variantes = vs;
+  if (edVars.length) {
+    const malo = edVars.findIndex(v => !v.nombre.trim()), sinFoto = edVars.findIndex(v => !v.imgs.length);
+    if (malo >= 0) { $("ed-err").textContent = `Ponle nombre a la variante ${malo + 1}.`; return $("e-vars").querySelectorAll('[data-v="nombre"]')[malo].focus(); }
+    if (sinFoto >= 0) { $("ed-err").textContent = `Marca al menos una foto para "${edVars[sinFoto].nombre.trim()}".`; return; }
+    const ids = new Set();
+    p.variantes = edVars.map(v => {
+      let vid = v.id || slug(v.nombre).slice(0, 30) || "v", b = vid, k = 2;
+      while (ids.has(vid)) vid = `${b}-${k++}`;
+      ids.add(vid);
+      return { id: vid, nombre: v.nombre.trim(), nota: v.nota.trim(), imgs: [...v.imgs] };
+    });
   }
   if (prev) datos.productos[edIdx] = p; else datos.productos.push(p);
   $("ed").close(); pintarLista(); marcar();
