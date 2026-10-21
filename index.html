@@ -209,6 +209,12 @@ main{padding-block:28px 48px;scroll-margin-top:calc(env(safe-area-inset-top,0px)
 .pd-name{font-family:var(--display);font-size:clamp(1.9rem,6vw,2.5rem);line-height:1.02;margin:0;text-wrap:balance}
 .pd-name small{display:block;font-family:var(--body);font-weight:600;font-size:1.05rem;color:var(--muted);margin-top:6px}
 .pd-desc{margin:0;font-size:1.05rem;white-space:pre-line}
+.pd-vars{width:100%;display:flex;flex-direction:column;gap:8px}
+.pd-vars>b{font-size:.85rem;color:var(--muted);font-weight:700}
+.pd-vars .vs{display:flex;flex-wrap:wrap;gap:8px}
+.pd-vars button{border:0;border-radius:12px;padding:9px 14px;font:700 .95rem var(--body);background:var(--chip);color:var(--ink);cursor:pointer;text-align:left;transition:box-shadow .2s,background .2s}
+.pd-vars button small{display:block;font-weight:500;font-size:.78rem;color:var(--muted)}
+.pd-vars button[aria-checked="true"]{background:var(--surface);box-shadow:inset 0 0 0 2.5px var(--ink)}
 .pd-foot{width:100%;display:flex;flex-wrap:wrap;gap:12px;align-items:center;justify-content:space-between;padding-top:8px;border-top:1px dashed var(--line);margin-top:4px}
 .pd-foot .btn-wa{flex:1 1 220px}
 .pd.is-open .pd-info>*{animation:rise .5s var(--out) backwards}
@@ -555,6 +561,7 @@ footer a{color:var(--ink-2);text-decoration:none} footer a:hover{text-decoration
       <h2 class="pd-name" id="pdName"></h2>
       <p class="pd-desc" id="pdDesc"></p>
       <ul class="specs" id="pdSpecs"></ul>
+      <div class="pd-vars" id="pdVars" hidden><b id="pdVarsT">Elige tu variante</b><div class="vs" role="radiogroup" aria-labelledby="pdVarsT"></div></div>
       <div class="pd-foot"><span class="price" id="pdPrice"></span><button type="button" class="btn btn-add" id="pdAdd"></button><a class="pd-ask" id="pdWa" target="_blank" rel="noopener" href="#"></a></div>
     </div>
   </div>
@@ -591,7 +598,11 @@ fetch("productos.json", {cache: "no-cache"})
     PRODUCTS = (d.productos || []).filter(p => p && okId(p.id) && txt(p.name) && Array.isArray(p.imgs))
       .map(p => ({ id: p.id, name: txt(p.name), sub: txt(p.sub), cat: txt(p.cat), badge: txt(p.badge), c: okColor(p.c) ? p.c : "var(--lime)",
         imgs: p.imgs.filter(s => typeof s === "string" && /^[a-zA-Z0-9_-]{1,80}$/.test(s)), desc: txt(p.desc),
-        specs: Array.isArray(p.specs) ? p.specs.filter(x => typeof x === "string") : [], price: txt(p.price), was: txt(p.was) }))
+        specs: Array.isArray(p.specs) ? p.specs.filter(x => typeof x === "string") : [], price: txt(p.price), was: txt(p.was),
+        variantes: (Array.isArray(p.variantes) ? p.variantes : []).filter(v => v && okId(v.id) && txt(v.nombre) && Array.isArray(v.imgs))
+          .map(v => ({ id: v.id, nombre: txt(v.nombre), nota: txt(v.nota), imgs: v.imgs.filter(s => p.imgs.includes(s) && /^[a-zA-Z0-9_-]{1,80}$/.test(s)) }))
+          .filter(v => v.imgs.length) }))
+      .map(p => (p.variantes.length < 2 && (p.variantes = []), p))
       .filter(p => p.imgs.length);
     CATS = (d.categorias || []).filter(c => c && (okId(c.id) || c.id === "all") && txt(c.label)).map(c => ({ id: c.id, label: txt(c.label), title: txt(c.title), sub: txt(c.sub) }));
     if (!CATS.length || CATS[0].id !== "all") CATS.unshift({id:"all", label:"Todos", title:"Todo el catálogo", sub:""});
@@ -648,7 +659,7 @@ function card(p){
       <ul class="specs">${p.specs.map(s=>`<li>${h(s)}</li>`).join("")}</ul>
       <div class="foot">
         <span class="price ${p.price ? "" : "ask"}">${priceHTML(p)}</span>
-        <button type="button" class="btn btn-add" data-add="${p.id}" aria-label="Agregar ${h(p.name)} al pedido">${BAG_ICON}<span class="wa-t">Agregar al pedido</span><b class="add-n" hidden></b></button>
+        <button type="button" class="btn btn-add" data-add="${p.id}" aria-label="Agregar ${h(p.name)} al pedido">${BAG_ICON}<span class="wa-t">${p.variantes.length ? "Elegir variante" : "Agregar al pedido"}</span><b class="add-n" hidden></b></button>
       </div>
     </div>`;
   const photo = el.querySelector(".photo");
@@ -828,17 +839,31 @@ if (document.fonts && document.fonts.ready) document.fonts.ready.then(() => plac
 /* ---------- pedido (carrito): se guarda solo en este dispositivo ---------- */
 const PEDIDO = "mp-pedido";
 let pedido = {};
-try { const g = JSON.parse(localStorage.getItem(PEDIDO) || "{}"); Object.keys(g).forEach(id => { const n = Math.min(99, parseInt(g[id], 10) || 0); if (byId[id] && n > 0) pedido[id] = n; }); } catch(e) {}
+// La clave es el id del producto, o "id::variante" en productos con variantes.
+function partir(k){
+  const [id, vid] = String(k).split("::"), p = byId[id];
+  if (!p) return null;
+  const v = vid ? p.variantes.find(x => x.id === vid) : null;
+  if (p.variantes.length ? !v : vid) return null;
+  return { p, v, nombre: p.name + (v ? ` (${v.nombre})` : ""), img: v ? v.imgs[0] : p.imgs[0] };
+}
+function leerPedido(raw){
+  const r = {};
+  try { const g = JSON.parse(raw || "{}"); Object.keys(g).forEach(k => { const n = Math.min(99, parseInt(g[k], 10) || 0); if (partir(k) && n > 0) r[k] = n; }); } catch(e) {}
+  return r;
+}
+try { pedido = leerPedido(localStorage.getItem(PEDIDO)); } catch(e) {}
 const numPrecio = p => { const n = parseFloat(String(p.price || "").replace(/[^0-9.]/g, "")); return isFinite(n) && n > 0 ? n : 0; };
 const dinero = n => "$" + n.toLocaleString("es-MX", { minimumFractionDigits: 2, maximumFractionDigits: 2 });
 const piezas = () => Object.values(pedido).reduce((a, b) => a + b, 0);
 function guardarPedido(){ try { localStorage.setItem(PEDIDO, JSON.stringify(pedido)); } catch(e) {} }
 function pintarAgregar(btn, id, grande){
-  const n = pedido[id] || 0, p = byId[id];
+  const p = byId[id] || partir(id).p;
+  const n = !grande && p.variantes.length ? p.variantes.reduce((s, v) => s + (pedido[id + "::" + v.id] || 0), 0) : pedido[id] || 0;
   if (grande) { btn.innerHTML = BAG_ICON + (n ? `Agregar otro <small>(${n} en tu pedido)</small>` : "Agregar al pedido"); btn.dataset.add = id; return; }
   const b = btn.querySelector(".add-n"); b.hidden = !n; b.textContent = n;
   btn.classList.toggle("is-in", n > 0);
-  btn.setAttribute("aria-label", n ? `Agregar otro ${p.name} (llevas ${n})` : `Agregar ${p.name} al pedido`);
+  btn.setAttribute("aria-label", p.variantes.length ? `Elegir variante de ${p.name}` + (n ? ` (llevas ${n})` : "") : n ? `Agregar otro ${p.name} (llevas ${n})` : `Agregar ${p.name} al pedido`);
 }
 function pintarPedido(){
   const n = piezas();
@@ -846,20 +871,20 @@ function pintarPedido(){
   const cf = document.getElementById("cartFab"); cf.hidden = !n; cf.setAttribute("aria-label", `Ver pedido, ${n} pieza${n !== 1 ? "s" : ""}`);
   fab.classList.toggle("is-hidden", n > 0);
   grid.querySelectorAll("[data-add]").forEach(b => pintarAgregar(b, b.dataset.add));
-  if (dlg.open && current) pintarAgregar(document.getElementById("pdAdd"), current, true);
+  if (dlg.open && current) pintarAgregar(document.getElementById("pdAdd"), claveActual(), true);
   const ids = Object.keys(pedido);
-  document.getElementById("cartList").innerHTML = ids.map(id => { const p = byId[id], q = pedido[id], u = numPrecio(p);
+  document.getElementById("cartList").innerHTML = ids.map(id => { const it = partir(id), p = it.p, q = pedido[id], u = numPrecio(p);
     return `<li class="cart-it">
-      <img src="${h(imgSrc(p.imgs[0]))}" alt="" width="1000" height="1000">
-      <div class="cart-it-t"><b>${h(p.name)}</b><span>${u ? dinero(u) + " c/u" : "Precio por confirmar"}</span></div>
-      <div class="cart-step" role="group" aria-label="Cantidad de ${h(p.name)}">
-        <button type="button" data-q="-1" data-id="${id}" aria-label="${q > 1 ? "Quitar uno" : "Quitar del pedido"}">${q > 1 ? "−" : '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" aria-hidden="true"><path d="M5 7h14M10 7V5h4v2M7 7l1 12h8l1-12"/></svg>'}</button>
+      <img src="${h(imgSrc(it.img))}" alt="" width="1000" height="1000">
+      <div class="cart-it-t"><b>${h(it.nombre)}</b><span>${u ? dinero(u) + " c/u" : "Precio por confirmar"}</span></div>
+      <div class="cart-step" role="group" aria-label="Cantidad de ${h(it.nombre)}">
+        <button type="button" data-q="-1" data-id="${h(id)}" aria-label="${q > 1 ? "Quitar uno" : "Quitar del pedido"}">${q > 1 ? "−" : '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" aria-hidden="true"><path d="M5 7h14M10 7V5h4v2M7 7l1 12h8l1-12"/></svg>'}</button>
         <span>${q}</span>
-        <button type="button" data-q="1" data-id="${id}" aria-label="Agregar uno" ${q >= 99 ? "disabled" : ""}>+</button>
+        <button type="button" data-q="1" data-id="${h(id)}" aria-label="Agregar uno" ${q >= 99 ? "disabled" : ""}>+</button>
       </div>
     </li>`; }).join("");
   document.getElementById("cartEmpty").hidden = ids.length > 0;
-  const total = ids.reduce((s, id) => s + numPrecio(byId[id]) * pedido[id], 0), sinPrecio = ids.filter(id => !numPrecio(byId[id])).length;
+  const total = ids.reduce((s, id) => s + numPrecio(partir(id).p) * pedido[id], 0), sinPrecio = ids.filter(id => !numPrecio(partir(id).p)).length;
   document.getElementById("cartTotal").innerHTML = ids.length ? `<span>${n} pieza${n !== 1 ? "s" : ""}</span><b>${dinero(total)}</b>${sinPrecio ? `<small>+ ${sinPrecio} producto${sinPrecio !== 1 ? "s" : ""} con precio por confirmar</small>` : ""}` : "";
   const send = document.getElementById("cartSend");
   send.innerHTML = WA_ICON + "Hacer pedido por WhatsApp";
@@ -869,9 +894,9 @@ function pintarPedido(){
 }
 function mensajePedido(){
   const ids = Object.keys(pedido);
-  const lineas = ids.map(id => { const p = byId[id], q = pedido[id], u = numPrecio(p);
-    return `• ${q} × ${fullName(p).replace(/, $/, "")}` + (u ? ` — ${dinero(u)} c/u = ${dinero(u * q)}` : " — precio por confirmar"); });
-  const total = ids.reduce((s, id) => s + numPrecio(byId[id]) * pedido[id], 0), sinPrecio = ids.some(id => !numPrecio(byId[id]));
+  const lineas = ids.map(id => { const it = partir(id), p = it.p, q = pedido[id], u = numPrecio(p);
+    return `• ${q} × ${fullName(p).replace(/, $/, "")}${it.v ? ` (${it.v.nombre})` : ""}` + (u ? ` — ${dinero(u)} c/u = ${dinero(u * q)}` : " — precio por confirmar"); });
+  const total = ids.reduce((s, id) => s + numPrecio(partir(id).p) * pedido[id], 0), sinPrecio = ids.some(id => !numPrecio(partir(id).p));
   const nombre = document.getElementById("cartName").value.trim(), nota = document.getElementById("cartNote").value.trim();
   const m = ["¡Hola MiniPrints! 👋 Quiero hacer este pedido:", "", ...lineas, "",
     `Total: ${dinero(total)}${sinPrecio ? " + productos por cotizar" : ""} (${piezas()} pieza${piezas() !== 1 ? "s" : ""})`];
@@ -887,10 +912,12 @@ function cambiar(id, d){
 }
 let toastT = 0;
 function aviso(t){ const el = document.getElementById("toast"); el.textContent = t; el.hidden = false; clearTimeout(toastT); toastT = setTimeout(() => { el.hidden = true; }, 2200); }
-grid.addEventListener("click", e => { const b = e.target.closest("[data-add]"); if (!b) return; e.preventDefault(); cambiar(b.dataset.add, 1);
+grid.addEventListener("click", e => { const b = e.target.closest("[data-add]"); if (!b) return; e.preventDefault();
+  if (byId[b.dataset.add].variantes.length) { openProduct(b.dataset.add, {push:true, trigger:b}); return; }
+  cambiar(b.dataset.add, 1);
   aviso(`${byId[b.dataset.add].name} agregado · ${piezas()} en tu pedido`);
   if (canAnimate()) document.getElementById("cartFab").animate([{transform:"scale(1)"},{transform:"scale(1.12)"},{transform:"scale(1)"}], {duration:320}); });
-document.getElementById("pdAdd").addEventListener("click", e => { const id = e.currentTarget.dataset.add; cambiar(id, 1); aviso(`${byId[id].name} agregado · ${piezas()} en tu pedido`); });
+document.getElementById("pdAdd").addEventListener("click", e => { const id = e.currentTarget.dataset.add; cambiar(id, 1); aviso(`${partir(id).nombre} agregado · ${piezas()} en tu pedido`); });
 const cart = document.getElementById("cart");
 document.getElementById("cartFab").addEventListener("click", () => { pintarPedido(); if (typeof cart.showModal === "function") { cart.showModal(); root.classList.add("modal-open"); } });
 document.getElementById("cartX").addEventListener("click", () => cart.close());
@@ -900,7 +927,7 @@ document.getElementById("cartList").addEventListener("click", e => { const b = e
 ["cartName", "cartNote"].forEach(id => document.getElementById(id).addEventListener("input", () => { const s = document.getElementById("cartSend"); if (Object.keys(pedido).length) s.href = waLink(mensajePedido()); }));
 document.getElementById("cartSend").addEventListener("click", e => { if (!Object.keys(pedido).length) e.preventDefault(); });
 document.getElementById("cartClear").addEventListener("click", () => { if (!confirm("¿Vaciar tu pedido?")) return; pedido = {}; guardarPedido(); pintarPedido(); });
-addEventListener("storage", e => { if (e.key === PEDIDO) { try { pedido = JSON.parse(e.newValue || "{}"); } catch(_) { pedido = {}; } pintarPedido(); } });
+addEventListener("storage", e => { if (e.key === PEDIDO) { pedido = leerPedido(e.newValue); pintarPedido(); } });
 
 /* ---------- botón flotante ---------- */
 const hero = document.querySelector(".hero");
@@ -912,7 +939,7 @@ else addEventListener("scroll", () => setFab(hero.getBoundingClientRect().bottom
 const dlg = document.getElementById("pd");
 const track = document.getElementById("pdTrack"), thumbs = document.getElementById("pdThumbs");
 const pdCount = document.getElementById("pdCount"), pdPrev = document.getElementById("pdPrev"), pdNext = document.getElementById("pdNext");
-let gIdx = 0, gN = 0, current = null, pushed = false, closing = false, closeTimer = 0, lastTrigger = null;
+let gIdx = 0, gN = 0, current = null, curVar = null, pushed = false, closing = false, closeTimer = 0, lastTrigger = null;
 
 function setIdx(i){
   gIdx = i;
@@ -944,15 +971,36 @@ dlg.addEventListener("keydown", e => {
   else if (e.key === "ArrowLeft") { e.preventDefault(); goSlide(gIdx - 1); }
 });
 
-function fill(p){
-  const n = p.imgs.length;
+const claveActual = () => current && curVar ? current + "::" + curVar.id : current;
+function galeria(p, fotos){
+  const n = fotos.length, alt = j => fullName(p) + (curVar ? `, ${curVar.nombre}` : "") + (n > 1 ? ` — foto ${j + 1} de ${n}` : "");
   gN = n; gIdx = 0;
   track.setAttribute("aria-label", `Fotos de ${p.name}`);
-  track.innerHTML = p.imgs.map((s, j) => `<div class="pd-slide" role="group" aria-roledescription="foto" aria-label="${j+1} de ${n}"><img src="${h(imgSrc(s))}" alt="${h(altFor(p,j))}" width="1000" height="1000" decoding="async"></div>`).join("");
-  [...track.children].forEach((sl, j) => placeholder(sl, p.imgs[j]));
+  track.innerHTML = fotos.map((s, j) => `<div class="pd-slide" role="group" aria-roledescription="foto" aria-label="${j+1} de ${n}"><img src="${h(imgSrc(s))}" alt="${h(alt(j))}" width="1000" height="1000" decoding="async"></div>`).join("");
+  [...track.children].forEach((sl, j) => placeholder(sl, fotos[j]));
   track.querySelectorAll("img").forEach(whenLoaded);
-  thumbs.innerHTML = n > 1 ? p.imgs.map((s, j) => `<button type="button" aria-label="Ver foto ${j+1} de ${n}" aria-current="${j===0}"><img src="${h(imgSrc(s))}" alt="" width="1000" height="1000" decoding="async"></button>`).join("") : "";
+  thumbs.innerHTML = n > 1 ? fotos.map((s, j) => `<button type="button" aria-label="Ver foto ${j+1} de ${n}" aria-current="${j===0}"><img src="${h(imgSrc(s))}" alt="" width="1000" height="1000" decoding="async"></button>`).join("") : "";
   thumbs.hidden = pdPrev.hidden = pdNext.hidden = pdCount.hidden = n < 2;
+  track.scrollLeft = 0; setIdx(0);
+}
+const pdVars = document.getElementById("pdVars");
+function elegirVariante(p, v){
+  curVar = v;
+  pdVars.querySelectorAll("button").forEach(b => { const on = b.dataset.v === (v && v.id); b.setAttribute("aria-checked", on); b.tabIndex = on ? 0 : -1; });
+  galeria(p, v ? v.imgs : p.imgs);
+  pintarAgregar(document.getElementById("pdAdd"), claveActual(), true);
+}
+pdVars.addEventListener("click", e => { const b = e.target.closest("button"); const p = byId[current]; if (b && p) elegirVariante(p, p.variantes.find(v => v.id === b.dataset.v)); });
+pdVars.addEventListener("keydown", e => {
+  const bs = [...pdVars.querySelectorAll("button")], i = bs.indexOf(document.activeElement), d = e.key === "ArrowRight" || e.key === "ArrowDown" ? 1 : e.key === "ArrowLeft" || e.key === "ArrowUp" ? -1 : 0;
+  if (i < 0 || !d) return;
+  e.preventDefault(); e.stopPropagation(); const b = bs[(i + d + bs.length) % bs.length]; b.focus(); b.click();
+});
+function fill(p){
+  curVar = p.variantes[0] || null;
+  pdVars.hidden = !p.variantes.length;
+  pdVars.querySelector(".vs").innerHTML = p.variantes.map((v, j) => `<button type="button" role="radio" data-v="${v.id}" aria-checked="${j === 0}" tabindex="${j ? -1 : 0}">${h(v.nombre)}${v.nota ? `<small>${h(v.nota)}</small>` : ""}</button>`).join("");
+  galeria(p, curVar ? curVar.imgs : p.imgs);
   const badge = document.getElementById("pdBadge");
   badge.textContent = p.badge; badge.style.setProperty("--c", p.c);
   document.getElementById("pdName").innerHTML = `${h(p.name)}<small>${h(p.sub)}</small>`;
@@ -963,7 +1011,7 @@ function fill(p){
   price.className = "price" + (p.price ? "" : " ask");
   const wa = document.getElementById("pdWa");
   wa.href = waLink(waMsg(p)); wa.textContent = "¿Dudas? Pregunta por WhatsApp";
-  pintarAgregar(document.getElementById("pdAdd"), p.id, true);
+  pintarAgregar(document.getElementById("pdAdd"), curVar ? p.id + "::" + curVar.id : p.id, true);
 }
 
 function openProduct(id, {push = false, trigger = null} = {}){

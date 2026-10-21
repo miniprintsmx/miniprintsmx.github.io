@@ -656,6 +656,51 @@
         "Articulada"
       ],
       "price": "$45.00"
+    },
+    {
+      "id": "zarigueya-dramatica",
+      "name": "Zarigüeya Dramática",
+      "sub": "Llavero",
+      "cat": "llaveros",
+      "badge": "Llaveros",
+      "c": "#f7a8c4",
+      "imgs": [
+        "zarigueya-cadenita-1",
+        "zarigueya-cadenita-2",
+        "zarigueya-cadenita-3",
+        "zarigueya-rizadita-1",
+        "zarigueya-rizadita-2",
+        "zarigueya-rizadita-3"
+      ],
+      "desc": "Se hace la muerta con ojitos de X, la boca abierta y las patitas rosas al aire 🐾 ¡La reina del drama colgando de tus llaves! 😂\n\n📏 5 cm",
+      "specs": [
+        "Impreso en 3D",
+        "Articulada",
+        "Con argolla"
+      ],
+      "price": "",
+      "variantes": [
+        {
+          "id": "cadenita",
+          "nombre": "🔗 Cola Cadenita",
+          "nota": "Cola recta de eslabones que se mueven",
+          "imgs": [
+            "zarigueya-cadenita-1",
+            "zarigueya-cadenita-2",
+            "zarigueya-cadenita-3"
+          ]
+        },
+        {
+          "id": "rizadita",
+          "nombre": "🌀 Cola Rizadita",
+          "nota": "Cola enroscada en espiral",
+          "imgs": [
+            "zarigueya-rizadita-1",
+            "zarigueya-rizadita-2",
+            "zarigueya-rizadita-3"
+          ]
+        }
+      ]
     }
   ]
 }

@@ -461,6 +461,11 @@ $("f-ed").addEventListener("submit", e => {
     specs: $("e-specs").value.split(",").map(s => s.trim()).filter(Boolean).slice(0, 6), price: aPrecio(price)
   };
   if (price !== "" && was !== "" && was > price) p.was = aPrecio(was);
+  // Variantes (ej. Zarigüeya): se conservan; si quitas fotos, se quitan también de su variante.
+  if (prev && Array.isArray(prev.variantes)) {
+    const vs = prev.variantes.map(v => ({ ...v, imgs: (v.imgs || []).filter(n => edFotos.includes(n)) })).filter(v => v.imgs.length);
+    if (vs.length > 1) p.variantes = vs;
+  }
   if (prev) datos.productos[edIdx] = p; else datos.productos.push(p);
   $("ed").close(); pintarLista(); marcar();
   toast(prev ? "Cambios guardados. Toca Publicar para subirlos." : "Producto agregado. Toca Publicar para subirlo.");
