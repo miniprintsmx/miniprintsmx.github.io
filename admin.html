@@ -17,34 +17,41 @@
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bagel+Fat+One&family=Figtree:wght@400;600;800&display=swap">
 <style>
 /* Administración del catálogo: misma paleta y logo que el catálogo. Todo se guarda en este
-   repositorio de GitHub (productos.json e img/) con una llave que solo sirve para él. */
+   repositorio de GitHub (productos.json e img/) con una llave que solo sirve para él.
+   Pantallas: #/productos · #/producto/<id> · #/categorias · #/publicar (todo en este archivo). */
 :root{
   --bg:#f6f4fb; --surface:#ffffff; --ink:#1d1a2e; --muted:#5d5873; --line:#e2ddef; --fill:#ece8f8;
   --lime:#c8e62b; --teal:#2bbfb3; --lilac:#a99be8; --caramel:#c98a4b; --red:#e2412f;
   --wa:#1f9d55; --danger:#c62f20; --ok:#1f8a4c; --focus:#6a4fd6; --scrim:rgba(20,16,36,.55);
+  --warn-bg:#fff4d6; --warn-ink:#6b4a00;
   --display:"Bagel Fat One","Arial Black",system-ui,sans-serif;
   --body:"Figtree",system-ui,-apple-system,"Segoe UI",sans-serif;
+  --safe-b:env(safe-area-inset-bottom,0px);
 }
 @media (prefers-color-scheme: dark){:root{
   --bg:#15131f; --surface:#211e30; --ink:#f3f0fb; --muted:#aca6c4; --line:#353049; --fill:#2b2740;
-  --danger:#ff6b5c; --ok:#4fd28a; --focus:#c8e62b; --scrim:rgba(5,4,12,.72); color-scheme:dark }}
+  --danger:#ff6b5c; --ok:#4fd28a; --focus:#c8e62b; --scrim:rgba(5,4,12,.72); --warn-bg:#3a3017; --warn-ink:#f5d98a; color-scheme:dark }}
 *{box-sizing:border-box}
 [hidden]{display:none!important}
 html{-webkit-text-size-adjust:100%}
 body{margin:0;background:var(--bg);color:var(--ink);font-family:var(--body);font-size:16px;line-height:1.45;-webkit-font-smoothing:antialiased}
+body.con-barra{padding-bottom:calc(76px + var(--safe-b))}
 a{color:var(--teal)}
 button,input,select,textarea{font:inherit;color:inherit}
 :focus-visible{outline:3px solid var(--focus);outline-offset:2px}
 .wrap{max-width:760px;margin:0 auto;padding:0 max(16px,env(safe-area-inset-left,0px))}
+.sr-only{position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap;border:0}
 
+/* Barra superior */
 .top{position:sticky;top:0;z-index:20;background:color-mix(in srgb,var(--bg) 82%,transparent);-webkit-backdrop-filter:blur(18px);backdrop-filter:blur(18px);
   border-bottom:1px solid var(--line);padding-top:env(safe-area-inset-top,0px)}
 .top .wrap{height:56px;display:flex;align-items:center;justify-content:space-between;gap:12px}
 .logo{font-family:var(--display);font-size:1.3rem;line-height:1;white-space:nowrap}
 .logo .m{color:var(--teal)} .logo small{font-family:var(--body);font-weight:600;font-size:.8rem;color:var(--muted);margin-left:8px}
-@media (max-width:480px){.logo small{display:none}.top .btn-plain{padding:0 8px;font-size:.92rem}}
-.top-acts{display:flex;gap:6px;align-items:center}
+.top-acts{display:flex;gap:4px;align-items:center}
+.top-t{flex:1;min-width:0;text-align:center;margin:0;font-size:1.05rem;font-weight:800;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 
+/* Botones */
 .btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;min-height:44px;padding:0 18px;border:0;border-radius:999px;
   font-weight:600;cursor:pointer;text-decoration:none;-webkit-tap-highlight-color:transparent;white-space:nowrap}
 .btn:active{transform:scale(.97)}
@@ -54,116 +61,209 @@ button,input,select,textarea{font:inherit;color:inherit}
 .btn-soft{background:var(--fill);color:var(--ink)}
 .btn-plain{background:none;color:var(--ink);padding:0 12px}
 .btn-danger{background:none;color:var(--danger)}
+.btn-big{min-height:54px;font-size:1.05rem;width:100%}
 .btn svg{width:18px;height:18px;flex:none}
-.icon-btn{width:44px;height:44px;display:grid;place-items:center;border:0;border-radius:50%;background:var(--fill);color:var(--ink);cursor:pointer}
-.icon-btn svg{width:18px;height:18px}
-.icon-btn:disabled{opacity:.35;cursor:default}
+.icon-btn{width:44px;height:44px;flex:none;display:grid;place-items:center;border:0;border-radius:50%;background:var(--fill);color:var(--ink);cursor:pointer;text-decoration:none}
+.icon-btn svg{width:20px;height:20px}
+.icon-btn:disabled{opacity:.3;cursor:default}
 
-h1{font-size:clamp(1.7rem,5vw,2.3rem);font-weight:800;letter-spacing:-.02em;line-height:1.1;margin:28px 0 6px}
-.lead{color:var(--muted);margin:0 0 20px}
+h1{font-size:clamp(1.6rem,5vw,2.1rem);font-weight:800;letter-spacing:-.02em;line-height:1.1;margin:22px 0 4px}
+.lead{color:var(--muted);margin:0 0 16px}
 .card{background:var(--surface);border-radius:20px;box-shadow:0 2px 14px rgba(29,26,46,.05)}
-.pad{padding:20px}
+.pad{padding:18px}
+.hint{font-size:.85rem;color:var(--muted);margin:6px 0 0}
+.err{color:var(--danger);font-weight:600;font-size:.92rem;margin:8px 0 0} .err:empty{display:none}
+
+/* Formularios */
+label.f,.f{display:block;font-weight:700;font-size:.9rem;margin:16px 0 6px}
+.f:first-child{margin-top:0}
+.f small{font-weight:500;color:var(--muted)}
+.in{width:100%;min-width:0;min-height:46px;padding:10px 14px;border:0;border-radius:12px;background:var(--fill);font-size:16px}
+.in[aria-invalid="true"]{box-shadow:inset 0 0 0 2px var(--danger)}
+textarea.in{min-height:110px;resize:vertical}
+select.in{appearance:none;-webkit-appearance:none;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%238a84a3' stroke-width='2.4' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='m6 9 6 6 6-6'/%3E%3C/svg%3E");
+  background-repeat:no-repeat;background-position:right 12px center;background-size:18px;padding-right:40px}
+.check{display:flex;gap:10px;align-items:center;margin:14px 0 0;font-size:.95rem;color:var(--muted)}
+.check input{width:20px;height:20px;accent-color:var(--teal)}
+.grid2{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:0 12px}
+.money{position:relative} .money span{position:absolute;left:14px;top:50%;transform:translateY(-50%);color:var(--muted);pointer-events:none}
+.money .in{padding-left:28px}
+.count{float:right;font-weight:500;color:var(--muted);font-size:.8rem}
 
 /* Entrar */
 .login{max-width:520px;margin:0 auto}
 .steps{margin:0;padding-left:20px;color:var(--muted)} .steps li{margin:6px 0} .steps b{color:var(--ink)}
-label.f{display:block;font-weight:600;font-size:.9rem;margin:16px 0 6px}
-.in{width:100%;min-width:0;min-height:46px;padding:10px 14px;border:0;border-radius:12px;background:var(--fill);font-size:16px}
-textarea.in{min-height:96px;resize:vertical}
-select.in{appearance:none;-webkit-appearance:none;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%238a84a3' stroke-width='2.4' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='m7 10 5 5 5-5'/%3E%3C/svg%3E");
-  background-repeat:no-repeat;background-position:right 12px center;background-size:18px;padding-right:40px}
-.check{display:flex;gap:10px;align-items:center;margin:14px 0 0;font-size:.95rem;color:var(--muted)}
-.check input{width:20px;height:20px;accent-color:var(--teal)}
-.err{color:var(--danger);font-weight:600;margin:12px 0 0} .err:empty{display:none}
-.hint{font-size:.85rem;color:var(--muted);margin:6px 0 0}
+.fail{max-width:460px;margin:60px auto;text-align:center}
 
-/* Barra de publicar */
-.pub{position:sticky;top:calc(env(safe-area-inset-top,0px) + 57px);z-index:15;margin:16px 0;display:flex;align-items:center;justify-content:space-between;gap:12px;
-  padding:10px 10px 10px 18px;border-radius:999px;background:var(--ink);color:var(--surface);box-shadow:0 10px 28px -14px rgba(0,0,0,.5)}
-.pub b{font-variant-numeric:tabular-nums}
-.pub .btn-plain{color:var(--surface)}
-.pub.is-clean{background:var(--surface);color:var(--muted);box-shadow:0 2px 14px rgba(29,26,46,.05)}
-.pub-acts{display:flex;gap:4px}
+/* Barra inferior de pestañas */
+.tabbar{position:fixed;left:0;right:0;bottom:0;z-index:25;display:flex;justify-content:center;
+  background:color-mix(in srgb,var(--surface) 90%,transparent);-webkit-backdrop-filter:blur(18px);backdrop-filter:blur(18px);
+  border-top:1px solid var(--line);padding-bottom:var(--safe-b)}
+.tabbar a{flex:1;max-width:200px;display:flex;flex-direction:column;align-items:center;gap:2px;padding:9px 4px 8px;min-height:60px;
+  color:var(--muted);text-decoration:none;font-size:.75rem;font-weight:700;position:relative;-webkit-tap-highlight-color:transparent}
+.tabbar svg{width:24px;height:24px}
+.tabbar a[aria-current="page"]{color:var(--ink)}
+.tabbar a[aria-current="page"] svg{color:var(--teal)}
+.tabbar .bdg{position:absolute;top:4px;left:calc(50% + 6px);min-width:20px;height:20px;padding:0 6px;border-radius:999px;background:var(--red);color:#fff;
+  font-size:.72rem;line-height:20px;text-align:center}
 
-.tabs{display:flex;gap:8px;margin:8px 0 16px}
-.tab{min-height:44px;padding:0 18px;border-radius:999px;border:0;background:var(--surface);box-shadow:inset 0 0 0 1px var(--line);font-weight:600;cursor:pointer}
-.tab[aria-selected="true"]{background:var(--ink);color:var(--surface);box-shadow:none}
-
-/* Lista de productos */
+/* Productos */
+.tools{position:sticky;top:calc(env(safe-area-inset-top,0px) + 57px);z-index:15;background:var(--bg);padding:10px 0 8px;margin:0 -2px}
+.tools-row{display:flex;gap:8px;padding:0 2px}
+.search{flex:1;min-width:0;display:flex;align-items:center;gap:8px;min-height:46px;padding:0 14px;border-radius:999px;background:var(--surface);box-shadow:inset 0 0 0 1px var(--line);color:var(--muted)}
+.search svg{width:18px;height:18px;flex:none}
+.search input{flex:1;min-width:0;border:0;background:none;outline:none;font-size:16px;color:var(--ink);padding:10px 0}
+.search:focus-within{box-shadow:inset 0 0 0 2px var(--teal)}
+.chips{display:flex;gap:8px;overflow-x:auto;padding:10px 2px 2px;scrollbar-width:none}
+.chips::-webkit-scrollbar{display:none}
+.chip{flex:none;min-height:38px;padding:0 14px;border:0;border-radius:999px;background:var(--surface);box-shadow:inset 0 0 0 1px var(--line);font-weight:600;font-size:.88rem;cursor:pointer;color:var(--ink)}
+.chip[aria-pressed="true"]{background:var(--ink);color:var(--surface);box-shadow:none}
+.chip .n{opacity:.6;margin-left:4px;font-variant-numeric:tabular-nums}
+.banner{display:flex;align-items:center;justify-content:space-between;gap:10px;margin:6px 0 12px;padding:10px 10px 10px 16px;border-radius:16px;
+  background:var(--warn-bg);color:var(--warn-ink);font-weight:600;font-size:.92rem;text-decoration:none}
+.banner b{font-variant-numeric:tabular-nums}
+.banner span.go{flex:none;background:var(--ink);color:var(--surface);border-radius:999px;padding:8px 14px;font-size:.85rem}
 .list{display:flex;flex-direction:column}
-.row{display:flex;align-items:center;gap:12px;padding:12px 14px;border-top:1px solid var(--line)}
+.row{display:flex;align-items:center;gap:10px;padding:10px 10px 10px 12px;border-top:1px solid var(--line)}
 .row:first-child{border-top:0}
-.thumb{width:56px;height:56px;flex:none;border-radius:14px;object-fit:cover;background:var(--fill)}
-.row-main{flex:1;min-width:0;display:flex;align-items:center;gap:12px;padding:0;border:0;background:none;text-align:left;cursor:pointer;border-radius:14px}
+.thumb{width:58px;height:58px;flex:none;border-radius:14px;object-fit:cover;background:var(--fill)}
+.row-main{flex:1;min-width:0;display:flex;align-items:center;gap:12px;padding:0;border:0;background:none;text-align:left;cursor:pointer;border-radius:14px;color:inherit;text-decoration:none}
 .row-main:active{opacity:.6}
 .row-t{flex:1;min-width:0}
-.row-t b{display:block;font-size:1.02rem;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-.row-t span{display:block;font-size:.85rem;color:var(--muted);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-.row-acts{display:flex;gap:6px;flex:none}
-.row-acts .icon-btn{background:none;box-shadow:inset 0 0 0 1px var(--line)}
-.row .tag-new{display:inline-block;margin-left:6px;font-size:.7rem;font-weight:800;color:var(--ok);vertical-align:middle}
-.empty{padding:36px 20px;text-align:center;color:var(--muted)}
-.add-row{margin-top:14px;width:100%}
+.row-t b{display:block;font-size:1rem;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.row-t span{display:block;font-size:.84rem;color:var(--muted);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.row-acts{display:flex;gap:4px;flex:none}
+.row-acts .icon-btn{width:40px;height:40px;background:none;box-shadow:inset 0 0 0 1px var(--line)}
+.tag{display:inline-block;margin-left:6px;font-size:.66rem;font-weight:800;letter-spacing:.03em;vertical-align:middle;padding:2px 6px;border-radius:6px}
+.tag-new{background:color-mix(in srgb,var(--ok) 16%,transparent);color:var(--ok)}
+.tag-ed{background:var(--warn-bg);color:var(--warn-ink)}
+.empty{padding:32px 20px;text-align:center;color:var(--muted)}
+.list-foot{margin:14px 0 20px;text-align:center;color:var(--muted);font-size:.85rem}
 
-/* Editor (hoja) */
-dialog.ed{padding:0;border:0;background:var(--bg);color:var(--ink);width:calc(100% - 16px);max-width:640px;overflow-x:hidden;max-height:calc(100dvh - 16px);margin:auto auto 8px;border-radius:28px;overflow:auto}
-dialog.ed::backdrop{background:var(--scrim)}
-@media (min-width:700px){dialog.ed{margin:auto;max-height:calc(100dvh - 48px)}}
-.ed-head{position:sticky;top:0;z-index:2;display:flex;align-items:center;justify-content:space-between;gap:10px;padding:14px 14px 10px;background:var(--bg)}
-.ed-head h2{margin:0;font-size:1.15rem;font-weight:800;flex:1;text-align:center}
-.ed-body{padding:0 18px 22px}
-.grid2{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:0 12px}
-.money{position:relative} .money span{position:absolute;left:14px;top:50%;transform:translateY(-50%);color:var(--muted);pointer-events:none}
-.money .in{padding-left:28px}
-.colors{display:flex;flex-wrap:wrap;gap:10px}
-.sw{width:40px;height:40px;border-radius:50%;border:0;cursor:pointer;background:var(--c);box-shadow:inset 0 0 0 1px rgba(0,0,0,.12)}
-.sw[aria-pressed="true"]{box-shadow:0 0 0 3px var(--bg),0 0 0 5px var(--ink)}
-.photos{display:grid;grid-template-columns:repeat(auto-fill,minmax(104px,1fr));gap:10px}
-.ph{position:relative;aspect-ratio:1;border-radius:16px;overflow:hidden;background:var(--fill)}
+/* Editor de producto (pantalla completa) */
+.ed-top{position:sticky;top:0;z-index:20;background:color-mix(in srgb,var(--bg) 88%,transparent);-webkit-backdrop-filter:blur(18px);backdrop-filter:blur(18px);
+  border-bottom:1px solid var(--line);padding-top:env(safe-area-inset-top,0px)}
+.ed-top .wrap{height:56px;display:flex;align-items:center;gap:10px}
+.back{display:inline-flex;align-items:center;gap:2px;min-height:44px;padding:0 8px 0 0;border:0;background:none;color:var(--teal);font-weight:700;cursor:pointer;flex:none}
+.back svg{width:22px;height:22px}
+.sec{background:var(--surface);border-radius:20px;padding:16px;margin-top:14px;box-shadow:0 2px 14px rgba(29,26,46,.05)}
+.sec-h{display:flex;align-items:baseline;justify-content:space-between;gap:8px;margin:0 0 10px;font-size:1rem;font-weight:800}
+.sec-h small{font-weight:600;color:var(--muted);font-size:.82rem}
+#h-fotos{flex-direction:column;align-items:flex-start;gap:2px}
+details.sec summary{cursor:pointer;font-weight:800;list-style:none;display:flex;justify-content:space-between;align-items:center;min-height:28px}
+details.sec summary::-webkit-details-marker{display:none}
+details.sec summary::after{content:"";width:10px;height:10px;border-right:2.5px solid var(--muted);border-bottom:2.5px solid var(--muted);transform:rotate(45deg);margin-right:6px;transition:transform .2s}
+details.sec[open] summary::after{transform:rotate(-135deg)}
+details.sec summary small{font-weight:600;color:var(--muted);font-size:.82rem;margin-left:8px;flex:1}
+/* Vista previa de la tarjeta del catálogo */
+.prev{display:flex;gap:12px;align-items:center;margin-top:14px;padding:10px;border-radius:20px;background:var(--surface);box-shadow:0 2px 14px rgba(29,26,46,.05)}
+.prev-ph{position:relative;width:92px;height:92px;flex:none;border-radius:14px;overflow:hidden;background:var(--fill)}
+.prev-ph img{width:100%;height:100%;object-fit:cover;display:block}
+.prev-stk{position:absolute;left:5px;top:5px;display:flex;flex-direction:column;gap:3px;align-items:flex-start}
+.pill{display:inline-block;padding:2px 7px;border-radius:999px;font-size:.62rem;font-weight:800;white-space:nowrap}
+.pill-v{background:var(--ink);color:var(--surface)} .pill-off{background:var(--red);color:#fff}
+.prev-t{min-width:0;flex:1}
+.prev-k{display:flex;align-items:center;gap:6px;font-size:.75rem;font-weight:800;color:var(--muted)}
+.prev-k i{width:8px;height:8px;border-radius:50%;background:var(--c,var(--teal));flex:none}
+.prev-t b{display:block;font-size:1.05rem;line-height:1.2;margin:2px 0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.prev-p{font-weight:800} .prev-p s{color:var(--muted);font-weight:600;margin-right:4px}
+.prev-p.ask{font-weight:600;color:var(--muted);font-size:.9rem}
+.prev-l{font-size:.72rem;color:var(--muted);font-weight:700;letter-spacing:.04em;text-transform:uppercase;margin-bottom:2px}
+.colors{display:flex;flex-wrap:wrap;gap:8px}
+.sw{width:44px;height:44px;border-radius:50%;border:0;cursor:pointer;background:var(--c);box-shadow:inset 0 0 0 1px rgba(0,0,0,.12)}
+.sw[aria-checked="true"]{box-shadow:0 0 0 3px var(--surface),0 0 0 5px var(--ink)}
+.photos{display:grid;grid-template-columns:repeat(auto-fill,minmax(96px,1fr));gap:10px}
+.ph{position:relative;aspect-ratio:1;border-radius:16px;overflow:hidden;background:var(--fill);border:0;padding:0;cursor:pointer;display:block;width:100%}
 .ph img{width:100%;height:100%;object-fit:cover;display:block}
 .ph .main{position:absolute;left:6px;top:6px;font-size:.68rem;font-weight:800;padding:3px 8px;border-radius:999px;background:var(--ink);color:var(--surface)}
-.ph-acts{position:absolute;left:0;right:0;bottom:0;display:flex;justify-content:space-between;padding:6px}
-.ph-acts button{width:32px;height:32px;border:0;border-radius:50%;display:grid;place-items:center;background:rgba(255,255,255,.92);color:#1d1a2e;cursor:pointer}
-.ph-acts button:disabled{opacity:.35}
-.ph-acts svg{width:16px;height:16px}
-.ph-add{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:6px;aspect-ratio:1;border-radius:16px;border:2px dashed var(--line);color:var(--muted);cursor:pointer;font-weight:600;font-size:.85rem;text-align:center}
-.ph-add svg{width:24px;height:24px}
+.ph .num{position:absolute;right:6px;bottom:6px;min-width:24px;height:24px;border-radius:999px;display:grid;place-items:center;font-size:.75rem;font-weight:800;background:rgba(255,255,255,.92);color:#1d1a2e}
+.ph-add{position:relative;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:6px;aspect-ratio:1;border-radius:16px;border:2px dashed var(--line);color:var(--muted);cursor:pointer;font-weight:600;font-size:.85rem;text-align:center}
+.ph-add svg{width:26px;height:26px}
 .ph-add input{position:absolute;width:1px;height:1px;opacity:0}
-/* Variantes */
 .vars{display:flex;flex-direction:column;gap:10px}
-.var{background:var(--surface);border-radius:18px;padding:14px;box-shadow:0 2px 14px rgba(29,26,46,.05)}
-.var-h{display:flex;align-items:center;justify-content:space-between;gap:8px;font-weight:700}
+.var{background:var(--bg);border-radius:16px;padding:12px}
+.var-h{display:flex;align-items:center;justify-content:space-between;gap:8px;font-weight:800}
+.var-h small{font-weight:600;color:var(--muted)}
 .var-h .btn-danger{min-height:36px;padding:0 6px;font-size:.9rem}
-.var .in{margin-top:8px}
-.var-l{display:block;font-size:.85rem;font-weight:600;color:var(--muted);margin:12px 0 6px}
+.var .in{margin-top:8px;background:var(--surface)}
+.var-l{display:block;font-size:.85rem;font-weight:700;color:var(--muted);margin:12px 0 6px}
 .var-ph{display:flex;flex-wrap:wrap;gap:8px}
-.var-ph button{position:relative;width:64px;height:64px;padding:0;border:0;border-radius:12px;overflow:hidden;background:var(--fill);cursor:pointer;opacity:.45;transition:opacity .15s,box-shadow .15s}
+.var-ph button{position:relative;width:60px;height:60px;padding:0;border:0;border-radius:12px;overflow:hidden;background:var(--fill);cursor:pointer;opacity:.45}
 .var-ph button img{width:100%;height:100%;object-fit:cover;display:block}
-.var-ph button[aria-pressed="true"]{opacity:1;box-shadow:0 0 0 3px var(--bg),0 0 0 5px var(--ink)}
-.var-ph button[aria-pressed="true"]::after{content:"✓";position:absolute;right:4px;top:4px;width:20px;height:20px;border-radius:50%;background:var(--ink);color:var(--surface);font-size:.75rem;font-weight:800;display:grid;place-items:center}
-.ed-foot{display:flex;gap:10px;justify-content:space-between;align-items:center;margin-top:24px;flex-wrap:wrap}
-.ed-foot .btn-ink{flex:1 1 200px}
+.var-ph button[aria-pressed="true"]{opacity:1;box-shadow:0 0 0 3px var(--surface),0 0 0 5px var(--ink)}
+.var-ph button[aria-pressed="true"]::after{content:"✓";position:absolute;right:3px;top:3px;width:20px;height:20px;border-radius:50%;background:var(--ink);color:var(--surface);font-size:.75rem;font-weight:800;display:grid;place-items:center}
+.specs{display:flex;flex-wrap:wrap;gap:6px;margin:0 0 8px}
+.specs:empty{display:none}
+.spec{display:inline-flex;align-items:center;gap:2px;padding:0 4px 0 12px;min-height:36px;border-radius:999px;background:var(--fill);font-weight:600;font-size:.88rem}
+.spec button{width:30px;height:30px;border:0;background:none;border-radius:50%;cursor:pointer;color:var(--muted);display:grid;place-items:center}
+.spec button svg{width:14px;height:14px}
+.spec-row{display:flex;gap:8px}
+.sugs{display:flex;flex-wrap:wrap;gap:6px;margin-top:8px}
+.sug{min-height:34px;padding:0 12px;border:0;border-radius:999px;background:none;box-shadow:inset 0 0 0 1px var(--line);font-size:.84rem;font-weight:600;cursor:pointer;color:var(--muted)}
+.ed-more{display:flex;flex-direction:column;gap:8px;margin:18px 0 10px}
+.ed-more .btn{width:100%}
+.ed-bar{position:fixed;left:0;right:0;bottom:0;z-index:25;background:color-mix(in srgb,var(--surface) 92%,transparent);-webkit-backdrop-filter:blur(18px);backdrop-filter:blur(18px);
+  border-top:1px solid var(--line);padding:10px 0 calc(10px + var(--safe-b))}
+.ed-bar .wrap{display:flex;align-items:center;gap:12px}
+.ed-bar .sum{flex:1;min-width:0;font-size:.85rem;color:var(--muted);line-height:1.25}
+.ed-bar .sum b{display:block;color:var(--ink);font-size:.95rem;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.ed-bar .btn-ink{min-width:130px;min-height:50px}
+body.en-editor{padding-bottom:calc(84px + var(--safe-b))}
+
+/* Menú de foto */
+.sheet{padding:0;border:0;background:var(--surface);color:var(--ink);width:calc(100% - 16px);max-width:420px;margin:auto auto 8px;border-radius:24px;box-shadow:0 -10px 40px rgba(0,0,0,.25)}
+.sheet::backdrop{background:var(--scrim)}
+@media (min-width:600px){.sheet{margin:auto}}
+.sheet-in{padding:14px 14px calc(14px + var(--safe-b))}
+.sheet-h{display:flex;align-items:center;gap:12px;margin-bottom:10px}
+.sheet-h img{width:56px;height:56px;border-radius:12px;object-fit:cover}
+.sheet-h b{font-size:1.05rem}
+.sheet .btn{width:100%;justify-content:flex-start;padding:0 16px;margin-top:6px;min-height:50px;border-radius:14px}
 
 /* Categorías */
-.cat{padding:16px;border-top:1px solid var(--line)} .cat:first-child{border-top:0}
-.cat-h{display:flex;align-items:center;justify-content:space-between;gap:10px}
-.cat-h b{font-size:1.02rem} .cat-h span{font-size:.85rem;color:var(--muted)}
-.cat .in{margin-top:8px}
+.cat-add{display:flex;gap:8px;margin-bottom:14px}
+.cat{border-top:1px solid var(--line)} .cat:first-child{border-top:0}
+.cat-row{display:flex;align-items:center;gap:8px;padding:10px 10px 10px 16px}
+.cat-row summary{flex:1;min-width:0;cursor:pointer;list-style:none;display:flex;flex-direction:column;padding:4px 0}
+.cat-row summary::-webkit-details-marker{display:none}
+.cat-row b{font-size:1rem}
+.cat-row span{font-size:.84rem;color:var(--muted)}
+.cat-body{padding:0 16px 16px}
+.cat-body .in{margin-top:0}
+.cat details{flex:1;min-width:0}
 
-.toast{position:fixed;left:50%;bottom:calc(env(safe-area-inset-bottom,0px) + 20px);transform:translateX(-50%);z-index:50;max-width:calc(100% - 32px);
-  padding:12px 18px;border-radius:999px;background:var(--ink);color:var(--surface);font-weight:600;box-shadow:0 10px 30px -10px rgba(0,0,0,.5)}
+/* Publicar */
+.chg{display:flex;gap:12px;align-items:flex-start;padding:12px 12px 12px 14px;border-top:1px solid var(--line)}
+.chg:first-child{border-top:0}
+.chg img{width:52px;height:52px;border-radius:12px;object-fit:cover;flex:none;background:var(--fill)}
+.chg-t{flex:1;min-width:0}
+.chg-t b{display:block}
+.chg-t ul{margin:4px 0 0;padding-left:18px;color:var(--muted);font-size:.88rem}
+.chg-t .k{font-size:.7rem;font-weight:800;letter-spacing:.04em;text-transform:uppercase}
+.k-nuevo{color:var(--ok)} .k-editado{color:var(--warn-ink)} .k-quitado{color:var(--danger)} .k-otro{color:var(--muted)}
+.chg{flex-wrap:wrap}
+.chg-acts{flex:1 1 100%;display:flex;gap:8px;justify-content:flex-end}
+.chg .btn{min-height:38px;padding:0 14px;font-size:.88rem;flex:none}
+.pub-sum{display:flex;flex-wrap:wrap;gap:6px 16px;margin:14px 2px;color:var(--muted);font-size:.9rem}
+.pub-err{margin:14px 0;padding:14px 16px;border-radius:16px;background:color-mix(in srgb,var(--danger) 12%,transparent);color:var(--danger);font-weight:600}
+.pub-err .btn{margin-top:10px}
+.pub-ok{text-align:center;padding:36px 20px}
+.pub-ok .big{font-size:2.6rem;line-height:1}
+
+.toast{position:fixed;left:50%;bottom:calc(var(--safe-b) + 88px);transform:translateX(-50%);z-index:50;max-width:calc(100% - 32px);
+  padding:12px 18px;border-radius:999px;background:var(--ink);color:var(--surface);font-weight:600;box-shadow:0 10px 30px -10px rgba(0,0,0,.5);text-align:center}
 .busy{position:fixed;inset:0;z-index:60;display:grid;place-items:center;background:var(--scrim);color:#fff;font-weight:600;text-align:center;padding:24px}
-.foot-note{margin:28px 0 60px;font-size:.85rem;color:var(--muted);text-align:center}
+.busy span{background:rgba(0,0,0,.35);padding:14px 20px;border-radius:16px}
+.foot-note{margin:28px 0 30px;font-size:.85rem;color:var(--muted);text-align:center}
 </style>
 </head>
 <body>
 
-<header class="top">
+<header class="top" id="top">
   <div class="wrap">
-    <span class="logo"><span class="m">Mini</span>Prints<small>Administrar catálogo</small></span>
+    <span class="logo"><span class="m">Mini</span>Prints<small>Administrar</small></span>
     <div class="top-acts">
       <a class="btn btn-plain" href="./" target="_blank" rel="noopener">Ver catálogo</a>
-      <button class="btn btn-plain" type="button" id="salir" hidden>Salir</button>
     </div>
   </div>
 </header>
@@ -186,92 +286,153 @@ dialog.ed::backdrop{background:var(--scrim)}
         <li>En GitHub abre <b>Settings › Developer settings › Personal access tokens › Fine-grained tokens</b> y toca <b>Generate new token</b>.</li>
         <li><b>Resource owner:</b> miniprintsmx. <b>Repository access:</b> Only select repositories › miniprintsmx.github.io.</li>
         <li><b>Permissions › Repository permissions › Contents:</b> Read and write. Nada más.</li>
-        <li>Genera la llave, cópiala y pégala aquí. Guárdala en un lugar seguro: GitHub solo la muestra una vez.</li>
+        <li>Genera la llave, cópiala y pégala aquí. Guárdala en un lugar seguro: GitHub solo la muestra una vez. Las llaves vencen: cuando pase, aquí te avisará y sacas una nueva igual.</li>
       </ol>
     </details>
   </div>
 </main>
 
-<!-- Administrar -->
-<main class="wrap" id="v-app" hidden>
-  <h1>Tus productos</h1>
-  <p class="lead">Toca un producto para editarlo o quitarlo; usa las flechas para cambiar el orden. Cuando termines, toca <b>Publicar</b>: el catálogo se actualiza en 1 o 2 minutos.</p>
-
-  <div class="pub is-clean" id="pub" role="status">
-    <span id="pub-t">Todo publicado</span>
-    <div class="pub-acts">
-      <button class="btn btn-plain" type="button" id="descartar" hidden>Descartar</button>
-      <button class="btn btn-wa" type="button" id="publicar" disabled>Publicar</button>
-    </div>
+<!-- No se pudo cargar -->
+<main class="wrap" id="v-fail" hidden>
+  <div class="fail card pad">
+    <h1 style="margin-top:0">No se pudo cargar</h1>
+    <p class="lead" id="fail-t">Revisa tu conexión a internet.</p>
+    <button class="btn btn-ink btn-big" type="button" id="reintentar">Reintentar</button>
   </div>
-
-  <div class="tabs" role="tablist" aria-label="Secciones">
-    <button class="tab" type="button" role="tab" id="t-prod" aria-selected="true" aria-controls="p-prod">Productos</button>
-    <button class="tab" type="button" role="tab" id="t-cat" aria-selected="false" aria-controls="p-cat">Categorías</button>
-  </div>
-
-  <section id="p-prod" role="tabpanel" aria-labelledby="t-prod">
-    <div class="card list" id="lista"></div>
-    <button class="btn btn-ink add-row" type="button" id="nuevo"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" aria-hidden="true"><path d="M12 5v14M5 12h14"/></svg>Agregar producto</button>
-  </section>
-
-  <section id="p-cat" role="tabpanel" aria-labelledby="t-cat" hidden>
-    <div class="card" id="cats"></div>
-    <button class="btn btn-soft add-row" type="button" id="nueva-cat">Agregar categoría</button>
-  </section>
-
-  <p class="foot-note">Los cambios se guardan en el repositorio <b>miniprintsmx.github.io</b>. Este catálogo no tiene ninguna conexión con tu sistema MiniPrints.</p>
 </main>
 
-<!-- Editor de producto -->
-<dialog class="ed" id="ed" aria-labelledby="ed-t">
-  <form id="f-ed" novalidate>
-    <div class="ed-head">
-      <button class="icon-btn" type="button" id="ed-x" aria-label="Cerrar sin guardar"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" aria-hidden="true"><path d="M6 6l12 12M18 6 6 18"/></svg></button>
-      <h2 id="ed-t">Producto</h2>
-      <span style="width:44px"></span>
+<div id="v-app" hidden>
+  <!-- Productos -->
+  <main class="wrap" id="v-list" data-vista="lista">
+    <h1>Productos</h1>
+    <a class="banner" id="banner" href="#/publicar" hidden><span><b id="banner-n">0</b> sin publicar</span><span class="go">Revisar y publicar</span></a>
+    <div class="tools">
+      <div class="tools-row">
+        <label class="search"><span class="sr-only">Buscar producto</span>
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></svg>
+          <input type="search" id="q" placeholder="Buscar producto…" autocomplete="off" enterkeyhint="search">
+        </label>
+        <a class="btn btn-ink" id="nuevo" href="#/producto/nuevo"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" aria-hidden="true"><path d="M12 5v14M5 12h14"/></svg>Nuevo</a>
+      </div>
+      <div class="chips" id="chips" role="group" aria-label="Filtrar"></div>
     </div>
-    <div class="ed-body">
-      <label class="f" for="e-name">Nombre *</label>
-      <input class="in" id="e-name" maxlength="60" required placeholder="Ej: Turbo">
-      <label class="f" for="e-sub">Subtítulo</label>
-      <input class="in" id="e-sub" maxlength="80" placeholder="Ej: el Monstruito Turquesa">
+    <div class="card list" id="lista"></div>
+    <p class="list-foot" id="list-foot"></p>
+  </main>
 
-      <div class="grid2">
-        <div><label class="f" for="e-cat">Categoría</label><select class="in" id="e-cat"></select></div>
-        <div><label class="f" for="e-badge">Etiqueta</label><input class="in" id="e-badge" maxlength="24" placeholder="Ej: Llavero"></div>
+  <!-- Categorías -->
+  <main class="wrap" id="v-cats" data-vista="cats" hidden>
+    <h1>Categorías</h1>
+    <p class="lead">Son los filtros del catálogo. Usa las flechas para cambiar su orden.</p>
+    <form class="cat-add" id="f-cat" novalidate>
+      <input class="in" id="cat-new" maxlength="24" placeholder="Nueva categoría (ej: Imanes)" aria-label="Nombre de la nueva categoría" style="background:var(--surface);box-shadow:inset 0 0 0 1px var(--line)">
+      <button class="btn btn-ink" type="submit">Agregar</button>
+    </form>
+    <div class="card" id="cats"></div>
+    <p class="foot-note">Los cambios se guardan en el repositorio <b>miniprintsmx.github.io</b>. Este catálogo no tiene ninguna conexión con tu sistema MiniPrints.<br><br><button class="btn btn-soft" type="button" id="salir">Cerrar sesión en este dispositivo</button></p>
+  </main>
+
+  <!-- Revisar y publicar -->
+  <main class="wrap" id="v-pub" data-vista="pub" hidden>
+    <h1>Publicar</h1>
+    <div id="pub-body"></div>
+  </main>
+
+  <!-- Editor de producto -->
+  <div id="v-ed" data-vista="ed" hidden>
+    <div class="ed-top">
+      <div class="wrap">
+        <button class="back" type="button" id="ed-back"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15 5l-7 7 7 7"/></svg>Productos</button>
+        <h2 class="top-t" id="ed-t">Producto</h2>
+        <span style="width:84px;flex:none"></span>
+      </div>
+    </div>
+    <form class="wrap" id="f-ed" novalidate>
+      <div class="prev" aria-live="polite">
+        <div class="prev-ph" id="pv-ph"></div>
+        <div class="prev-t"><div class="prev-l">Así se verá</div><div class="prev-k" id="pv-k"></div><b id="pv-n"></b><div class="prev-p" id="pv-p"></div></div>
       </div>
 
-      <span class="f" style="display:block;font-weight:600;font-size:.9rem;margin:16px 0 8px" id="e-color-l">Color de la etiqueta</span>
-      <div class="colors" id="e-colors" role="group" aria-labelledby="e-color-l"></div>
+      <section class="sec" aria-labelledby="h-fotos">
+        <h3 class="sec-h" id="h-fotos">Fotos <small>La primera es la principal · toca una para moverla o quitarla</small></h3>
+        <div class="photos" id="e-photos"></div>
+        <p class="err" id="err-fotos" role="alert"></p>
+        <p class="hint">Se recortan cuadradas desde el centro. Usa fotos con el producto centrado.</p>
+      </section>
 
-      <span class="f" style="display:block;font-weight:600;font-size:.9rem;margin:18px 0 8px" id="e-ph-l">Fotos * <span class="hint" style="display:inline">· la primera es la principal</span></span>
-      <div class="photos" id="e-photos" role="group" aria-labelledby="e-ph-l"></div>
-      <p class="hint">Se recortan cuadradas (1000 × 1000) desde el centro. Usa fotos con el producto centrado.</p>
+      <section class="sec" aria-label="Nombre y precio">
+        <label class="f" for="e-name">Nombre <span class="count" id="c-name"></span></label>
+        <input class="in" id="e-name" maxlength="60" placeholder="Ej: Turbo" autocomplete="off">
+        <p class="err" id="err-name" role="alert"></p>
+        <div class="grid2">
+          <div><label class="f" for="e-price">Precio</label><div class="money"><span>$</span><input class="in" id="e-price" type="text" inputmode="decimal" autocomplete="off" placeholder="55"></div></div>
+          <div><label class="f" for="e-was">Precio antes <small>(oferta)</small></label><div class="money"><span>$</span><input class="in" id="e-was" type="text" inputmode="decimal" autocomplete="off" placeholder="Opcional"></div></div>
+        </div>
+        <p class="err" id="err-price" role="alert"></p>
+        <p class="hint" id="h-price">Sin precio, el catálogo dice "Precio por WhatsApp". El precio de antes se muestra tachado, con el % de descuento.</p>
+      </section>
 
-      <span class="f" style="display:block;font-weight:600;font-size:.9rem;margin:18px 0 4px">Variantes <span class="hint" style="display:inline">· opcional</span></span>
-      <p class="hint" style="margin:0 0 10px">Úsalas cuando el mismo modelo viene en versiones (otra cola, otro color…). El cliente elige una y el pedido dice cuál. Primero sube todas las fotos arriba y luego marca cuáles son de cada variante.</p>
-      <div class="vars" id="e-vars"></div>
-      <button class="btn btn-soft" type="button" id="e-var-add" style="margin-top:10px;width:100%">Agregar variante</button>
+      <section class="sec" aria-label="Categoría y etiqueta">
+        <div class="grid2">
+          <div><label class="f" for="e-cat">Categoría</label><select class="in" id="e-cat"></select></div>
+          <div><label class="f" for="e-badge">Etiqueta</label><input class="in" id="e-badge" maxlength="24" list="dl-badges" autocomplete="off"></div>
+        </div>
+        <datalist id="dl-badges"></datalist>
+        <p class="hint">La etiqueta sale arriba del nombre. Elige una de la lista para que todas se escriban igual.</p>
+        <span class="f" id="e-color-l">Color de la etiqueta</span>
+        <div class="colors" id="e-colors" role="radiogroup" aria-labelledby="e-color-l"></div>
+      </section>
 
-      <label class="f" for="e-desc">Descripción</label>
-      <textarea class="in" id="e-desc" maxlength="400" placeholder="Qué es, cómo es, para qué sirve…"></textarea>
-      <label class="f" for="e-specs">Características</label>
-      <input class="in" id="e-specs" maxlength="120" placeholder="Separadas por coma: Impreso en 3D, Flexible, Con argolla">
+      <section class="sec" aria-labelledby="h-vars">
+        <h3 class="sec-h" id="h-vars">Variantes <small>opcional</small></h3>
+        <p class="hint" style="margin:0 0 10px">Para el mismo modelo en versiones (otra cola, otro color…). El cliente elige una y el pedido dice cuál.</p>
+        <div class="vars" id="e-vars"></div>
+        <p class="err" id="err-vars" role="alert"></p>
+        <button class="btn btn-soft" type="button" id="e-var-add" style="margin-top:10px;width:100%">Agregar variantes</button>
+      </section>
 
-      <div class="grid2">
-        <div><label class="f" for="e-price">Precio</label><div class="money"><span>$</span><input class="in" id="e-price" type="number" inputmode="decimal" min="0" step="0.5" placeholder="Vacío = por WhatsApp"></div></div>
-        <div><label class="f" for="e-was">Precio anterior</label><div class="money"><span>$</span><input class="in" id="e-was" type="number" inputmode="decimal" min="0" step="0.5" placeholder="Opcional"></div></div>
-      </div>
-      <p class="hint">Si pones precio anterior, se muestra tachado junto al precio.</p>
+      <details class="sec" id="e-more">
+        <summary>Más detalles<small id="more-sum"></small></summary>
+        <label class="f" for="e-sub" style="margin-top:14px">Subtítulo <small>(sale bajo el nombre en la ficha)</small></label>
+        <input class="in" id="e-sub" maxlength="80" placeholder="Ej: el Monstruito Turquesa">
+        <label class="f" for="e-desc">Descripción <span class="count" id="c-desc"></span></label>
+        <textarea class="in" id="e-desc" maxlength="400" placeholder="Qué es, cómo es, para qué sirve… Puedes usar emojis y saltos de línea."></textarea>
+        <label class="f" for="e-spec">Características <small id="c-specs"></small></label>
+        <div class="specs" id="e-specs"></div>
+        <div class="spec-row"><input class="in" id="e-spec" maxlength="24" placeholder="Ej: Con argolla" enterkeyhint="done" autocomplete="off"><button class="btn btn-soft" type="button" id="e-spec-add">Agregar</button></div>
+        <div class="sugs" id="e-sugs"></div>
+      </details>
 
-      <p class="err" id="ed-err" role="alert"></p>
-      <div class="ed-foot">
+      <div class="ed-more" id="ed-more">
+        <button class="btn btn-soft" type="button" id="ed-first">Mover al principio del catálogo</button>
+        <button class="btn btn-soft" type="button" id="ed-last">Mover al final del catálogo</button>
         <button class="btn btn-danger" type="button" id="ed-del">Eliminar producto</button>
-        <button class="btn btn-ink" type="submit">Guardar</button>
+      </div>
+    </form>
+    <div class="ed-bar">
+      <div class="wrap">
+        <div class="sum" id="ed-sum"></div>
+        <button class="btn btn-ink" type="submit" form="f-ed" id="ed-save">Guardar</button>
       </div>
     </div>
-  </form>
+  </div>
+
+  <nav class="tabbar" id="tabbar" aria-label="Secciones">
+    <a href="#/productos" data-tab="lista"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="3" width="7" height="7" rx="1.5"/><rect x="14" y="3" width="7" height="7" rx="1.5"/><rect x="3" y="14" width="7" height="7" rx="1.5"/><rect x="14" y="14" width="7" height="7" rx="1.5"/></svg>Productos</a>
+    <a href="#/categorias" data-tab="cats"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20.6 13.4 13.4 20.6a2 2 0 0 1-2.8 0L3 13V3h10l7.6 7.6a2 2 0 0 1 0 2.8z"/><circle cx="7.5" cy="7.5" r="1.5"/></svg>Categorías</a>
+    <a href="#/publicar" data-tab="pub"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 16V4M7 9l5-5 5 5"/><path d="M4 16v3a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-3"/></svg>Publicar<b class="bdg" id="tab-n" hidden></b></a>
+  </nav>
+</div>
+
+<dialog class="sheet" id="ph-menu" aria-label="Opciones de la foto">
+  <div class="sheet-in">
+    <div class="sheet-h"><img id="phm-img" alt=""><b id="phm-t">Foto</b></div>
+    <button class="btn btn-soft" type="button" data-pm="main">★ Hacer foto principal</button>
+    <button class="btn btn-soft" type="button" data-pm="izq">← Mover antes</button>
+    <button class="btn btn-soft" type="button" data-pm="der">→ Mover después</button>
+    <button class="btn btn-soft" type="button" data-pm="quitar" style="color:var(--danger)">Quitar foto</button>
+    <button class="btn btn-plain" type="button" data-pm="cerrar" style="justify-content:center">Cancelar</button>
+  </div>
 </dialog>
 
 <div class="toast" id="toast" role="status" hidden></div>
@@ -285,17 +446,16 @@ const PROTEGIDAS = new Set(["banda"]);   // foto de la portada: nunca se borra
 const COLORES = [
   ["var(--teal)", "#2bbfb3", "Turquesa"], ["var(--lime)", "#c8e62b", "Lima"], ["var(--lilac)", "#a99be8", "Lila"],
   ["var(--caramel)", "#c98a4b", "Caramelo"], ["var(--red)", "#e2412f", "Rojo"], ["#f39a3c", "#f39a3c", "Naranja"],
-  ["#4cc36a", "#4cc36a", "Verde"], ["#cfd6e6", "#cfd6e6", "Plata"]
+  ["#4cc36a", "#4cc36a", "Verde"], ["#f7a8c4", "#f7a8c4", "Rosa"], ["#cfd6e6", "#cfd6e6", "Plata"]
 ];
+const hexDe = v => (COLORES.find(c => c[0] === v) || [v, v])[1];
 const $ = id => document.getElementById(id);
 const esc = t => String(t ?? "").replace(/[&<>"']/g, c => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" })[c]);
+const norm = t => String(t || "").normalize("NFD").replace(/[̀-ͯ]/g, "").toLowerCase().trim();
 const ICO = {
   up: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m6 15 6-6 6 6"/></svg>',
   down: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m6 9 6 6 6-6"/></svg>',
-  left: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m15 6-6 6 6 6"/></svg>',
-  right: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m9 6 6 6-6 6"/></svg>',
-  x: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" aria-hidden="true"><path d="M6 6l12 12M18 6 6 18"/></svg>',
-  edit: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 20h4L19 9l-4-4L4 16z"/></svg>',
+  x: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" aria-hidden="true"><path d="M6 6l12 12M18 6 6 18"/></svg>',
   plus: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" aria-hidden="true"><path d="M12 5v14M5 12h14"/></svg>'
 };
 
@@ -321,166 +481,335 @@ const textToB64 = t => { const bytes = new TextEncoder().encode(t); let s = ""; 
 
 /* ---------- estado ---------- */
 let base = null;           // { categorias, productos } tal como está publicado
+let baseSha = "";          // versión publicada de productos.json (para detectar cambios hechos en otro lado)
 let datos = null;          // borrador
 let imgsRepo = new Set();  // nombres (sin .jpg) que existen en img/
 const nuevas = new Map();  // nombre → { blob, url } fotos por subir
 let sucio = false;
 
 const clon = o => JSON.parse(JSON.stringify(o));
-function marcar() { sucio = JSON.stringify(datos) !== JSON.stringify(base) || nuevas.size > 0 && usadasNuevas().length > 0; pintarPub(); }
+const J = o => JSON.stringify(o);
+const porId = (lista, id) => lista.find(p => p.id === id);
 const usadas = () => new Set(datos.productos.flatMap(p => p.imgs));
 const usadasNuevas = () => [...nuevas.keys()].filter(n => usadas().has(n));
 const fotoUrl = n => nuevas.has(n) ? nuevas.get(n).url : `img/${encodeURIComponent(n)}.jpg`;
+const catLabel = id => ((datos || base).categorias.find(c => c.id === id) || {}).label || "Sin categoría";
+const aNumero = t => { let s = String(t ?? "").trim().replace(/[^0-9.,]/g, ""); if (/,\d{1,2}$/.test(s) && !s.includes(".")) s = s.replace(",", "."); s = s.replace(/,/g, ""); const n = parseFloat(s); return isFinite(n) && n >= 0 ? n : ""; };
+const aPrecio = n => n === "" || n == null ? "" : "$" + Number(n).toLocaleString("en-US", { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+const corto = s => String(s || "").replace(/\.00$/, "");
+const slug = t => String(t || "").normalize("NFD").replace(/[̀-ͯ]/g, "").toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/^-+|-+$/g, "").slice(0, 40) || "producto";
 
-function cambiosTexto() {
-  const a = new Map(base.productos.map(p => [p.id, JSON.stringify(p)])), b = new Map(datos.productos.map(p => [p.id, JSON.stringify(p)]));
-  let n = 0;
-  b.forEach((v, k) => { if (!a.has(k) || a.get(k) !== v) n++; });
-  a.forEach((v, k) => { if (!b.has(k)) n++; });
-  if (JSON.stringify(datos.categorias) !== JSON.stringify(base.categorias)) n++;
-  if (!n && datos.productos.map(p => p.id).join() !== base.productos.map(p => p.id).join()) n = 1;
-  return n;
-}
-function pintarPub() {
-  const n = sucio ? Math.max(1, cambiosTexto()) : 0;
-  $("pub").classList.toggle("is-clean", !n);
-  $("pub-t").innerHTML = n ? `<b>${n}</b> cambio${n !== 1 ? "s" : ""} sin publicar` : "Todo publicado";
-  $("publicar").disabled = !n; $("descartar").hidden = !n;
+function marcar() {
+  sucio = J(datos) !== J(base) || usadasNuevas().length > 0;
+  pintarEstado(); programarBorrador();
 }
 function toast(t) { const el = $("toast"); el.textContent = t; el.hidden = false; clearTimeout(toast._t); toast._t = setTimeout(() => el.hidden = true, 3200); }
 function ocupado(t) { $("busy-t").textContent = t || ""; $("busy").hidden = !t; }
 
+/* ---------- cambios sin publicar ---------- */
+const CAMPOS = [["name", "Nombre"], ["price", "Precio"], ["was", "Precio antes"], ["imgs", "Fotos"], ["variantes", "Variantes"], ["cat", "Categoría"],
+  ["badge", "Etiqueta"], ["c", "Color"], ["sub", "Subtítulo"], ["desc", "Descripción"], ["specs", "Características"]];
+function detalle(a, b) {
+  const out = [];
+  CAMPOS.forEach(([k, t]) => {
+    if (J(a[k] ?? "") === J(b[k] ?? "")) return;
+    if (k === "price" || k === "was") out.push(`${t}: ${corto(a[k]) || "—"} → ${corto(b[k]) || "—"}`);
+    else if (k === "cat") out.push(`${t}: ${catLabel(a[k])} → ${catLabel(b[k])}`);
+    else if (k === "imgs") { const mas = b.imgs.filter(n => !a.imgs.includes(n)).length, menos = a.imgs.filter(n => !b.imgs.includes(n)).length;
+      out.push(mas || menos ? `${t}: ${[mas && `+${mas}`, menos && `−${menos}`].filter(Boolean).join(", ")}` : "Orden de las fotos"); }
+    else if (k === "name") out.push(`${t}: ${a.name} → ${b.name}`);
+    else out.push(t);
+  });
+  return out;
+}
+function cambios() {
+  if (!datos) return [];
+  const lista = [];
+  datos.productos.forEach(p => {
+    const a = porId(base.productos, p.id);
+    if (!a) lista.push({ tipo: "nuevo", p });
+    else if (J(a) !== J(p)) lista.push({ tipo: "editado", p, campos: detalle(a, p) });
+  });
+  base.productos.forEach((p, i) => { if (!porId(datos.productos, p.id)) lista.push({ tipo: "quitado", p, i }); });
+  if (J(datos.categorias) !== J(base.categorias)) lista.push({ tipo: "cats" });
+  const comunes = ids => ids.filter(id => porId(base.productos, id) && porId(datos.productos, id));
+  if (comunes(datos.productos.map(p => p.id)).join() !== comunes(base.productos.map(p => p.id)).join()) lista.push({ tipo: "orden" });
+  return lista;
+}
+function pintarEstado() {
+  const n = cambios().length;
+  $("tab-n").hidden = !n; $("tab-n").textContent = n;
+  $("banner").hidden = !n; $("banner-n").textContent = n === 1 ? "1 cambio" : `${n} cambios`;
+  if (vista === "pub") pintarPublicar();
+}
+
+/* ---------- borrador: los cambios sin publicar sobreviven si iOS cierra la app ---------- */
+const DB = () => new Promise((res, rej) => { const r = indexedDB.open("mpcat", 1); r.onupgradeneeded = () => r.result.createObjectStore("b"); r.onsuccess = () => res(r.result); r.onerror = () => rej(r.error); });
+async function idb(modo, valor) {
+  const db = await DB();
+  return new Promise((res, rej) => {
+    const t = db.transaction("b", modo === "get" ? "readonly" : "readwrite"), s = t.objectStore("b");
+    const r = modo === "get" ? s.get("borrador") : modo === "del" ? s.delete("borrador") : s.put(valor, "borrador");
+    t.oncomplete = () => { db.close(); res(r.result); }; t.onerror = () => { db.close(); rej(t.error); };
+  });
+}
+let bT = 0;
+function programarBorrador() { clearTimeout(bT); bT = setTimeout(guardarBorrador, 500); }
+async function guardarBorrador() {
+  clearTimeout(bT);
+  if (!datos || !("indexedDB" in window)) return;
+  const ed = vista === "ed" && edSucio() ? estadoEd() : null;
+  try {
+    if (!sucio && !ed) await idb("del");
+    else await idb("put", { base, baseSha, datos, ed, fotos: [...nuevas].map(([n, v]) => [n, v.blob]), t: Date.now() });
+  } catch (e) { /* sin espacio o modo privado: se sigue sin borrador */ }
+}
+document.addEventListener("visibilitychange", () => { if (document.visibilityState === "hidden") guardarBorrador(); });
+addEventListener("pagehide", guardarBorrador);
+
+/* Combina cambios propios (mio vs su base) sobre lo que hay publicado ahora (remoto). */
+function combinar(viejo, mio, remoto) {
+  const out = { ...remoto, productos: [], categorias: J(mio.categorias) !== J(viejo.categorias) ? clon(mio.categorias) : clon(remoto.categorias) };
+  remoto.productos.forEach(r => {
+    const v = porId(viejo.productos, r.id), m = porId(mio.productos, r.id);
+    if (v && !m) return;                                   // lo quité yo
+    out.productos.push(clon(m && v && J(m) !== J(v) ? m : r));
+  });
+  mio.productos.forEach(m => { if (!porId(viejo.productos, m.id) && !porId(out.productos, m.id)) out.productos.push(clon(m)); });
+  const ids = l => l.map(p => p.id).filter(id => porId(viejo.productos, id) && porId(mio.productos, id));
+  if (ids(mio.productos).join() !== ids(viejo.productos).join()) {      // cambié el orden: se respeta
+    const pos = new Map(mio.productos.map((p, i) => [p.id, i]));
+    out.productos.sort((a, b) => (pos.has(a.id) ? pos.get(a.id) : 1e6) - (pos.has(b.id) ? pos.get(b.id) : 1e6));
+  }
+  return out;
+}
+
 /* ---------- cargar ---------- */
+async function leerRemoto() {
+  const f = await gh(repo(`/contents/productos.json?ref=${BRANCH}`));
+  const d = JSON.parse(b64ToText(f.content)); d.categorias = d.categorias || []; d.productos = d.productos || [];
+  try { imgsRepo = new Set((await gh(repo(`/contents/img?ref=${BRANCH}`))).filter(x => x.type === "file" && /\.jpg$/i.test(x.name)).map(x => x.name.replace(/\.jpg$/i, ""))); } catch (e) { imgsRepo = new Set(); }
+  return { d, sha: f.sha };
+}
 async function cargar() {
   ocupado("Cargando tu catálogo…");
   try {
-    const f = await gh(repo(`/contents/productos.json?ref=${BRANCH}`));
-    base = JSON.parse(b64ToText(f.content));
-    base.categorias = base.categorias || []; base.productos = base.productos || [];
-    try { imgsRepo = new Set((await gh(repo(`/contents/img?ref=${BRANCH}`))).filter(x => x.type === "file" && /\.jpg$/i.test(x.name)).map(x => x.name.replace(/\.jpg$/i, ""))); } catch (e) { imgsRepo = new Set(); }
-    datos = clon(base); nuevas.forEach(v => URL.revokeObjectURL(v.url)); nuevas.clear(); sucio = false;
-    pintarTodo(); pintarPub();
+    const { d, sha } = await leerRemoto();
+    base = d; baseSha = sha; datos = clon(base);
+    nuevas.forEach(v => URL.revokeObjectURL(v.url)); nuevas.clear();
+    let edRecuperado = null;
+    try {
+      const b = "indexedDB" in window ? await idb("get") : null;
+      if (b && b.datos) {
+        (b.fotos || []).forEach(([n, blob]) => nuevas.set(n, { blob, url: URL.createObjectURL(blob) }));
+        datos = b.baseSha === sha ? b.datos : combinar(b.base, b.datos, base);
+        edRecuperado = b.ed || null;
+        setTimeout(() => toast(b.baseSha === sha ? "Recuperamos tus cambios sin publicar." : "Recuperamos tus cambios y los combinamos con lo publicado."), 300);
+      }
+    } catch (e) {}
+    marcar();
+    return edRecuperado;
   } finally { ocupado(""); }
 }
 
-/* ---------- lista ---------- */
-const catLabel = id => (datos.categorias.find(c => c.id === id) || {}).label || "Sin categoría";
-function pintarTodo() { pintarLista(); pintarCats(); }
-function pintarLista() {
-  const el = $("lista"), ps = datos.productos;
-  if (!ps.length) { el.innerHTML = '<div class="empty">Aún no hay productos. Toca <b>Agregar producto</b>.</div>'; return; }
-  const viejos = new Set(base.productos.map(p => p.id));
-  el.innerHTML = ps.map((p, i) => `<div class="row">
-      <button class="row-main" type="button" data-a="edit" data-i="${i}" aria-label="Editar ${esc(p.name)}">
-        <img class="thumb" src="${esc(fotoUrl(p.imgs[0]))}" alt="">
-        <span class="row-t"><b>${esc(p.name)}${viejos.has(p.id) ? "" : '<span class="tag-new">NUEVO</span>'}</b><span>${esc(catLabel(p.cat))} · ${esc(p.price || "Precio por WhatsApp")}${(p.variantes || []).length ? ` · ${p.variantes.length} variantes` : ""}</span></span>
-      </button>
-      <div class="row-acts">
-        <button class="icon-btn" type="button" data-a="up" data-i="${i}" aria-label="Subir ${esc(p.name)}" ${i ? "" : "disabled"}>${ICO.up}</button>
-        <button class="icon-btn" type="button" data-a="down" data-i="${i}" aria-label="Bajar ${esc(p.name)}" ${i < ps.length - 1 ? "" : "disabled"}>${ICO.down}</button>
-      </div>
-    </div>`).join("");
+/* ---------- navegación ---------- */
+let vista = null;
+const posVista = {};
+try { history.scrollRestoration = "manual"; } catch (e) {}
+const VISTAS = { lista: "v-list", cats: "v-cats", pub: "v-pub", ed: "v-ed" };
+function ir(hash) { if (location.hash === hash) return ruta(); history.pushState({ mp: 1 }, "", hash); ruta(); }
+function volver() { if (history.state && history.state.mp) history.back(); else { history.replaceState(null, "", "#/productos"); ruta(); } }
+function mostrar(v) {
+  if (vista && vista !== v) posVista[vista] = scrollY;
+  const cambia = vista !== v; vista = v;
+  Object.entries(VISTAS).forEach(([k, id]) => { $(id).hidden = k !== v; });
+  $("top").hidden = v === "ed"; $("tabbar").hidden = v === "ed";
+  document.body.classList.toggle("con-barra", v !== "ed"); document.body.classList.toggle("en-editor", v === "ed");
+  document.querySelectorAll("#tabbar a").forEach(a => { if (a.dataset.tab === v) a.setAttribute("aria-current", "page"); else a.removeAttribute("aria-current"); });
+  if (cambia) scrollTo(0, v === "lista" ? posVista.lista || 0 : 0);
 }
+function ruta() {
+  if (!datos) return;
+  const h = location.hash;
+  // Salir del editor con cambios sin guardar: se pregunta
+  if (vista === "ed" && h !== edHash && edSucio()) {
+    if (!confirm("Tienes cambios sin guardar en este producto. ¿Salir sin guardarlos?")) { history.pushState({ mp: 1 }, "", edHash); return; }
+  }
+  const m = /^#\/producto\/(.+)$/.exec(h);
+  if (m) { let id = ""; try { id = decodeURIComponent(m[1]); } catch (e) {} if (vista === "ed" && h === edHash) return; if (abrirEditor(id)) { mostrar("ed"); document.title = "Editar · Admin MP"; } return; }
+  edHash = "";
+  if (h === "#/categorias") { pintarCats(); mostrar("cats"); document.title = "Categorías · Admin MP"; }
+  else if (h === "#/publicar") { pubMsg = pubMsg && pubMsg.tipo === "ok" && cambios().length ? null : pubMsg; pintarPublicar(); mostrar("pub"); document.title = "Publicar · Admin MP"; }
+  else { pintarLista(); mostrar("lista"); document.title = "Productos · Admin MP"; }
+  guardarBorrador();
+}
+addEventListener("popstate", ruta);
+addEventListener("hashchange", ruta);
+document.addEventListener("click", e => {   // enlaces internos con historial propio
+  const a = e.target.closest('a[href^="#/"]'); if (!a || e.metaKey || e.ctrlKey) return;
+  e.preventDefault(); ir(a.getAttribute("href"));
+});
+
+/* ---------- lista de productos ---------- */
+let filtro = "all";
+const enFiltro = (p, f) => f === "all" ? true : f === "ofertas" ? !!p.was : f === "sinprecio" ? !p.price : f === "cambios" ? estadoFila(p) !== "" : p.cat === f;
+function estadoFila(p) { const a = porId(base.productos, p.id); return !a ? "nuevo" : J(a) !== J(p) ? "editado" : ""; }
+const textoBus = p => norm([p.name, p.sub, p.id, p.badge, catLabel(p.cat), ...(p.variantes || []).map(v => v.nombre)].join(" "));
+function pintarLista() {
+  const ps = datos.productos, q = norm($("q").value);
+  const cuenta = f => ps.filter(p => enFiltro(p, f)).length;
+  const fs = [["all", "Todos"], ...datos.categorias.filter(c => c.id !== "all").map(c => [c.id, c.label]), ["ofertas", "Ofertas"], ["sinprecio", "Sin precio"], ["cambios", "Con cambios"]]
+    .filter(([f]) => f === "all" || f === filtro || cuenta(f) > 0 || datos.categorias.some(c => c.id === f));
+  if (!fs.some(([f]) => f === filtro)) filtro = "all";
+  $("chips").innerHTML = fs.map(([f, t]) => `<button class="chip" type="button" data-f="${esc(f)}" aria-pressed="${f === filtro}">${esc(t)}<span class="n">${cuenta(f)}</span></button>`).join("");
+  const vis = ps.map((p, i) => ({ p, i })).filter(({ p }) => enFiltro(p, filtro) && (!q || q.split(/\s+/).every(w => textoBus(p).includes(w))));
+  const ordenable = !q && (filtro === "all" || datos.categorias.some(c => c.id === filtro));
+  $("lista").innerHTML = vis.length ? vis.map(({ p, i }, k) => { const st = estadoFila(p);
+    return `<div class="row">
+      <a class="row-main" href="#/producto/${encodeURIComponent(p.id)}">
+        <img class="thumb" src="${esc(fotoUrl(p.imgs[0]))}" alt="" loading="lazy">
+        <span class="row-t"><b>${esc(p.name)}${st === "nuevo" ? '<span class="tag tag-new">NUEVO</span>' : st === "editado" ? '<span class="tag tag-ed">EDITADO</span>' : ""}</b><span>${esc(catLabel(p.cat))} · ${esc(corto(p.price) || "Sin precio")}${p.was ? ` <s>${esc(corto(p.was))}</s>` : ""}${(p.variantes || []).length ? ` · ${p.variantes.length} variantes` : ""}</span></span>
+      </a>
+      ${ordenable ? `<div class="row-acts">
+        <button class="icon-btn" type="button" data-a="up" data-i="${i}" aria-label="Subir ${esc(p.name)}" ${k ? "" : "disabled"}>${ICO.up}</button>
+        <button class="icon-btn" type="button" data-a="down" data-i="${i}" aria-label="Bajar ${esc(p.name)}" ${k < vis.length - 1 ? "" : "disabled"}>${ICO.down}</button>
+      </div>` : ""}
+    </div>`; }).join("") : `<div class="empty">${q ? `No hay productos con “${esc($("q").value.trim())}”.` : ps.length ? "No hay productos en este filtro." : "Aún no hay productos. Toca <b>Nuevo</b>."}</div>`;
+  $("list-foot").textContent = vis.length ? `${vis.length} de ${ps.length} productos` + (ordenable ? " · el orden es el mismo del catálogo" : "") : "";
+  const cat = datos.categorias.find(c => c.id === filtro && c.id !== "all");
+  $("nuevo").setAttribute("href", "#/producto/nuevo" + (cat ? "?cat=" + encodeURIComponent(cat.id) : ""));
+}
+$("q").addEventListener("input", pintarLista);
+$("chips").addEventListener("click", e => { const b = e.target.closest("[data-f]"); if (!b) return; filtro = b.dataset.f; pintarLista(); b.scrollIntoView({ inline: "center", block: "nearest" }); });
 $("lista").addEventListener("click", e => {
   const b = e.target.closest("[data-a]"); if (!b) return;
-  const i = Number(b.dataset.i), ps = datos.productos;
-  if (b.dataset.a === "edit") return abrirEditor(i);
-  const j = b.dataset.a === "up" ? i - 1 : i + 1;
+  const ps = datos.productos, i = Number(b.dataset.i), d = b.dataset.a === "up" ? -1 : 1;
+  // Dentro de una categoría se intercambia con el vecino de la misma categoría
+  let j = i + d; while (j >= 0 && j < ps.length && !enFiltro(ps[j], filtro)) j += d;
   if (j < 0 || j >= ps.length) return;
   [ps[i], ps[j]] = [ps[j], ps[i]]; pintarLista(); marcar();
+  const btn = $("lista").querySelector(`[data-a="${b.dataset.a}"][data-i="${j}"]`); if (btn && !btn.disabled) btn.focus();
 });
-$("nuevo").addEventListener("click", () => abrirEditor(-1));
 
 /* ---------- editor ---------- */
-let edIdx = -1, edFotos = [], edColor = COLORES[0][0], edVars = [];
-const slug = t => String(t || "").normalize("NFD").replace(/[̀-ͯ]/g, "").toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/^-+|-+$/g, "").slice(0, 40) || "producto";
-const aNumero = t => { const n = parseFloat(String(t || "").replace(/[^0-9.]/g, "")); return isFinite(n) ? n : ""; };
-const aPrecio = n => n === "" || n == null ? "" : "$" + Number(n).toLocaleString("en-US", { minimumFractionDigits: 2, maximumFractionDigits: 2 });
-
-function abrirEditor(i) {
-  edIdx = i;
-  const p = i >= 0 ? datos.productos[i] : { name: "", sub: "", cat: (datos.categorias.find(c => c.id !== "all") || {}).id || "", badge: "", c: COLORES[0][0], imgs: [], desc: "", specs: ["Impreso en 3D"], price: "" };
-  $("ed-t").textContent = i >= 0 ? "Editar producto" : "Nuevo producto";
+let edId = null, edHash = "", edSnap = "", edFotos = [], edColor = COLORES[0][0], edVars = [], edSpecs = [], badgeAuto = false;
+const precioDe = id => $(id).value;
+function estadoEd() {
+  return { id: edId, name: $("e-name").value, price: precioDe("e-price"), was: precioDe("e-was"), cat: $("e-cat").value, badge: $("e-badge").value,
+    c: edColor, imgs: [...edFotos], vars: clon(edVars), sub: $("e-sub").value, desc: $("e-desc").value, specs: [...edSpecs], hash: edHash };
+}
+const edSucio = () => !!edHash && J({ ...estadoEd(), hash: "" }) !== edSnap;
+function abrirEditor(idRuta, restaurar) {
+  const [id, qs] = idRuta.split("?");
+  const prev = id === "nuevo" ? null : porId(datos.productos, id);
+  if (id !== "nuevo" && !prev) { toast("Ese producto ya no existe."); history.replaceState(null, "", "#/productos"); ruta(); return false; }
+  const catQ = new URLSearchParams(qs || "").get("cat");
+  const primeraCat = (datos.categorias.find(c => c.id !== "all") || {}).id || "";
+  const p = prev || { name: "", sub: "", cat: datos.categorias.some(c => c.id === catQ) ? catQ : primeraCat, badge: "", c: COLORES[0][0], imgs: [], desc: "", specs: ["Impreso en 3D"], price: "" };
+  edId = prev ? prev.id : null; edHash = location.hash;
+  $("ed-t").textContent = prev ? prev.name : "Nuevo producto";
   $("e-name").value = p.name || ""; $("e-sub").value = p.sub || "";
   $("e-cat").innerHTML = datos.categorias.filter(c => c.id !== "all").map(c => `<option value="${esc(c.id)}">${esc(c.label)}</option>`).join("");
-  $("e-cat").value = p.cat || "";
-  $("e-badge").value = p.badge || ""; $("e-badge").placeholder = catLabel($("e-cat").value);
-  edColor = p.c || COLORES[0][0]; pintarColores();
+  $("e-cat").value = p.cat || primeraCat;
+  // Etiquetas existentes, sin repetir mayúsculas ni acentos
+  const vistos = new Map(); datos.productos.forEach(x => { if (x.badge && !vistos.has(norm(x.badge))) vistos.set(norm(x.badge), x.badge); });
+  datos.categorias.forEach(c => { if (c.id !== "all" && !vistos.has(norm(c.label))) vistos.set(norm(c.label), c.label); });
+  $("dl-badges").innerHTML = [...vistos.values()].sort((a, b) => a.localeCompare(b, "es")).map(b => `<option value="${esc(b)}">`).join("");
+  $("e-badge").value = p.badge || catLabel($("e-cat").value);
+  badgeAuto = !p.badge || norm(p.badge) === norm(catLabel(p.cat));
+  edColor = p.c || COLORES[0][0];
   edVars = (p.variantes || []).map(v => ({ id: v.id, nombre: v.nombre || "", nota: v.nota || "", imgs: [...(v.imgs || [])] }));
-  edFotos = [...(p.imgs || [])]; pintarFotos();
-  $("e-desc").value = p.desc || ""; $("e-specs").value = (p.specs || []).join(", ");
+  edFotos = [...(p.imgs || [])];
+  $("e-desc").value = p.desc || ""; edSpecs = [...(p.specs || [])];
   $("e-price").value = aNumero(p.price); $("e-was").value = aNumero(p.was);
-  $("ed-del").hidden = i < 0; $("ed-err").textContent = "";
-  $("ed").showModal(); $("ed").scrollTop = 0;
+  ["err-name", "err-fotos", "err-price", "err-vars"].forEach(k => $(k).textContent = "");
+  ["e-name", "e-price", "e-was"].forEach(k => $(k).removeAttribute("aria-invalid"));
+  $("ed-more").hidden = !prev; $("e-more").open = false;
+  edSnap = J({ ...estadoEd(), hash: "" });
+  if (restaurar) {   // formulario a medio llenar que se recuperó del borrador
+    $("e-name").value = restaurar.name; $("e-price").value = restaurar.price; $("e-was").value = restaurar.was; $("e-cat").value = restaurar.cat;
+    $("e-badge").value = restaurar.badge; edColor = restaurar.c; edFotos = restaurar.imgs.filter(n => nuevas.has(n) || imgsRepo.has(n) || (prev && prev.imgs.includes(n)));
+    edVars = restaurar.vars; $("e-sub").value = restaurar.sub; $("e-desc").value = restaurar.desc; edSpecs = restaurar.specs;
+  }
+  pintarColores(); pintarFotos(); pintarSpecs(); pintarPrev();
+  return true;
 }
-$("e-cat").addEventListener("change", () => { $("e-badge").placeholder = catLabel($("e-cat").value); });
+function pintarPrev() {
+  const n = $("e-name").value.trim() || "Nombre del producto", price = aNumero($("e-price").value), was = aNumero($("e-was").value);
+  const off = price !== "" && was !== "" && was > price && price > 0 ? Math.round((1 - price / was) * 100) : 0;
+  const fotos = edVars.length && edVars[0].imgs.length ? edVars[0].imgs : edFotos;
+  $("pv-ph").innerHTML = (fotos[0] ? `<img src="${esc(fotoUrl(fotos[0]))}" alt="">` : "") +
+    `<span class="prev-stk">${edVars.length ? `<span class="pill pill-v">${edVars.length} variantes</span>` : ""}${off ? `<span class="pill pill-off">−${off}%</span>` : ""}</span>`;
+  $("pv-k").innerHTML = `<i style="--c:${esc(hexDe(edColor))}"></i>${esc($("e-badge").value.trim() || catLabel($("e-cat").value))}`;
+  $("pv-n").textContent = n;
+  $("pv-p").className = "prev-p" + (price === "" ? " ask" : "");
+  $("pv-p").innerHTML = price === "" ? "Precio por WhatsApp" : (off ? `<s>${esc(corto(aPrecio(was)))}</s>` : "") + esc(corto(aPrecio(price)));
+  $("c-name").textContent = `${$("e-name").value.length}/60`;
+  $("c-desc").textContent = `${$("e-desc").value.length}/400`;
+  $("more-sum").textContent = [$("e-sub").value.trim() && "subtítulo", $("e-desc").value.trim() && "descripción", edSpecs.length && `${edSpecs.length} características`].filter(Boolean).join(" · ") || "subtítulo, descripción, características";
+  $("ed-sum").innerHTML = `<b>${esc(n)}</b>${price === "" ? "Sin precio" : esc(corto(aPrecio(price)))} · ${edFotos.length} foto${edFotos.length !== 1 ? "s" : ""}${edVars.length ? ` · ${edVars.length} variantes` : ""}`;
+  // Aviso del precio de oferta mientras escribe
+  const avisoPrecio = was !== "" && (price === "" || was <= price) ? (price === "" ? "Pon el precio actual para mostrar la oferta." : "El precio de antes debe ser mayor que el precio actual.") : "";
+  if ($("err-price").textContent && !avisoPrecio) { $("err-price").textContent = ""; $("e-was").removeAttribute("aria-invalid"); }
+}
+$("f-ed").addEventListener("input", e => {
+  if (e.target.id === "e-badge") badgeAuto = false;
+  if (e.target.id === "e-name" && $("e-name").value.trim()) { $("err-name").textContent = ""; $("e-name").removeAttribute("aria-invalid"); }
+  pintarPrev(); programarBorrador();
+});
+$("e-cat").addEventListener("change", () => { if (badgeAuto) $("e-badge").value = catLabel($("e-cat").value); pintarPrev(); });
 function pintarColores() {
   const propios = COLORES.some(c => c[0] === edColor) ? COLORES : [...COLORES, [edColor, edColor, "Actual"]];
-  $("e-colors").innerHTML = propios.map(([v, hex, n]) => `<button type="button" class="sw" style="--c:${esc(hex)}" data-c="${esc(v)}" aria-pressed="${v === edColor}" aria-label="${esc(n)}"></button>`).join("");
+  $("e-colors").innerHTML = propios.map(([v, hex, n]) => `<button type="button" class="sw" role="radio" style="--c:${esc(hex)}" data-c="${esc(v)}" aria-checked="${v === edColor}" aria-label="${esc(n)}"></button>`).join("");
 }
-$("e-colors").addEventListener("click", e => { const b = e.target.closest("[data-c]"); if (b) { edColor = b.dataset.c; pintarColores(); } });
+$("e-colors").addEventListener("click", e => { const b = e.target.closest("[data-c]"); if (b) { edColor = b.dataset.c; pintarColores(); pintarPrev(); programarBorrador(); } });
+
+// Fotos
 function pintarFotos() {
-  $("e-photos").innerHTML = edFotos.map((n, i) => `<div class="ph">
-      <img src="${esc(fotoUrl(n))}" alt="Foto ${i + 1}">
-      ${i ? "" : '<span class="main">Principal</span>'}
-      <div class="ph-acts">
-        <button type="button" data-f="izq" data-i="${i}" aria-label="Mover foto ${i + 1} antes" ${i ? "" : "disabled"}>${ICO.left}</button>
-        <button type="button" data-f="quitar" data-i="${i}" aria-label="Quitar foto ${i + 1}">${ICO.x}</button>
-        <button type="button" data-f="der" data-i="${i}" aria-label="Mover foto ${i + 1} después" ${i < edFotos.length - 1 ? "" : "disabled"}>${ICO.right}</button>
-      </div>
-    </div>`).join("") + `<label class="ph-add">${ICO.plus}Agregar fotos<input type="file" id="e-files" accept="image/*" multiple></label>`;
-  pintarVars();
+  $("e-photos").innerHTML = edFotos.map((n, i) => `<button type="button" class="ph" data-i="${i}" aria-label="Foto ${i + 1}${i ? "" : ", principal"}: opciones">
+      <img src="${esc(fotoUrl(n))}" alt="">${i ? "" : '<span class="main">Principal</span>'}<span class="num">${i + 1}</span>
+    </button>`).join("") + `<label class="ph-add">${ICO.plus}${edFotos.length ? "Agregar más" : "Agregar fotos"}<input type="file" id="e-files" accept="image/*" multiple></label>`;
+  if (edFotos.length) $("err-fotos").textContent = "";
+  pintarVars(); pintarPrev();
 }
-function pintarVars() {
-  edVars.forEach(v => { v.imgs = edFotos.filter(n => v.imgs.includes(n)); });   // mismo orden que arriba
-  $("e-vars").innerHTML = edVars.map((v, i) => `<div class="var">
-      <div class="var-h"><span>Variante ${i + 1}</span><button class="btn btn-danger" type="button" data-v="quitar" data-i="${i}">Quitar</button></div>
-      <input class="in" data-v="nombre" data-i="${i}" maxlength="40" value="${esc(v.nombre)}" placeholder="Nombre. Ej: 🔗 Cola Cadenita" aria-label="Nombre de la variante ${i + 1}">
-      <input class="in" data-v="nota" data-i="${i}" maxlength="80" value="${esc(v.nota)}" placeholder="Detalle (opcional). Ej: cola recta de eslabones" aria-label="Detalle de la variante ${i + 1}">
-      <span class="var-l">Toca sus fotos</span>
-      <div class="var-ph">${edFotos.length ? edFotos.map((n, j) => `<button type="button" data-v="foto" data-i="${i}" data-n="${esc(n)}" aria-pressed="${v.imgs.includes(n)}" aria-label="Foto ${j + 1}"><img src="${esc(fotoUrl(n))}" alt=""></button>`).join("") : '<span class="hint" style="margin:0">Primero agrega fotos arriba.</span>'}</div>
-    </div>`).join("");
-  $("e-var-add").textContent = edVars.length ? "Agregar otra variante" : "Agregar variantes";
-}
-$("e-var-add").addEventListener("click", () => {
-  const n = edVars.length ? 1 : 2;   // una sola variante no sirve: la primera vez se crean dos
-  for (let k = 0; k < n; k++) edVars.push({ id: "", nombre: "", nota: "", imgs: [] });
-  pintarVars();
-  const ins = $("e-vars").querySelectorAll('[data-v="nombre"]'); ins[ins.length - n].focus();
-});
-$("e-vars").addEventListener("input", e => { const t = e.target; if (t.dataset.v === "nombre" || t.dataset.v === "nota") edVars[Number(t.dataset.i)][t.dataset.v] = t.value; });
-$("e-vars").addEventListener("click", e => {
-  const b = e.target.closest("button[data-v]"); if (!b) return;
-  const v = edVars[Number(b.dataset.i)];
-  if (b.dataset.v === "quitar") {
-    if (edVars.length === 2 && !confirm("Con una sola variante no hay nada que elegir, así que se quitan las dos. ¿Continuar?")) return;
-    edVars.splice(Number(b.dataset.i), 1); if (edVars.length < 2) edVars = [];
-  } else if (b.dataset.v === "foto") {
-    const n = b.dataset.n; v.imgs = v.imgs.includes(n) ? v.imgs.filter(x => x !== n) : [...v.imgs, n];
-  }
-  pintarVars();
-});
+let phIdx = -1;
 $("e-photos").addEventListener("click", e => {
-  const b = e.target.closest("[data-f]"); if (!b) return;
-  const i = Number(b.dataset.i);
-  if (b.dataset.f === "quitar") edFotos.splice(i, 1);
-  else { const j = b.dataset.f === "izq" ? i - 1 : i + 1; [edFotos[i], edFotos[j]] = [edFotos[j], edFotos[i]]; }
-  pintarFotos();
+  const b = e.target.closest(".ph"); if (!b) return;
+  phIdx = Number(b.dataset.i);
+  $("phm-img").src = fotoUrl(edFotos[phIdx]); $("phm-t").textContent = `Foto ${phIdx + 1} de ${edFotos.length}`;
+  const m = $("ph-menu");
+  m.querySelector('[data-pm="main"]').hidden = phIdx === 0; m.querySelector('[data-pm="izq"]').hidden = phIdx === 0;
+  m.querySelector('[data-pm="der"]').hidden = phIdx === edFotos.length - 1;
+  m.showModal();
+});
+$("ph-menu").addEventListener("click", e => {
+  const m = $("ph-menu"); if (e.target === m) return m.close();
+  const b = e.target.closest("[data-pm]"); if (!b) return;
+  const i = phIdx, n = edFotos[i], a = b.dataset.pm;
+  if (a === "main") { edFotos.splice(i, 1); edFotos.unshift(n); }
+  else if (a === "izq" || a === "der") { const j = a === "izq" ? i - 1 : i + 1; [edFotos[i], edFotos[j]] = [edFotos[j], edFotos[i]]; }
+  else if (a === "quitar") {
+    const deVar = edVars.filter(v => v.imgs.includes(n)).map(v => v.nombre.trim() || "una variante");
+    if (deVar.length && !confirm(`Esta foto es de ${deVar.join(" y ")}. ¿Quitarla?`)) return;
+    edFotos.splice(i, 1);
+  }
+  m.close(); if (a !== "cerrar") { pintarFotos(); programarBorrador(); }
 });
 $("e-photos").addEventListener("change", async e => {
   if (e.target.id !== "e-files") return;
   const files = [...e.target.files]; if (!files.length) return;
-  const id = edIdx >= 0 ? datos.productos[edIdx].id : slug($("e-name").value);
-  ocupado("Preparando fotos…");
+  const id = edId || slug($("e-name").value);
+  let k = 0;
   try {
     for (const f of files) {
+      ocupado(`Preparando foto ${++k} de ${files.length}…`);
       const blob = await cuadrada(f);
       const n = nombreLibre(id);
       nuevas.set(n, { blob, url: URL.createObjectURL(blob) });
       edFotos.push(n);
     }
   } catch (err) { toast("No se pudo leer una de las fotos. Prueba con JPG o PNG."); }
-  ocupado(""); pintarFotos();
+  ocupado(""); pintarFotos(); guardarBorrador();
 });
 function nombreLibre(id) {
   const ocupados = new Set([...imgsRepo, ...nuevas.keys(), ...usadas(), ...edFotos]);
@@ -499,26 +828,96 @@ async function cuadrada(file) {
     return await new Promise((res, rej) => cv.toBlob(b => b ? res(b) : rej(new Error("toBlob")), "image/jpeg", 0.86));
   } finally { URL.revokeObjectURL(url); }
 }
-$("ed-x").addEventListener("click", () => $("ed").close());
+
+// Variantes
+function pintarVars() {
+  edVars.forEach(v => { v.imgs = edFotos.filter(n => v.imgs.includes(n)); });   // mismo orden que las fotos
+  const sinVar = edVars.length ? edFotos.filter(n => !edVars.some(v => v.imgs.includes(n))).length : 0;
+  $("e-vars").innerHTML = edVars.map((v, i) => `<div class="var">
+      <div class="var-h"><span>Variante ${i + 1} <small>· ${v.imgs.length} foto${v.imgs.length !== 1 ? "s" : ""}</small></span><button class="btn btn-danger" type="button" data-v="quitar" data-i="${i}">Quitar</button></div>
+      <input class="in" data-v="nombre" data-i="${i}" maxlength="40" value="${esc(v.nombre)}" placeholder="Nombre. Ej: 🔗 Cola Cadenita" aria-label="Nombre de la variante ${i + 1}">
+      <input class="in" data-v="nota" data-i="${i}" maxlength="80" value="${esc(v.nota)}" placeholder="Detalle (opcional). Ej: cola recta de eslabones" aria-label="Detalle de la variante ${i + 1}">
+      <span class="var-l">¿Qué fotos son de esta variante?</span>
+      <div class="var-ph">${edFotos.length ? edFotos.map((n, j) => `<button type="button" data-v="foto" data-i="${i}" data-n="${esc(n)}" aria-pressed="${v.imgs.includes(n)}" aria-label="Foto ${j + 1} para ${esc(v.nombre || "variante " + (i + 1))}"><img src="${esc(fotoUrl(n))}" alt=""></button>`).join("") : '<span class="hint" style="margin:0">Primero agrega fotos arriba.</span>'}</div>
+    </div>`).join("") + (sinVar ? `<p class="hint" style="margin:0">${sinVar} foto${sinVar !== 1 ? "s" : ""} sin variante: el cliente la${sinVar !== 1 ? "s" : ""} verá solo en la tarjeta.</p>` : "");
+  $("e-var-add").textContent = edVars.length ? "Agregar otra variante" : "Agregar variantes";
+  if ($("err-vars").textContent && edVars.every(v => v.nombre.trim() && v.imgs.length)) $("err-vars").textContent = "";
+}
+$("e-var-add").addEventListener("click", () => {
+  const n = edVars.length ? 1 : 2;   // una sola variante no sirve: la primera vez se crean dos
+  for (let k = 0; k < n; k++) edVars.push({ id: "", nombre: "", nota: "", imgs: [] });
+  pintarVars(); pintarPrev();
+  const ins = $("e-vars").querySelectorAll('[data-v="nombre"]'); ins[ins.length - n].focus();
+});
+$("e-vars").addEventListener("input", e => { const t = e.target; if (t.dataset.v === "nombre" || t.dataset.v === "nota") edVars[Number(t.dataset.i)][t.dataset.v] = t.value; });
+$("e-vars").addEventListener("click", e => {
+  const b = e.target.closest("button[data-v]"); if (!b) return;
+  const v = edVars[Number(b.dataset.i)];
+  if (b.dataset.v === "quitar") {
+    if (edVars.length === 2 && !confirm("Con una sola variante no hay nada que elegir, así que se quitan las dos. ¿Continuar?")) return;
+    edVars.splice(Number(b.dataset.i), 1); if (edVars.length < 2) edVars = [];
+  } else if (b.dataset.v === "foto") {
+    const n = b.dataset.n; v.imgs = v.imgs.includes(n) ? v.imgs.filter(x => x !== n) : [...v.imgs, n];
+  }
+  pintarVars(); pintarPrev(); programarBorrador();
+});
+
+// Características como etiquetas
+function pintarSpecs() {
+  $("e-specs").innerHTML = edSpecs.map((s, i) => `<span class="spec">${esc(s)}<button type="button" data-s="${i}" aria-label="Quitar ${esc(s)}">${ICO.x}</button></span>`).join("");
+  $("c-specs").textContent = `(${edSpecs.length}/6)`;
+  const todas = new Map(); datos.productos.forEach(p => (p.specs || []).forEach(s => { if (!todas.has(norm(s))) todas.set(norm(s), s); }));
+  const tengo = new Set(edSpecs.map(norm));
+  $("e-sugs").innerHTML = edSpecs.length >= 6 ? "" : [...todas.values()].filter(s => !tengo.has(norm(s))).slice(0, 10).map(s => `<button type="button" class="sug" data-sug="${esc(s)}">+ ${esc(s)}</button>`).join("");
+  $("e-spec").disabled = $("e-spec-add").disabled = edSpecs.length >= 6;
+  pintarPrev();
+}
+function agregarSpec(t) {
+  t = String(t || "").replace(/,/g, " ").trim().slice(0, 24); if (!t || edSpecs.length >= 6) return;
+  if (!edSpecs.some(s => norm(s) === norm(t))) edSpecs.push(t);
+  $("e-spec").value = ""; pintarSpecs(); programarBorrador();
+}
+$("e-spec-add").addEventListener("click", () => agregarSpec($("e-spec").value));
+$("e-spec").addEventListener("keydown", e => { if (e.key === "Enter" || e.key === ",") { e.preventDefault(); agregarSpec($("e-spec").value); } });
+$("e-specs").addEventListener("click", e => { const b = e.target.closest("[data-s]"); if (b) { edSpecs.splice(Number(b.dataset.s), 1); pintarSpecs(); programarBorrador(); } });
+$("e-sugs").addEventListener("click", e => { const b = e.target.closest("[data-sug]"); if (b) agregarSpec(b.dataset.sug); });
+
+function errorEn(idErr, msg, foco) {
+  $(idErr).textContent = msg;
+  const el = foco ? $(foco) : $(idErr);
+  if (foco) el.setAttribute("aria-invalid", "true");
+  el.scrollIntoView({ block: "center", behavior: "smooth" });
+  if (foco) setTimeout(() => el.focus({ preventScroll: true }), 300);
+}
+$("ed-back").addEventListener("click", volver);
 $("f-ed").addEventListener("submit", e => {
   e.preventDefault();
+  if ($("e-spec").value.trim()) agregarSpec($("e-spec").value);
   const name = $("e-name").value.trim();
-  if (!name) { $("ed-err").textContent = "Ponle un nombre al producto."; return $("e-name").focus(); }
-  if (!edFotos.length) { $("ed-err").textContent = "Agrega al menos una foto."; return; }
+  if (!edFotos.length) return errorEn("err-fotos", "Agrega al menos una foto.");
+  if (!name) return errorEn("err-name", "Ponle un nombre al producto.", "e-name");
   const price = aNumero($("e-price").value), was = aNumero($("e-was").value);
-  const prev = edIdx >= 0 ? datos.productos[edIdx] : null;
-  let id = prev ? prev.id : slug(name);
-  if (!prev) { const ids = new Set(datos.productos.map(p => p.id)); let k = 2, b = id; while (ids.has(id)) id = `${b}-${k++}`; }
-  const p = {
-    id, name, sub: $("e-sub").value.trim(), cat: $("e-cat").value, badge: $("e-badge").value.trim() || catLabel($("e-cat").value),
-    c: edColor, imgs: [...edFotos], desc: $("e-desc").value.trim(),
-    specs: $("e-specs").value.split(",").map(s => s.trim()).filter(Boolean).slice(0, 6), price: aPrecio(price)
-  };
-  if (price !== "" && was !== "" && was > price) p.was = aPrecio(was);
+  if ($("e-price").value.trim() && price === "") return errorEn("err-price", "Escribe el precio solo con números, ej: 55 o 55.50.", "e-price");
+  if (was !== "" && price === "") return errorEn("err-price", "Para mostrar oferta pon también el precio actual, o borra el precio de antes.", "e-price");
+  if (was !== "" && was <= price) return errorEn("err-price", "El precio de antes debe ser mayor que el precio actual (o déjalo vacío).", "e-was");
   if (edVars.length) {
     const malo = edVars.findIndex(v => !v.nombre.trim()), sinFoto = edVars.findIndex(v => !v.imgs.length);
-    if (malo >= 0) { $("ed-err").textContent = `Ponle nombre a la variante ${malo + 1}.`; return $("e-vars").querySelectorAll('[data-v="nombre"]')[malo].focus(); }
-    if (sinFoto >= 0) { $("ed-err").textContent = `Marca al menos una foto para "${edVars[sinFoto].nombre.trim()}".`; return; }
+    if (malo >= 0) { errorEn("err-vars", `Ponle nombre a la variante ${malo + 1}.`); return setTimeout(() => $("e-vars").querySelectorAll('[data-v="nombre"]')[malo].focus({ preventScroll: true }), 300); }
+    if (sinFoto >= 0) return errorEn("err-vars", `Marca al menos una foto para "${edVars[sinFoto].nombre.trim()}".`);
+  }
+  const prev = edId ? porId(datos.productos, edId) : null;
+  let id = prev ? prev.id : slug(name);
+  if (!prev) { const ids = new Set(datos.productos.map(p => p.id)); let k = 2, b = id; while (ids.has(id)) id = `${b}-${k++}`; }
+  // Fotos nuevas subidas antes de poner nombre: se renombran con el del producto
+  const ren = {};
+  edFotos.forEach(n => { if (nuevas.has(n) && !n.startsWith(id + "-")) { const nn = nombreLibre(id); nuevas.set(nn, nuevas.get(n)); nuevas.delete(n); ren[n] = nn; } });
+  edFotos = edFotos.map(n => ren[n] || n); edVars.forEach(v => { v.imgs = v.imgs.map(n => ren[n] || n); });
+  const p = {
+    id, name, sub: $("e-sub").value.trim(), cat: $("e-cat").value, badge: $("e-badge").value.trim() || catLabel($("e-cat").value),
+    c: edColor, imgs: [...edFotos], desc: $("e-desc").value.trim(), specs: edSpecs.slice(0, 6), price: aPrecio(price)
+  };
+  if (was !== "") p.was = aPrecio(was);
+  if (edVars.length) {
     const ids = new Set();
     p.variantes = edVars.map(v => {
       let vid = v.id || slug(v.nombre).slice(0, 30) || "v", b = vid, k = 2;
@@ -527,93 +926,159 @@ $("f-ed").addEventListener("submit", e => {
       return { id: vid, nombre: v.nombre.trim(), nota: v.nota.trim(), imgs: [...v.imgs] };
     });
   }
-  if (prev) datos.productos[edIdx] = p; else datos.productos.push(p);
-  $("ed").close(); pintarLista(); marcar();
-  toast(prev ? "Cambios guardados. Toca Publicar para subirlos." : "Producto agregado. Toca Publicar para subirlo.");
+  if (prev) datos.productos[datos.productos.indexOf(prev)] = p; else datos.productos.push(p);
+  limpiarNuevas();
+  edSnap = J({ ...estadoEd(), hash: "" });   // ya está guardado: salir no pregunta
+  marcar(); volver();
+  toast(prev ? "Guardado. Publícalo cuando termines." : "Producto agregado. Publícalo cuando termines.");
 });
+function moverProducto(alInicio) {
+  const ps = datos.productos, p = porId(ps, edId); if (!p) return;
+  ps.splice(ps.indexOf(p), 1); alInicio ? ps.unshift(p) : ps.push(p);
+  marcar(); toast(alInicio ? "Movido al principio del catálogo." : "Movido al final del catálogo.");
+}
+$("ed-first").addEventListener("click", () => moverProducto(true));
+$("ed-last").addEventListener("click", () => moverProducto(false));
 $("ed-del").addEventListener("click", () => {
-  const p = datos.productos[edIdx]; if (!p) return;
-  if (!confirm(`¿Eliminar "${p.name}" del catálogo? Se quitará al publicar.`)) return;
-  datos.productos.splice(edIdx, 1); $("ed").close(); pintarLista(); marcar();
-  toast("Producto quitado. Toca Publicar para aplicarlo.");
+  const p = porId(datos.productos, edId); if (!p) return;
+  if (!confirm(`¿Eliminar "${p.name}" del catálogo? Se quitará al publicar (puedes deshacerlo antes en Publicar).`)) return;
+  datos.productos.splice(datos.productos.indexOf(p), 1); limpiarNuevas();
+  edSnap = J({ ...estadoEd(), hash: "" }); marcar(); volver();
+  toast("Producto quitado. Se aplica al publicar.");
 });
+// Fotos preparadas que ya no usa nadie (ni el editor abierto)
+function limpiarNuevas() {
+  const u = usadas(); [...nuevas.keys()].filter(n => !u.has(n)).forEach(n => { URL.revokeObjectURL(nuevas.get(n).url); nuevas.delete(n); });
+}
 
 /* ---------- categorías ---------- */
 function pintarCats() {
   const uso = id => datos.productos.filter(p => p.cat === id).length;
-  $("cats").innerHTML = datos.categorias.map((c, i) => `<div class="cat">
-      <div class="cat-h"><b>${c.id === "all" ? "Todos (página principal)" : esc(c.label)}</b><span>${c.id === "all" ? datos.productos.length + " productos" : uso(c.id) + " producto" + (uso(c.id) !== 1 ? "s" : "")}</span></div>
-      ${c.id === "all" ? "" : `<label class="f" for="c-l-${i}">Nombre del filtro</label><input class="in" id="c-l-${i}" data-c="${i}" data-k="label" maxlength="24" value="${esc(c.label)}">`}
-      <label class="f" for="c-t-${i}">Título</label><input class="in" id="c-t-${i}" data-c="${i}" data-k="title" maxlength="60" value="${esc(c.title || "")}">
-      <label class="f" for="c-s-${i}">Texto</label><input class="in" id="c-s-${i}" data-c="${i}" data-k="sub" maxlength="140" value="${esc(c.sub || "")}">
-      ${c.id === "all" ? "" : `<button class="btn btn-danger" type="button" data-del="${i}" style="margin-top:8px;padding:0" ${uso(c.id) ? "disabled title='Tiene productos'" : ""}>Eliminar categoría${uso(c.id) ? " (mueve antes sus productos)" : ""}</button>`}
-    </div>`).join("");
+  const cs = datos.categorias;
+  $("cats").innerHTML = cs.map((c, i) => { const todos = c.id === "all", n = todos ? datos.productos.length : uso(c.id);
+    return `<div class="cat"><div class="cat-row">
+      <details data-ci="${i}"><summary><b>${todos ? "Página principal (Todos)" : esc(c.label)}</b><span>${n} producto${n !== 1 ? "s" : ""} · toca para editar</span></summary></details>
+      ${todos ? "" : `<button class="icon-btn" type="button" data-mv="-1" data-i="${i}" aria-label="Subir ${esc(c.label)}" ${i > 1 ? "" : "disabled"}>${ICO.up}</button>
+      <button class="icon-btn" type="button" data-mv="1" data-i="${i}" aria-label="Bajar ${esc(c.label)}" ${i < cs.length - 1 ? "" : "disabled"}>${ICO.down}</button>`}
+    </div>
+    <div class="cat-body" id="cb-${i}" hidden>
+      ${todos ? "" : `<label class="f" for="c-l-${i}">Nombre del filtro</label><input class="in" id="c-l-${i}" data-c="${i}" data-k="label" maxlength="24" value="${esc(c.label)}">`}
+      <label class="f" for="c-t-${i}">Título de la página</label><input class="in" id="c-t-${i}" data-c="${i}" data-k="title" maxlength="60" value="${esc(c.title || "")}">
+      <label class="f" for="c-s-${i}">Texto bajo el título</label><input class="in" id="c-s-${i}" data-c="${i}" data-k="sub" maxlength="140" value="${esc(c.sub || "")}">
+      ${todos ? "" : `<div style="display:flex;gap:8px;flex-wrap:wrap;margin-top:12px"><a class="btn btn-soft" href="#/productos" data-ver="${esc(c.id)}">Ver sus productos</a>
+      <button class="btn btn-danger" type="button" data-del="${i}" ${n ? "disabled" : ""}>${n ? "Para eliminarla, mueve antes sus productos" : "Eliminar categoría"}</button></div>`}
+    </div></div>`; }).join("");
 }
+$("cats").addEventListener("toggle", e => { const d = e.target.closest("details[data-ci]"); if (d) $("cb-" + d.dataset.ci).hidden = !d.open; }, true);
 $("cats").addEventListener("input", e => { const el = e.target.closest("[data-c]"); if (!el) return; datos.categorias[Number(el.dataset.c)][el.dataset.k] = el.value; marcar(); });
-$("cats").addEventListener("change", () => pintarLista());
+$("cats").addEventListener("change", e => { const el = e.target.closest('[data-k="label"]'); if (el) { const d = el.closest(".cat").querySelector("summary b"); if (d) d.textContent = el.value; } });
 $("cats").addEventListener("click", e => {
+  const v = e.target.closest("[data-ver]"); if (v) { filtro = v.dataset.ver; return; }
+  const m = e.target.closest("[data-mv]");
+  if (m) { const cs = datos.categorias, i = Number(m.dataset.i), j = i + Number(m.dataset.mv); if (j < 1 || j >= cs.length) return;
+    [cs[i], cs[j]] = [cs[j], cs[i]]; pintarCats(); marcar(); return; }
   const b = e.target.closest("[data-del]"); if (!b) return;
   const c = datos.categorias[Number(b.dataset.del)];
   if (!confirm(`¿Eliminar la categoría "${c.label}"?`)) return;
   datos.categorias.splice(Number(b.dataset.del), 1); pintarCats(); marcar();
 });
-$("nueva-cat").addEventListener("click", () => {
-  const label = (prompt("Nombre de la nueva categoría (ej: Llaveros):") || "").trim().slice(0, 24);
-  if (!label) return;
+$("f-cat").addEventListener("submit", e => {
+  e.preventDefault();
+  const label = $("cat-new").value.trim().slice(0, 24); if (!label) return $("cat-new").focus();
   let id = slug(label), k = 2, b = id; const ids = new Set(datos.categorias.map(c => c.id));
-  while (ids.has(id) || id === "all") id = `${b}-${k++}`;
-  datos.categorias.push({ id, label, title: label, sub: "" }); pintarCats(); marcar();
+  while (ids.has(id) || id === "all" || id === "ofertas" || id === "todos") id = `${b}-${k++}`;
+  datos.categorias.push({ id, label, title: label, sub: "" }); $("cat-new").value = ""; pintarCats(); marcar();
+  toast(`Categoría "${label}" agregada.`);
 });
-["t-prod", "t-cat"].forEach(t => $(t).addEventListener("click", () => {
-  const prod = t === "t-prod";
-  $("t-prod").setAttribute("aria-selected", prod); $("t-cat").setAttribute("aria-selected", !prod);
-  $("p-prod").hidden = !prod; $("p-cat").hidden = prod;
-}));
+
+/* ---------- revisar y publicar ---------- */
+let pubMsg = null;   // { tipo: "ok" | "error", texto }
+function pintarPublicar() {
+  const cs = cambios(), el = $("pub-body");
+  if (pubMsg && pubMsg.tipo === "ok" && !cs.length) {
+    el.innerHTML = `<div class="card pub-ok"><div class="big">✓</div><h2>¡Publicado!</h2><p class="lead">${esc(pubMsg.texto)}</p><a class="btn btn-ink" href="./" target="_blank" rel="noopener">Ver catálogo</a></div>`; return;
+  }
+  if (!cs.length) { el.innerHTML = `<div class="card pub-ok"><div class="big">☁︎</div><h2>Todo está publicado</h2><p class="lead">Cuando edites o agregues productos, aquí verás los cambios antes de subirlos.</p></div>`; return; }
+  const sub = usadasNuevas().length, antes = new Set(base.productos.flatMap(p => p.imgs)), u = usadas();
+  const borra = [...antes].filter(n => !u.has(n) && !PROTEGIDAS.has(n) && imgsRepo.has(n)).length;
+  const K = { nuevo: "Nuevo", editado: "Editado", quitado: "Se quitará" };
+  el.innerHTML = `<p class="lead">Revisa lo que vas a subir. Puedes deshacer cualquier cambio.</p>
+    ${pubMsg && pubMsg.tipo === "error" ? `<div class="pub-err" role="alert">${esc(pubMsg.texto)}<br><button class="btn btn-ink" type="button" data-pub="publicar">Reintentar</button></div>` : ""}
+    <div class="card">${cs.map((c, i) => c.p ? `<div class="chg">
+        <img src="${esc(fotoUrl(c.p.imgs[0]))}" alt="">
+        <div class="chg-t"><span class="k k-${c.tipo}">${K[c.tipo]}</span><b>${esc(c.p.name)}</b>${c.campos ? `<ul>${c.campos.map(t => `<li>${esc(t)}</li>`).join("")}</ul>` : ""}</div>
+        <div class="chg-acts">${c.tipo !== "quitado" ? `<a class="btn btn-soft" href="#/producto/${encodeURIComponent(c.p.id)}">Ver</a>` : ""}<button class="btn btn-soft" type="button" data-undo="${i}">Deshacer</button></div>
+      </div>` : `<div class="chg"><div class="chg-t"><span class="k k-otro">Cambio</span><b>${c.tipo === "cats" ? "Categorías" : "Orden de los productos"}</b></div><button class="btn btn-soft" type="button" data-undo="${i}">Deshacer</button></div>`).join("")}</div>
+    <div class="pub-sum"><span>${cs.length} cambio${cs.length !== 1 ? "s" : ""}</span>${sub ? `<span>${sub} foto${sub !== 1 ? "s" : ""} por subir</span>` : ""}${borra ? `<span>${borra} foto${borra !== 1 ? "s" : ""} que ya no se usan se borrarán</span>` : ""}</div>
+    <button class="btn btn-wa btn-big" type="button" data-pub="publicar">Publicar ahora</button>
+    <p class="hint" style="text-align:center">El catálogo se actualiza en 1 o 2 minutos.</p>
+    <p style="text-align:center"><button class="btn btn-danger" type="button" data-pub="descartar">Descartar todos los cambios</button></p>`;
+}
+$("pub-body").addEventListener("click", e => {
+  const u = e.target.closest("[data-undo]");
+  if (u) {
+    const c = cambios()[Number(u.dataset.undo)]; if (!c) return;
+    const ps = datos.productos;
+    if (c.tipo === "nuevo") ps.splice(ps.indexOf(c.p), 1);
+    else if (c.tipo === "editado") ps[ps.indexOf(c.p)] = clon(porId(base.productos, c.p.id));
+    else if (c.tipo === "quitado") ps.splice(Math.min(c.i, ps.length), 0, clon(c.p));
+    else if (c.tipo === "cats") datos.categorias = clon(base.categorias);
+    else if (c.tipo === "orden") { const pos = new Map(base.productos.map((p, i) => [p.id, i])); ps.sort((a, b) => (pos.has(a.id) ? pos.get(a.id) : 1e6) - (pos.has(b.id) ? pos.get(b.id) : 1e6)); }
+    limpiarNuevas(); marcar(); pintarPublicar(); toast("Cambio deshecho."); return;
+  }
+  const b = e.target.closest("[data-pub]"); if (!b) return;
+  if (b.dataset.pub === "publicar") publicar();
+  else if (confirm("¿Descartar todos los cambios sin publicar? No se puede deshacer.")) {
+    datos = clon(base); nuevas.forEach(v => URL.revokeObjectURL(v.url)); nuevas.clear(); pubMsg = null; marcar(); pintarPublicar();
+  }
+});
 
 /* ---------- publicar: un solo cambio en GitHub con todo ---------- */
 function blobB64(blob) { return new Promise((res, rej) => { const r = new FileReader(); r.onload = () => res(String(r.result).split(",")[1]); r.onerror = rej; r.readAsDataURL(blob); }); }
-async function publicar() {
-  const sinFoto = datos.productos.find(p => !p.imgs.length); if (sinFoto) return toast(`"${sinFoto.name}" no tiene fotos.`);
-  ocupado("Publicando…");
+async function publicar(intento = 1) {
+  const sinFoto = datos.productos.find(p => !p.imgs.length); if (sinFoto) { pubMsg = { tipo: "error", texto: `"${sinFoto.name}" no tiene fotos.` }; return pintarPublicar(); }
+  pubMsg = null; ocupado("Revisando el catálogo…");
+  let combinado = false;
   try {
+    // ¿Alguien publicó desde otro lado? Se combinan sus cambios con los tuyos.
+    const f = await gh(repo(`/contents/productos.json?ref=${BRANCH}`));
+    if (f.sha !== baseSha) {
+      const { d } = await leerRemoto();
+      datos = combinar(base, datos, d); base = d; baseSha = f.sha; combinado = true;
+    }
     const ref = await gh(repo(`/git/ref/heads/${BRANCH}`));
     const padre = ref.object.sha, com = await gh(repo(`/git/commits/${padre}`));
-    const tree = [];
-    const usar = usadas();
-    for (const n of usadasNuevas()) {
-      $("busy-t").textContent = `Subiendo foto ${n}…`;
-      const b = await gh(repo("/git/blobs"), { method: "POST", body: JSON.stringify({ content: await blobB64(nuevas.get(n).blob), encoding: "base64" }) });
-      tree.push({ path: `img/${n}.jpg`, mode: "100644", type: "blob", sha: b.sha });
+    const tree = [], usar = usadas(), subir = usadasNuevas();
+    for (let k = 0; k < subir.length; k++) {
+      ocupado(`Subiendo foto ${k + 1} de ${subir.length}…`);
+      const b = await gh(repo("/git/blobs"), { method: "POST", body: JSON.stringify({ content: await blobB64(nuevas.get(subir[k]).blob), encoding: "base64" }) });
+      tree.push({ path: `img/${subir[k]}.jpg`, mode: "100644", type: "blob", sha: b.sha });
     }
     // Fotos que dejaron de usarse (de productos quitados o fotos quitadas)
     const antes = new Set(base.productos.flatMap(p => p.imgs));
     const borrar = [...antes].filter(n => !usar.has(n) && !PROTEGIDAS.has(n) && imgsRepo.has(n));
     borrar.forEach(n => tree.push({ path: `img/${n}.jpg`, mode: "100644", type: "blob", sha: null }));
-    $("busy-t").textContent = "Guardando productos…";
+    ocupado("Guardando productos…");
     const json = JSON.stringify(datos, null, 2) + "\n";
     const jb = await gh(repo("/git/blobs"), { method: "POST", body: JSON.stringify({ content: textToB64(json), encoding: "base64" }) });
     tree.push({ path: "productos.json", mode: "100644", type: "blob", sha: jb.sha });
     const t = await gh(repo("/git/trees"), { method: "POST", body: JSON.stringify({ base_tree: com.tree.sha, tree }) });
     const c = await gh(repo("/git/commits"), { method: "POST", body: JSON.stringify({ message: "Catálogo: cambios desde la administración", tree: t.sha, parents: [padre] }) });
     await gh(repo(`/git/refs/heads/${BRANCH}`), { method: "PATCH", body: JSON.stringify({ sha: c.sha, force: false }) });
-    usadasNuevas().forEach(n => imgsRepo.add(n)); borrar.forEach(n => imgsRepo.delete(n));
-    base = clon(datos); [...nuevas.keys()].filter(n => !usar.has(n)).forEach(n => { URL.revokeObjectURL(nuevas.get(n).url); nuevas.delete(n); });
-    sucio = false; pintarTodo(); pintarPub();
-    toast("¡Publicado! El catálogo se actualiza en 1 o 2 minutos.");
+    subir.forEach(n => imgsRepo.add(n)); borrar.forEach(n => imgsRepo.delete(n));
+    base = clon(datos); baseSha = jb.sha;
+    nuevas.forEach(v => URL.revokeObjectURL(v.url)); nuevas.clear();
+    pubMsg = { tipo: "ok", texto: "El catálogo se actualiza en 1 o 2 minutos." + (combinado ? " Se combinaron con cambios publicados desde otro dispositivo." : "") };
+    marcar(); try { await idb("del"); } catch (e) {}
   } catch (e) {
     console.error(e);
-    toast(e.status === 401 ? "Tu llave ya no es válida. Sal y entra con una nueva."
+    if ((e.status === 409 || e.status === 422) && intento < 3) { ocupado(""); return publicar(intento + 1); }   // alguien publicó justo ahora: se reintenta combinando
+    pubMsg = { tipo: "error", texto: e.status === 401 ? "Tu llave ya no es válida. Cierra sesión (en Categorías) y entra con una nueva. Tus cambios quedan guardados en este dispositivo."
       : e.status === 403 || e.status === 404 ? "Tu llave no tiene permiso para guardar en el catálogo."
-      : e.status === 409 || e.status === 422 ? "El catálogo cambió en otro lado. Recarga la página e inténtalo de nuevo."
-      : "No se pudo publicar. Revisa tu conexión e inténtalo de nuevo.");
-  } finally { ocupado(""); }
+      : "No se pudo publicar. Revisa tu conexión e inténtalo de nuevo. Tus cambios siguen guardados." };
+    marcar();
+  } finally { ocupado(""); pintarPublicar(); }
 }
-$("publicar").addEventListener("click", publicar);
-$("descartar").addEventListener("click", () => {
-  if (!confirm("¿Descartar todos los cambios sin publicar?")) return;
-  datos = clon(base); nuevas.forEach(v => URL.revokeObjectURL(v.url)); nuevas.clear(); sucio = false; pintarTodo(); pintarPub();
-});
-addEventListener("beforeunload", e => { if (sucio) { e.preventDefault(); e.returnValue = ""; } });
 
 /* ---------- entrar / salir ---------- */
 async function entrar(token, recordar) {
@@ -621,9 +1086,23 @@ async function entrar(token, recordar) {
   const r = await gh(repo(""));
   if (!r.permissions || !r.permissions.push) { const e = new Error("sin permiso"); e.status = 403; throw e; }
   if (recordar !== undefined) guardarLlave(token, recordar);
-  $("v-login").hidden = true; $("v-app").hidden = false; $("salir").hidden = false;
-  await cargar();
+  $("v-login").hidden = true;
+  await abrirApp();
 }
+async function abrirApp() {
+  $("v-fail").hidden = true;
+  let ed;
+  try { ed = await cargar(); }
+  catch (e) {
+    $("v-app").hidden = true; $("v-fail").hidden = false;
+    $("fail-t").textContent = e.status === 401 ? "Tu llave ya no es válida." : "Revisa tu conexión a internet e inténtalo de nuevo.";
+    return;
+  }
+  $("v-app").hidden = false;
+  if (ed && ed.hash) { history.replaceState(null, "", ed.hash); if (abrirEditor(decodeURIComponent(ed.hash.replace(/^#\/producto\//, "")), ed)) { mostrar("ed"); toast("Recuperamos el producto que estabas editando."); } else ruta(); }
+  else { if (!/^#\//.test(location.hash) || /^#\/producto\//.test(location.hash)) history.replaceState(null, "", "#/productos"); ruta(); }
+}
+$("reintentar").addEventListener("click", abrirApp);
 $("f-login").addEventListener("submit", async e => {
   e.preventDefault();
   const t = $("token").value.trim(); $("login-err").textContent = "";
@@ -638,14 +1117,18 @@ $("f-login").addEventListener("submit", async e => {
   } finally { ocupado(""); }
 });
 $("salir").addEventListener("click", () => {
-  if (sucio && !confirm("Tienes cambios sin publicar. ¿Salir de todos modos?")) return;
-  sucio = false; borrarLlave(); TOKEN = ""; location.reload();
+  if (sucio && !confirm("Tienes cambios sin publicar. Se quedan guardados en este dispositivo. ¿Cerrar sesión de todos modos?")) return;
+  guardarBorrador().finally(() => { borrarLlave(); TOKEN = ""; location.replace(location.pathname); });
 });
 (async function () {
   const t = leerLlave();
   if (!t) { $("v-login").hidden = false; return; }
   try { await entrar(t); }
-  catch (e) { if (e.status === 401 || e.status === 403 || e.status === 404) borrarLlave(); TOKEN = ""; $("v-login").hidden = false; ocupado(""); }
+  catch (e) {
+    TOKEN = ""; ocupado("");
+    if (e.status === 401 || e.status === 403 || e.status === 404) { borrarLlave(); $("v-login").hidden = false; $("login-err").textContent = "Tu llave ya no es válida. Pega una nueva."; }
+    else { $("v-fail").hidden = false; $("fail-t").textContent = "No se pudo conectar con GitHub. Revisa tu internet."; $("reintentar").onclick = () => location.reload(); }
+  }
 })();
 </script>
 </body>

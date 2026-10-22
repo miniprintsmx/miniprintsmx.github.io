@@ -12,6 +12,11 @@ Abre **https://miniprintsmx.github.io/admin.html**, entra con tu llave de GitHub
 agrega, edita, ordena o quita productos y fotos, y edita las categorías. Al tocar **Publicar**,
 todo se guarda en un solo cambio en este repositorio y el catálogo se actualiza en 1 o 2 minutos.
 
+- Pantallas: **Productos** (buscar, filtrar, ordenar), el editor de cada producto, **Categorías** y
+  **Publicar** (lista de cambios con *Deshacer* antes de subirlos).
+- Los cambios sin publicar se guardan en el propio dispositivo (IndexedDB) y se recuperan si la app
+  se cierra. Si alguien publicó desde otro dispositivo, al publicar se combinan los cambios.
+
 - Los productos y categorías viven en `productos.json`; las fotos en `img/` (JPG 1000 × 1000).
 - La llave es un *fine-grained token* de GitHub solo para este repositorio, con permiso
   **Contents: Read and write**. Se guarda únicamente en tu dispositivo.
