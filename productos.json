@@ -54,7 +54,8 @@
         "Llavero",
         "Articulada"
       ],
-      "price": "$45.00"
+      "price": "$35.00",
+      "was": "$45.00"
     },
     {
       "id": "cocodrilito-llavero",
@@ -72,7 +73,8 @@
         "Llavero",
         "Articulado"
       ],
-      "price": "$45.00"
+      "price": "$35.00",
+      "was": "$45.00"
     },
     {
       "id": "abejita",
@@ -108,7 +110,8 @@
         "Impreso en 3D",
         "Con argolla"
       ],
-      "price": ""
+      "price": "$35.00",
+      "was": "$45.00"
     },
     {
       "id": "stego",
@@ -126,7 +129,8 @@
       "specs": [
         "Articulada"
       ],
-      "price": "$45.00"
+      "price": "$45.00",
+      "was": "$55.00"
     },
     {
       "id": "unicornio",
@@ -143,7 +147,8 @@
       "specs": [
         "Articulada"
       ],
-      "price": "$55.00"
+      "price": "$45.00",
+      "was": "$55.00"
     },
     {
       "id": "cuellito",
@@ -162,7 +167,7 @@
         "Flexible",
         "Con argolla"
       ],
-      "price": ""
+      "price": "$45.00"
     },
     {
       "id": "tricerito",
@@ -172,8 +177,8 @@
       "badge": "Llavero",
       "c": "#f39a3c",
       "imgs": [
-        "tricerito-1",
-        "tricerito-2"
+        "tricerito-2",
+        "tricerito-1"
       ],
       "desc": "Tres cuernitos, ojos de botón y una sonrisa que derrite hasta a un meteorito ☄️ Su cuerpo flexible se mueve como si estuviera vivo.",
       "specs": [
@@ -181,7 +186,7 @@
         "Flexible",
         "Con argolla"
       ],
-      "price": ""
+      "price": "$45.00"
     },
     {
       "id": "calaverita-bunny",
@@ -197,7 +202,8 @@
       "specs": [
         "Articulado"
       ],
-      "price": "$55.00"
+      "price": "$40.00",
+      "was": "$55.00"
     },
     {
       "id": "cajita-cupcake",
