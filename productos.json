@@ -598,17 +598,63 @@
       "badge": "Monstruitos",
       "c": "var(--teal)",
       "imgs": [
-        "turbo-1",
-        "turbo-2",
-        "turbo-3",
-        "turbo-4",
-        "banda"
+        "turbo-5",
+        "turbo-6",
+        "turbo-7",
+        "turbo-8",
+        "turbo-9",
+        "turbo-10",
+        "turbo-11",
+        "turbo-12",
+        "turbo-15",
+        "turbo-13",
+        "turbo-16",
+        "turbo-14",
+        "turbo-17"
       ],
       "desc": "Cuernos, colmillo, arete dorado y collar de picos: Turbo se las da de rudo, pero se derrite con un abrazo 🤘 Ideal para tu escritorio o para regalar a alguien con actitud.",
       "specs": [
         "Impreso en 3D"
       ],
-      "price": "$135.00"
+      "price": "$135.00",
+      "variantes": [
+        {
+          "id": "ojitos",
+          "nombre": "Ojitos",
+          "nota": "",
+          "imgs": [
+            "turbo-5",
+            "turbo-6",
+            "turbo-7",
+            "turbo-8",
+            "turbo-17"
+          ]
+        },
+        {
+          "id": "grunon",
+          "nombre": "Gruñon",
+          "nota": "",
+          "imgs": [
+            "turbo-9",
+            "turbo-10",
+            "turbo-11",
+            "turbo-12",
+            "turbo-17"
+          ]
+        },
+        {
+          "id": "feroz",
+          "nombre": "Feroz",
+          "nota": "",
+          "imgs": [
+            "turbo-15",
+            "turbo-13",
+            "turbo-16",
+            "turbo-14",
+            "turbo-17"
+          ]
+        }
+      ]
     },
     {
       "id": "limon",
