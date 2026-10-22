@@ -224,6 +224,24 @@
       "price": "$160.00"
     },
     {
+      "id": "sapo-gloton-portaplumas",
+      "name": "Sapo Glotón Portaplumas",
+      "sub": "",
+      "cat": "penholders",
+      "badge": "Figuras",
+      "c": "#4cc36a",
+      "imgs": [
+        "sapo-gloton-portaplumas-1",
+        "sapo-gloton-portaplumas-3",
+        "sapo-gloton-portaplumas-4"
+      ],
+      "desc": "Un sapo con la boca bien abierta que se traga todos tus plumones y colores 🖍️ Se abraza la panza como si ya hubiera comido de más, y su color va de azul a verde y amarillo. Orden en tu escritorio con mucha personalidad 😂",
+      "specs": [
+        "Penholder"
+      ],
+      "price": "$120.00"
+    },
+    {
       "id": "organizador-3-en-1",
       "name": "Organizador 3 en 1",
       "sub": "Escritorio Zen",
@@ -239,22 +257,6 @@
         "Penholder"
       ],
       "price": "$180.00"
-    },
-    {
-      "id": "ondas-atardecer",
-      "name": "Ondas Atardecer",
-      "sub": "",
-      "cat": "penholders",
-      "badge": "Figuras",
-      "c": "var(--red)",
-      "imgs": [
-        "ondas-atardecer-1"
-      ],
-      "desc": "Un cubo de ondas que cambia de rosa a naranja según cómo le pegue la luz 🌅 Pura vibra retro para tu escritorio, repisa o buró. De esas piezas que todos preguntan “¿y eso dónde lo compraste?” 😎",
-      "specs": [
-        "Penholder"
-      ],
-      "price": "$100.00"
     },
     {
       "id": "michi-fantasma",
@@ -295,22 +297,20 @@
       "price": "$180.00"
     },
     {
-      "id": "sapo-gloton-portaplumas",
-      "name": "Sapo Glotón Portaplumas",
+      "id": "ondas-atardecer",
+      "name": "Ondas Atardecer",
       "sub": "",
       "cat": "penholders",
       "badge": "Figuras",
-      "c": "#4cc36a",
+      "c": "var(--red)",
       "imgs": [
-        "sapo-gloton-portaplumas-1",
-        "sapo-gloton-portaplumas-3",
-        "sapo-gloton-portaplumas-4"
+        "ondas-atardecer-1"
       ],
-      "desc": "Un sapo con la boca bien abierta que se traga todos tus plumones y colores 🖍️ Se abraza la panza como si ya hubiera comido de más, y su color va de azul a verde y amarillo. Orden en tu escritorio con mucha personalidad 😂",
+      "desc": "Un cubo de ondas que cambia de rosa a naranja según cómo le pegue la luz 🌅 Pura vibra retro para tu escritorio, repisa o buró. De esas piezas que todos preguntan “¿y eso dónde lo compraste?” 😎",
       "specs": [
         "Penholder"
       ],
-      "price": "$120.00"
+      "price": "$100.00"
     },
     {
       "id": "ptero",
@@ -492,6 +492,25 @@
       "price": "$35.00"
     },
     {
+      "id": "mini-brocoli",
+      "name": "Mini Brocoli",
+      "sub": "",
+      "cat": "miniaturas",
+      "badge": "Miniaturas",
+      "c": "#4cc36a",
+      "imgs": [
+        "mini-brocoli-1",
+        "mini-brocoli-2",
+        "mini-brocoli-3"
+      ],
+      "desc": "¡El brócoli más feliz del huerto! 🥦 Con su copa esponjosa, su carita sonriente y sus bracitos, demuestra que las verduras también pueden ser adorables 😄 Su cuerpo en segmentos se ve de lo más divertido.\n\n📏 3.5 cm",
+      "specs": [
+        "Articulada",
+        "Miniatura"
+      ],
+      "price": "$25.00"
+    },
+    {
       "id": "pinzas",
       "name": "Pinzas",
       "sub": "🦞La Langostita",
@@ -504,23 +523,6 @@
         "pinzas-3"
       ],
       "desc": "Roja como tomate, con ojotes de sorpresa y dos tenazas listas para saludar 👋 Su cola va por segmentos, así que se mueve y menea en tus manos. Prometemos que no pellizca 😆\n\n📏 3.51cm.",
-      "specs": [
-        "Miniatura",
-        "Articulada"
-      ],
-      "price": "$25.00"
-    },
-    {
-      "id": "zanahorio",
-      "name": "Zanahorio",
-      "sub": "🥕 El Copetón",
-      "cat": "miniaturas",
-      "badge": "Miniatura",
-      "c": "#f39a3c",
-      "imgs": [
-        "zanahorio-1"
-      ],
-      "desc": "Una zanahoria con copete verde que parece recién salida de la peluquería 💇 Sonrisita, bracitos abiertos y segmentos apilados para girarlo como quieras. La única verdura que nadie va a dejar en el plato 😄\n\n📏 3.51cm.",
       "specs": [
         "Miniatura",
         "Articulada"
@@ -570,6 +572,23 @@
           ]
         }
       ]
+    },
+    {
+      "id": "zanahorio",
+      "name": "Zanahorio",
+      "sub": "🥕 El Copetón",
+      "cat": "miniaturas",
+      "badge": "Miniatura",
+      "c": "#f39a3c",
+      "imgs": [
+        "zanahorio-1"
+      ],
+      "desc": "Una zanahoria con copete verde que parece recién salida de la peluquería 💇 Sonrisita, bracitos abiertos y segmentos apilados para girarlo como quieras. La única verdura que nadie va a dejar en el plato 😄\n\n📏 3.51cm.",
+      "specs": [
+        "Miniatura",
+        "Articulada"
+      ],
+      "price": "$25.00"
     },
     {
       "id": "mini-bumblebee",
@@ -625,25 +644,6 @@
       "specs": [
         "Miniatura",
         "Articulada"
-      ],
-      "price": "$25.00"
-    },
-    {
-      "id": "mini-kylo-ren",
-      "name": "Mini Kylo Ren",
-      "sub": "",
-      "cat": "miniaturas",
-      "badge": "Miniaturas",
-      "c": "#cfd6e6",
-      "imgs": [
-        "mini-kylo-ren-1",
-        "mini-kylo-ren-2",
-        "mini-kylo-ren-3"
-      ],
-      "desc": "¡El villano más misterioso de la galaxia, ahora en tamaño mini! 🌌 Viene con su capucha negra, su máscara con detalles plateados y su cinturón, listo para dominar tu repisa 😎\n\n📏 3.5 cm",
-      "specs": [
-        "Articulada",
-        "Miniatura"
       ],
       "price": "$25.00"
     },
@@ -872,23 +872,41 @@
       "price": "$160.00"
     },
     {
-      "id": "mini-brocoli",
-      "name": "Mini Brocoli",
+      "id": "mini-kylo-ren",
+      "name": "Mini Kylo Ren",
       "sub": "",
       "cat": "miniaturas",
       "badge": "Miniaturas",
-      "c": "#4cc36a",
+      "c": "#cfd6e6",
       "imgs": [
-        "mini-brocoli-1",
-        "mini-brocoli-2",
-        "mini-brocoli-3"
+        "mini-kylo-ren-1",
+        "mini-kylo-ren-2",
+        "mini-kylo-ren-3"
       ],
-      "desc": "¡El brócoli más feliz del huerto! 🥦 Con su copa esponjosa, su carita sonriente y sus bracitos, demuestra que las verduras también pueden ser adorables 😄 Su cuerpo en segmentos se ve de lo más divertido.\n\n📏 3.5 cm",
+      "desc": "¡El villano más misterioso de la galaxia, ahora en tamaño mini! 🌌 Viene con su capucha negra, su máscara con detalles plateados y su cinturón, listo para dominar tu repisa 😎\n\n📏 3.5 cm",
       "specs": [
         "Articulada",
         "Miniatura"
       ],
       "price": "$25.00"
+    },
+    {
+      "id": "paquita",
+      "name": "Paquita",
+      "sub": "🦜 Paquita, la Guacamaya",
+      "cat": "figuras",
+      "badge": "Figuras",
+      "c": "var(--red)",
+      "imgs": [
+        "paquita-3",
+        "paquita-2",
+        "paquita-1"
+      ],
+      "desc": "¡Llegó la más colorida y parlanchina de la selva! 🌈 Toda roja, con carita blanca, piquito negro y alas de arcoíris en amarillo, verde y azul. Imposible verla y no sonreír 😄\n\n📏 5 cm",
+      "specs": [
+        "Articulada"
+      ],
+      "price": "$55.00"
     }
   ]
 }
