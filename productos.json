@@ -329,7 +329,7 @@
         "Minis",
         "Articulada"
       ],
-      "price": "$15.00"
+      "price": "$20.00"
     },
     {
       "id": "buhito",
@@ -417,7 +417,7 @@
       "specs": [
         "Articulada"
       ],
-      "price": "$20.00"
+      "price": "$25.00"
     },
     {
       "id": "pokeball-snorlax",
@@ -489,7 +489,7 @@
         "Miniatura",
         "Articulada"
       ],
-      "price": "$20.00"
+      "price": "$25.00"
     },
     {
       "id": "zanahorio",
@@ -506,7 +506,7 @@
         "Miniatura",
         "Articulada"
       ],
-      "price": "$20.00"
+      "price": "$25.00"
     },
     {
       "id": "mini-darth-maul",
