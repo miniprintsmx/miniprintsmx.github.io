@@ -931,24 +931,14 @@
       "color": "#f7a8c4"
     },
     {
-      "id": "ofertas",
+      "id": "banner-3",
       "tipo": "foto",
-      "img": "abejita-1",
-      "titulo": "🔥 Ofertas",
-      "texto": "Piezas con precio rebajado por tiempo limitado.",
-      "boton": "Ver ofertas",
-      "enlace": "#/ofertas",
+      "img": "banner-1",
+      "titulo": "Tus monstrito personalizado",
+      "texto": "Selecciona el color, cabeza y cuerpo",
+      "boton": "Personalizar",
+      "enlace": "#/monstruitos",
       "color": "#c8e62b"
-    },
-    {
-      "id": "a-tu-medida",
-      "tipo": "foto",
-      "img": "ajolotito-1",
-      "titulo": "¿Lo quieres a tu medida?",
-      "texto": "Cuéntanos tu idea y te cotizamos una pieza única.",
-      "boton": "Escríbenos",
-      "enlace": "wa",
-      "color": "#a99be8"
     }
   ]
 }
