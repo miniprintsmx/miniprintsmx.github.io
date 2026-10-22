@@ -332,6 +332,25 @@
       "price": "$20.00"
     },
     {
+      "id": "ballenita",
+      "name": "Ballenita",
+      "sub": "",
+      "cat": "miniaturas",
+      "badge": "Miniaturas",
+      "c": "var(--teal)",
+      "imgs": [
+        "ballenita-1",
+        "ballenita-2",
+        "ballenita-3"
+      ],
+      "desc": "¡La ballena más tierna del océano cabe en tu mano! 💙 Azul cielo con pancita blanca, ojitos brillantes y aletitas listas para nadar por tu escritorio. Su cuerpo en segmentos le da un movimiento muy divertido 🌊\n\n📏 3.5 cm",
+      "specs": [
+        "Miniatura",
+        "Articulada"
+      ],
+      "price": "$15.00"
+    },
+    {
       "id": "buhito",
       "name": "Búhito",
       "sub": "",
@@ -509,25 +528,6 @@
       "price": "$25.00"
     },
     {
-      "id": "mini-darth-maul",
-      "name": "Mini Darth Maul",
-      "sub": "",
-      "cat": "miniaturas",
-      "badge": "Miniatura",
-      "c": "var(--red)",
-      "imgs": [
-        "mini-darth-maul-2",
-        "mini-darth-maul-3",
-        "mini-darth-maul-1"
-      ],
-      "desc": "¡El villano más rudo de la galaxia, ahora en versión miniatura! 🌌 Con su cara roja y negra, sus cuernitos blancos y su túnica negra, se ve bravo pero bien coleccionable 🔥 Perfecto para tu escritorio o tu repisa.\n\n📏 3.51cm.",
-      "specs": [
-        "Miniatura",
-        "Articulada"
-      ],
-      "price": "$25.00"
-    },
-    {
       "id": "zarigueya-dramatica",
       "name": "Zarigüeya Dramática",
       "sub": "Llavero",
@@ -570,6 +570,82 @@
           ]
         }
       ]
+    },
+    {
+      "id": "mini-bumblebee",
+      "name": "Mini Bumblebee",
+      "sub": "",
+      "cat": "miniaturas",
+      "badge": "Miniaturas",
+      "c": "#f39a3c",
+      "imgs": [
+        "mini-bumblebee-1",
+        "mini-bumblebee-2",
+        "mini-bumblebee-3"
+      ],
+      "desc": "¡El robot más valiente y amarillo llegó en versión mini! 🤖 Amarillo brillante con detalles gris metálico, ojitos blancos y armadura llena de detalles. Listo para cuidar tu escritorio ⚡\n\n📏 3.5 cm",
+      "specs": [
+        "Articulada",
+        "Miniatura"
+      ],
+      "price": "$25.00"
+    },
+    {
+      "id": "mini-stromtrooper",
+      "name": "Mini StromTrooper",
+      "sub": "",
+      "cat": "miniaturas",
+      "badge": "Miniaturas",
+      "c": "#cfd6e6",
+      "imgs": [
+        "mini-stromtrooper-1",
+        "mini-stromtrooper-2",
+        "mini-stromtrooper-3"
+      ],
+      "desc": "¡El soldado más elegante de la galaxia llegó en tamaño bolsillo! 🌌 Blanco impecable, cinturón y detalles en negro, listo para cuidar tu escritorio sin fallar ni un disparo 😜\n\n📏 3.5 cm",
+      "specs": [
+        "Articulado",
+        "Miniatura"
+      ],
+      "price": "$25.00"
+    },
+    {
+      "id": "mini-darth-maul",
+      "name": "Mini Darth Maul",
+      "sub": "",
+      "cat": "miniaturas",
+      "badge": "Miniatura",
+      "c": "var(--red)",
+      "imgs": [
+        "mini-darth-maul-2",
+        "mini-darth-maul-3",
+        "mini-darth-maul-1"
+      ],
+      "desc": "¡El villano más rudo de la galaxia, ahora en versión miniatura! 🌌 Con su cara roja y negra, sus cuernitos blancos y su túnica negra, se ve bravo pero bien coleccionable 🔥 Perfecto para tu escritorio o tu repisa.\n\n📏 3.51cm.",
+      "specs": [
+        "Miniatura",
+        "Articulada"
+      ],
+      "price": "$25.00"
+    },
+    {
+      "id": "mini-kylo-ren",
+      "name": "Mini Kylo Ren",
+      "sub": "",
+      "cat": "miniaturas",
+      "badge": "Miniaturas",
+      "c": "#cfd6e6",
+      "imgs": [
+        "mini-kylo-ren-1",
+        "mini-kylo-ren-2",
+        "mini-kylo-ren-3"
+      ],
+      "desc": "¡El villano más misterioso de la galaxia, ahora en tamaño mini! 🌌 Viene con su capucha negra, su máscara con detalles plateados y su cinturón, listo para dominar tu repisa 😎\n\n📏 3.5 cm",
+      "specs": [
+        "Articulada",
+        "Miniatura"
+      ],
+      "price": "$25.00"
     },
     {
       "id": "pokeball-charmander",
