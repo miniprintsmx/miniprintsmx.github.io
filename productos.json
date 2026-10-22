@@ -908,5 +908,47 @@
       ],
       "price": "$55.00"
     }
+  ],
+  "banners": [
+    {
+      "id": "monstruitos",
+      "tipo": "foto",
+      "img": "banda",
+      "titulo": "La banda de monstruitos",
+      "texto": "Rudos por fuera, apapachables por dentro.",
+      "boton": "Conócelos",
+      "enlace": "#/monstruitos",
+      "color": "#2bbfb3"
+    },
+    {
+      "id": "llaveros",
+      "tipo": "foto",
+      "img": "zarigueya-rizadita-1",
+      "titulo": "Llaveros con mucha actitud",
+      "texto": "Para tus llaves, tu mochila o tu bolsa.",
+      "boton": "Ver llaveros",
+      "enlace": "#/llaveros",
+      "color": "#f7a8c4"
+    },
+    {
+      "id": "ofertas",
+      "tipo": "foto",
+      "img": "abejita-1",
+      "titulo": "🔥 Ofertas",
+      "texto": "Piezas con precio rebajado por tiempo limitado.",
+      "boton": "Ver ofertas",
+      "enlace": "#/ofertas",
+      "color": "#c8e62b"
+    },
+    {
+      "id": "a-tu-medida",
+      "tipo": "foto",
+      "img": "ajolotito-1",
+      "titulo": "¿Lo quieres a tu medida?",
+      "texto": "Cuéntanos tu idea y te cotizamos una pieza única.",
+      "boton": "Escríbenos",
+      "enlace": "wa",
+      "color": "#a99be8"
+    }
   ]
 }

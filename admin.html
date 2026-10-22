@@ -232,6 +232,28 @@ body.en-editor{padding-bottom:calc(84px + var(--safe-b))}
 .cat-body .in{margin-top:0}
 .cat details{flex:1;min-width:0}
 
+/* Portada (banners) */
+.bnc{background:var(--surface);border-radius:20px;padding:12px;margin-bottom:12px;box-shadow:0 2px 14px rgba(29,26,46,.05)}
+.bnp{position:relative;aspect-ratio:16/9;border-radius:16px;overflow:hidden;background:var(--fill)}
+.bnp>img{width:100%;height:100%;object-fit:cover;display:block}
+.bnp-f{display:grid;grid-template-columns:minmax(0,1.15fr) minmax(0,1fr);align-items:center;gap:10px;height:100%;padding:12px 12px 12px 16px;background:var(--bg-b);color:var(--fg-b)}
+.bnp-f b{display:block;font-family:var(--display);font-weight:400;font-size:1.2rem;line-height:1.05}
+.bnp-f p{margin:4px 0 0;font-size:.78rem;line-height:1.25;opacity:.88;display:-webkit-box;-webkit-line-clamp:3;-webkit-box-orient:vertical;overflow:hidden}
+.bnp-f span.b{display:inline-block;margin-top:6px;padding:5px 11px;border-radius:999px;background:var(--fg-b);color:var(--bg-b);font-weight:800;font-size:.72rem}
+.bnp-f .ph2{aspect-ratio:1;border-radius:14px;overflow:hidden;transform:rotate(3deg);box-shadow:0 0 0 3px rgba(255,255,255,.9);background:#fff}
+.bnp-f .ph2 img{width:100%;height:100%;object-fit:cover;display:block}
+.bnp .vacio{display:grid;place-items:center;height:100%;color:var(--muted);font-weight:600;font-size:.9rem}
+.bnc-acts{display:flex;align-items:center;gap:6px;margin-top:10px}
+.bnc-acts .grow{flex:1;min-width:0;font-size:.85rem;color:var(--muted);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.bnc-acts .icon-btn{width:40px;height:40px}
+.bnc-ed{margin-top:6px}
+.seg{display:grid;grid-template-columns:1fr 1fr;gap:6px;padding:4px;border-radius:14px;background:var(--fill)}
+.seg button{min-height:40px;border:0;border-radius:10px;background:none;font-weight:700;font-size:.88rem;cursor:pointer;color:var(--muted)}
+.seg button[aria-checked="true"]{background:var(--surface);color:var(--ink);box-shadow:0 1px 4px rgba(0,0,0,.08)}
+.up-row{display:flex;gap:8px;flex-wrap:wrap;align-items:center}
+.up-btn{position:relative;overflow:hidden}
+.up-btn input{position:absolute;inset:0;opacity:0;cursor:pointer}
+
 /* Publicar */
 .chg{display:flex;gap:12px;align-items:flex-start;padding:12px 12px 12px 14px;border-top:1px solid var(--line)}
 .chg:first-child{border-top:0}
@@ -332,6 +354,15 @@ body.en-editor{padding-bottom:calc(84px + var(--safe-b))}
     <p class="foot-note">Los cambios se guardan en el repositorio <b>miniprintsmx.github.io</b>. Este catálogo no tiene ninguna conexión con tu sistema MiniPrints.<br><br><button class="btn btn-soft" type="button" id="salir">Cerrar sesión en este dispositivo</button></p>
   </main>
 
+  <!-- Portada: banners del carrusel -->
+  <main class="wrap" id="v-bn" data-vista="bn" hidden>
+    <h1>Portada</h1>
+    <p class="lead">Los banners del carrusel al inicio del catálogo. Pasan solos cada 6 segundos, en este orden.</p>
+    <div id="bns"></div>
+    <button class="btn btn-ink btn-big" type="button" id="bn-add"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" aria-hidden="true"><path d="M12 5v14M5 12h14"/></svg>Agregar banner</button>
+    <p class="hint" style="text-align:center;margin:12px 0 24px">Para un banner diseñado por ti (Canva, etc.) usa <b>Imagen completa</b> de 1600 × 900 px y deja textos y logos al centro: en computadora se recorta un poco arriba y abajo.</p>
+  </main>
+
   <!-- Revisar y publicar -->
   <main class="wrap" id="v-pub" data-vista="pub" hidden>
     <h1>Publicar</h1>
@@ -419,6 +450,7 @@ body.en-editor{padding-bottom:calc(84px + var(--safe-b))}
 
   <nav class="tabbar" id="tabbar" aria-label="Secciones">
     <a href="#/productos" data-tab="lista"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="3" width="7" height="7" rx="1.5"/><rect x="14" y="3" width="7" height="7" rx="1.5"/><rect x="3" y="14" width="7" height="7" rx="1.5"/><rect x="14" y="14" width="7" height="7" rx="1.5"/></svg>Productos</a>
+    <a href="#/portada" data-tab="bn"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="2.5" y="4" width="19" height="13" rx="2.5"/><path d="m2.5 14 5-4.5 4 3.5 3-2.5 7 5"/><path d="M9 21h6"/></svg>Portada</a>
     <a href="#/categorias" data-tab="cats"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20.6 13.4 13.4 20.6a2 2 0 0 1-2.8 0L3 13V3h10l7.6 7.6a2 2 0 0 1 0 2.8z"/><circle cx="7.5" cy="7.5" r="1.5"/></svg>Categorías</a>
     <a href="#/publicar" data-tab="pub"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 16V4M7 9l5-5 5 5"/><path d="M4 16v3a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-3"/></svg>Publicar<b class="bdg" id="tab-n" hidden></b></a>
   </nav>
@@ -490,7 +522,8 @@ let sucio = false;
 const clon = o => JSON.parse(JSON.stringify(o));
 const J = o => JSON.stringify(o);
 const porId = (lista, id) => lista.find(p => p.id === id);
-const usadas = () => new Set(datos.productos.flatMap(p => p.imgs));
+const fotosDe = d => [...d.productos.flatMap(p => p.imgs), ...(d.banners || []).map(b => b.img).filter(Boolean)];
+const usadas = () => new Set(fotosDe(datos));
 const usadasNuevas = () => [...nuevas.keys()].filter(n => usadas().has(n));
 const fotoUrl = n => nuevas.has(n) ? nuevas.get(n).url : `img/${encodeURIComponent(n)}.jpg`;
 const catLabel = id => ((datos || base).categorias.find(c => c.id === id) || {}).label || "Sin categoría";
@@ -532,6 +565,7 @@ function cambios() {
   });
   base.productos.forEach((p, i) => { if (!porId(datos.productos, p.id)) lista.push({ tipo: "quitado", p, i }); });
   if (J(datos.categorias) !== J(base.categorias)) lista.push({ tipo: "cats" });
+  if (J(datos.banners || []) !== J(base.banners || [])) lista.push({ tipo: "banners" });
   const comunes = ids => ids.filter(id => porId(base.productos, id) && porId(datos.productos, id));
   if (comunes(datos.productos.map(p => p.id)).join() !== comunes(base.productos.map(p => p.id)).join()) lista.push({ tipo: "orden" });
   return lista;
@@ -570,6 +604,7 @@ addEventListener("pagehide", guardarBorrador);
 /* Combina cambios propios (mio vs su base) sobre lo que hay publicado ahora (remoto). */
 function combinar(viejo, mio, remoto) {
   const out = { ...remoto, productos: [], categorias: J(mio.categorias) !== J(viejo.categorias) ? clon(mio.categorias) : clon(remoto.categorias) };
+  if (J(mio.banners || []) !== J(viejo.banners || [])) out.banners = clon(mio.banners || []);
   remoto.productos.forEach(r => {
     const v = porId(viejo.productos, r.id), m = porId(mio.productos, r.id);
     if (v && !m) return;                                   // lo quité yo
@@ -616,7 +651,7 @@ async function cargar() {
 let vista = null;
 const posVista = {};
 try { history.scrollRestoration = "manual"; } catch (e) {}
-const VISTAS = { lista: "v-list", cats: "v-cats", pub: "v-pub", ed: "v-ed" };
+const VISTAS = { lista: "v-list", bn: "v-bn", cats: "v-cats", pub: "v-pub", ed: "v-ed" };
 function ir(hash) { if (location.hash === hash) return ruta(); history.pushState({ mp: 1 }, "", hash); ruta(); }
 function volver() { if (history.state && history.state.mp) history.back(); else { history.replaceState(null, "", "#/productos"); ruta(); } }
 function mostrar(v) {
@@ -638,7 +673,8 @@ function ruta() {
   const m = /^#\/producto\/(.+)$/.exec(h);
   if (m) { let id = ""; try { id = decodeURIComponent(m[1]); } catch (e) {} if (vista === "ed" && h === edHash) return; if (abrirEditor(id)) { mostrar("ed"); document.title = "Editar · Admin MP"; } return; }
   edHash = "";
-  if (h === "#/categorias") { pintarCats(); mostrar("cats"); document.title = "Categorías · Admin MP"; }
+  if (h === "#/portada") { pintarBanners(); mostrar("bn"); document.title = "Portada · Admin MP"; }
+  else if (h === "#/categorias") { pintarCats(); mostrar("cats"); document.title = "Categorías · Admin MP"; }
   else if (h === "#/publicar") { pubMsg = pubMsg && pubMsg.tipo === "ok" && cambios().length ? null : pubMsg; pintarPublicar(); mostrar("pub"); document.title = "Publicar · Admin MP"; }
   else { pintarLista(); mostrar("lista"); document.title = "Productos · Admin MP"; }
   guardarBorrador();
@@ -816,15 +852,18 @@ function nombreLibre(id) {
   let k = 1; while (ocupados.has(`${id}-${k}`)) k++;
   return `${id}-${k}`;
 }
-// Recorte cuadrado desde el centro a 1000 × 1000, JPG
-async function cuadrada(file) {
+// Recorte desde el centro, JPG: cuadrada 1000 × 1000 (productos) o 1600 × 900 (banners)
+const cuadrada = file => recortar(file, 1000, 1000);
+async function recortar(file, W, H) {
   const url = URL.createObjectURL(file);
   try {
     const img = await new Promise((res, rej) => { const im = new Image(); im.onload = () => res(im); im.onerror = rej; im.src = url; });
-    const lado = Math.min(img.naturalWidth, img.naturalHeight), S = Math.min(1000, lado);
-    const cv = document.createElement("canvas"); cv.width = cv.height = S;
-    const cx = cv.getContext("2d"); cx.fillStyle = "#fff"; cx.fillRect(0, 0, S, S);
-    cx.drawImage(img, (img.naturalWidth - lado) / 2, (img.naturalHeight - lado) / 2, lado, lado, 0, 0, S, S);
+    const iw = img.naturalWidth, ih = img.naturalHeight, r = W / H;
+    const sw = Math.min(iw, ih * r), sh = sw / r;                 // zona central con la proporción pedida
+    const cw = Math.round(Math.min(W, sw)), chh = Math.round(cw / r);   // nunca se agranda
+    const cv = document.createElement("canvas"); cv.width = cw; cv.height = chh;
+    const cx = cv.getContext("2d"); cx.fillStyle = "#fff"; cx.fillRect(0, 0, cw, chh);
+    cx.drawImage(img, (iw - sw) / 2, (ih - sh) / 2, sw, sh, 0, 0, cw, chh);
     return await new Promise((res, rej) => cv.toBlob(b => b ? res(b) : rej(new Error("toBlob")), "image/jpeg", 0.86));
   } finally { URL.revokeObjectURL(url); }
 }
@@ -951,6 +990,96 @@ function limpiarNuevas() {
   const u = usadas(); [...nuevas.keys()].filter(n => !u.has(n)).forEach(n => { URL.revokeObjectURL(nuevas.get(n).url); nuevas.delete(n); });
 }
 
+/* ---------- portada: banners ---------- */
+const BN_COLORES = [["#2bbfb3", "Turquesa"], ["#c8e62b", "Lima"], ["#a99be8", "Lila"], ["#f7a8c4", "Rosa"], ["#f39a3c", "Naranja"], ["#e2412f", "Rojo"], ["#4cc36a", "Verde"], ["#1d1a2e", "Tinta"], ["#ffffff", "Blanco"]];
+const tinta = hex => { const n = parseInt(hex.slice(1), 16), c = [n >> 16, n >> 8 & 255, n & 255].map(v => { v /= 255; return v <= .03928 ? v / 12.92 : ((v + .055) / 1.055) ** 2.4; });
+  return .2126 * c[0] + .7152 * c[1] + .0722 * c[2] > .36 ? "#1d1a2e" : "#ffffff"; };
+const bns = () => datos.banners || [];
+let bnAbierto = -1;
+function enlaceTexto(e) {
+  if (!e) return "Sin enlace";
+  if (e === "wa") return "Abre WhatsApp";
+  if (e === "#/todos") return "Todo el catálogo";
+  if (e === "#/ofertas") return "Ofertas";
+  if (e.startsWith("#/")) return "Categoría: " + catLabel(e.slice(2));
+  const p = porId(datos.productos, e.slice(1)); return p ? "Producto: " + p.name : "Producto";
+}
+function vistaBanner(b) {
+  if (!b.img) return '<div class="bnp"><div class="vacio">Sin imagen todavía</div></div>';
+  if (b.tipo === "imagen") return `<div class="bnp"><img src="${esc(fotoUrl(b.img))}" alt=""></div>`;
+  return `<div class="bnp"><div class="bnp-f" style="--bg-b:${esc(b.color)};--fg-b:${tinta(b.color)}"><div>${b.titulo ? `<b>${esc(b.titulo)}</b>` : ""}${b.texto ? `<p>${esc(b.texto)}</p>` : ""}${b.boton && b.enlace ? `<span class="b">${esc(b.boton)} →</span>` : ""}</div><div class="ph2"><img src="${esc(fotoUrl(b.img))}" alt=""></div></div></div>`;
+}
+function formBanner(b, i) {
+  const e = b.enlace || "", esProd = !!e && !e.startsWith("#/") && e !== "wa";
+  const opts = [["", "Sin enlace"], ["#/todos", "Todo el catálogo"], ["#/ofertas", "Ofertas"], ...datos.categorias.filter(c => c.id !== "all").map(c => ["#/" + c.id, "Categoría: " + c.label]), ["prod", "Un producto…"], ["wa", "Abrir WhatsApp"]];
+  return `<div class="bnc-ed">
+    <span class="f">Tipo</span>
+    <div class="seg" role="radiogroup" aria-label="Tipo de banner"><button type="button" role="radio" data-bt="foto" aria-checked="${b.tipo !== "imagen"}">Foto y texto</button><button type="button" role="radio" data-bt="imagen" aria-checked="${b.tipo === "imagen"}">Imagen completa</button></div>
+    <span class="f">${b.tipo === "imagen" ? "Imagen (se recorta a 1600 × 900)" : "Foto"}</span>
+    <div class="up-row"><label class="btn btn-soft up-btn">Subir ${b.img ? "otra" : "imagen"}<input type="file" accept="image/*" data-bup="${i}"></label>
+      <select class="in" data-bk="img-prod" style="flex:1;min-width:160px" aria-label="Usar foto de un producto"><option value="">o usa la foto de un producto…</option>${datos.productos.map(p => `<option value="${esc(p.imgs[0])}">${esc(p.name)}</option>`).join("")}</select></div>
+    <label class="f" for="bt-${i}">Título</label><input class="in" id="bt-${i}" data-bk="titulo" maxlength="40" value="${esc(b.titulo)}" placeholder="Ej: Llaveros con actitud">
+    ${b.tipo !== "imagen" ? `<label class="f" for="bx-${i}">Texto</label><input class="in" id="bx-${i}" data-bk="texto" maxlength="90" value="${esc(b.texto)}" placeholder="Una frase corta">` : `<p class="hint">En este tipo el título no se ve: sirve para lectores de pantalla y para el mensaje de WhatsApp. La imagen ya trae su diseño.</p>`}
+    <label class="f" for="be-${i}">Al tocarlo lleva a</label>
+    <select class="in" id="be-${i}" data-bk="enlace">${opts.map(([v, t]) => `<option value="${esc(v)}" ${(v === "prod" ? esProd : v === e) ? "selected" : ""}>${esc(t)}</option>`).join("")}</select>
+    ${esProd ? `<select class="in" data-bk="enlace-prod" style="margin-top:8px" aria-label="Producto">${datos.productos.map(p => `<option value="#${esc(p.id)}" ${"#" + p.id === e ? "selected" : ""}>${esc(p.name)}</option>`).join("")}</select>` : ""}
+    ${b.tipo !== "imagen" && e ? `<label class="f" for="bb-${i}">Texto del botón</label><input class="in" id="bb-${i}" data-bk="boton" maxlength="20" value="${esc(b.boton)}" placeholder="Ej: Ver llaveros">` : ""}
+    ${b.tipo !== "imagen" ? `<span class="f">Color de fondo</span><div class="colors" role="radiogroup" aria-label="Color de fondo">${BN_COLORES.map(([hx, n]) => `<button type="button" class="sw" role="radio" style="--c:${hx}" data-bc="${hx}" aria-checked="${hx === b.color}" aria-label="${n}"></button>`).join("")}</div>` : ""}
+    <button class="btn btn-danger" type="button" data-bdel="${i}" style="margin-top:14px;padding:0">Eliminar banner</button>
+  </div>`;
+}
+function pintarBanners() {
+  const l = bns();
+  $("bns").innerHTML = l.length ? l.map((b, i) => `<div class="bnc" data-bi="${i}">
+      <div class="bnv">${vistaBanner(b)}</div>
+      <div class="bnc-acts"><span class="grow">${i + 1}. ${esc(b.titulo || "Sin título")} · ${esc(enlaceTexto(b.enlace))}</span>
+        <button class="icon-btn" type="button" data-bmv="-1" aria-label="Subir banner ${i + 1}" ${i ? "" : "disabled"}>${ICO.up}</button>
+        <button class="icon-btn" type="button" data-bmv="1" aria-label="Bajar banner ${i + 1}" ${i < l.length - 1 ? "" : "disabled"}>${ICO.down}</button>
+        <button class="btn btn-soft" type="button" data-bed aria-expanded="${bnAbierto === i}">${bnAbierto === i ? "Listo" : "Editar"}</button></div>
+      ${bnAbierto === i ? formBanner(b, i) : ""}
+    </div>`).join("") : '<div class="card empty">Aún no hay banners. Mientras tanto el catálogo muestra uno con la foto de los monstruitos.</div>';
+}
+function repintarBanner(i) {   // solo la vista previa y el resumen, para no perder el foco al escribir
+  const c = $("bns").querySelector(`[data-bi="${i}"]`), b = bns()[i]; if (!c || !b) return;
+  c.querySelector(".bnv").innerHTML = vistaBanner(b);
+  c.querySelector(".grow").textContent = `${i + 1}. ${b.titulo || "Sin título"} · ${enlaceTexto(b.enlace)}`;
+}
+$("bn-add").addEventListener("click", () => {
+  if (!datos.banners) datos.banners = [];
+  const ids = new Set(datos.banners.map(b => b.id)); let k = datos.banners.length + 1; while (ids.has("banner-" + k)) k++;
+  datos.banners.push({ id: "banner-" + k, tipo: "foto", img: (datos.productos[0] || { imgs: [""] }).imgs[0], titulo: "Nuevo banner", texto: "", boton: "Ver más", enlace: "#/todos", color: "#2bbfb3" });
+  bnAbierto = datos.banners.length - 1; pintarBanners(); marcar();
+  $("bns").lastElementChild.scrollIntoView({ block: "start", behavior: "smooth" });
+});
+$("bns").addEventListener("input", e => {
+  const el = e.target.closest('[data-bk="titulo"],[data-bk="texto"],[data-bk="boton"]'); if (!el) return;
+  const i = Number(el.closest("[data-bi]").dataset.bi); bns()[i][el.dataset.bk] = el.value; repintarBanner(i); marcar();
+});
+$("bns").addEventListener("change", async e => {
+  const c = e.target.closest("[data-bi]"); if (!c) return;
+  const i = Number(c.dataset.bi), b = bns()[i], el = e.target;
+  if (el.dataset.bup !== undefined) {
+    const f = el.files[0]; if (!f) return;
+    ocupado("Preparando imagen…");
+    try { const blob = b.tipo === "imagen" ? await recortar(f, 1600, 900) : await cuadrada(f); const n = nombreLibre("banner"); nuevas.set(n, { blob, url: URL.createObjectURL(blob) }); b.img = n; }
+    catch (err) { toast("No se pudo leer la imagen. Prueba con JPG o PNG."); }
+    ocupado(""); limpiarNuevas(); pintarBanners(); marcar(); guardarBorrador(); return;
+  }
+  if (el.dataset.bk === "img-prod") { if (el.value) { b.img = el.value; limpiarNuevas(); pintarBanners(); marcar(); } return; }
+  if (el.dataset.bk === "enlace") { b.enlace = el.value === "prod" ? "#" + (datos.productos[0] || {}).id : el.value; if (b.enlace && !b.boton) b.boton = "Ver más"; pintarBanners(); marcar(); return; }
+  if (el.dataset.bk === "enlace-prod") { b.enlace = el.value; repintarBanner(i); marcar(); }
+});
+$("bns").addEventListener("click", e => {
+  const c = e.target.closest("[data-bi]"); if (!c) return;
+  const i = Number(c.dataset.bi), l = datos.banners, b = l[i];
+  const t = e.target.closest("[data-bt]"); if (t) { b.tipo = t.dataset.bt; pintarBanners(); marcar(); return; }
+  const col = e.target.closest("[data-bc]"); if (col) { b.color = col.dataset.bc; c.querySelectorAll("[data-bc]").forEach(x => x.setAttribute("aria-checked", x === col)); repintarBanner(i); marcar(); return; }
+  if (e.target.closest("[data-bed]")) { bnAbierto = bnAbierto === i ? -1 : i; pintarBanners(); return; }
+  const mv = e.target.closest("[data-bmv]");
+  if (mv) { const j = i + Number(mv.dataset.bmv); if (j < 0 || j >= l.length) return; [l[i], l[j]] = [l[j], l[i]]; if (bnAbierto === i) bnAbierto = j; else if (bnAbierto === j) bnAbierto = i; pintarBanners(); marcar(); return; }
+  if (e.target.closest("[data-bdel]")) { if (!confirm("¿Eliminar este banner?")) return; l.splice(i, 1); bnAbierto = -1; limpiarNuevas(); pintarBanners(); marcar(); }
+});
+
 /* ---------- categorías ---------- */
 function pintarCats() {
   const uso = id => datos.productos.filter(p => p.cat === id).length;
@@ -999,7 +1128,7 @@ function pintarPublicar() {
     el.innerHTML = `<div class="card pub-ok"><div class="big">✓</div><h2>¡Publicado!</h2><p class="lead">${esc(pubMsg.texto)}</p><a class="btn btn-ink" href="./" target="_blank" rel="noopener">Ver catálogo</a></div>`; return;
   }
   if (!cs.length) { el.innerHTML = `<div class="card pub-ok"><div class="big">☁︎</div><h2>Todo está publicado</h2><p class="lead">Cuando edites o agregues productos, aquí verás los cambios antes de subirlos.</p></div>`; return; }
-  const sub = usadasNuevas().length, antes = new Set(base.productos.flatMap(p => p.imgs)), u = usadas();
+  const sub = usadasNuevas().length, antes = new Set(fotosDe(base)), u = usadas();
   const borra = [...antes].filter(n => !u.has(n) && !PROTEGIDAS.has(n) && imgsRepo.has(n)).length;
   const K = { nuevo: "Nuevo", editado: "Editado", quitado: "Se quitará" };
   el.innerHTML = `<p class="lead">Revisa lo que vas a subir. Puedes deshacer cualquier cambio.</p>
@@ -1008,7 +1137,7 @@ function pintarPublicar() {
         <img src="${esc(fotoUrl(c.p.imgs[0]))}" alt="">
         <div class="chg-t"><span class="k k-${c.tipo}">${K[c.tipo]}</span><b>${esc(c.p.name)}</b>${c.campos ? `<ul>${c.campos.map(t => `<li>${esc(t)}</li>`).join("")}</ul>` : ""}</div>
         <div class="chg-acts">${c.tipo !== "quitado" ? `<a class="btn btn-soft" href="#/producto/${encodeURIComponent(c.p.id)}">Ver</a>` : ""}<button class="btn btn-soft" type="button" data-undo="${i}">Deshacer</button></div>
-      </div>` : `<div class="chg"><div class="chg-t"><span class="k k-otro">Cambio</span><b>${c.tipo === "cats" ? "Categorías" : "Orden de los productos"}</b></div><button class="btn btn-soft" type="button" data-undo="${i}">Deshacer</button></div>`).join("")}</div>
+      </div>` : `<div class="chg"><div class="chg-t"><span class="k k-otro">Cambio</span><b>${c.tipo === "cats" ? "Categorías" : c.tipo === "banners" ? "Banners de la portada" : "Orden de los productos"}</b></div><button class="btn btn-soft" type="button" data-undo="${i}">Deshacer</button></div>`).join("")}</div>
     <div class="pub-sum"><span>${cs.length} cambio${cs.length !== 1 ? "s" : ""}</span>${sub ? `<span>${sub} foto${sub !== 1 ? "s" : ""} por subir</span>` : ""}${borra ? `<span>${borra} foto${borra !== 1 ? "s" : ""} que ya no se usan se borrarán</span>` : ""}</div>
     <button class="btn btn-wa btn-big" type="button" data-pub="publicar">Publicar ahora</button>
     <p class="hint" style="text-align:center">El catálogo se actualiza en 1 o 2 minutos.</p>
@@ -1023,6 +1152,7 @@ $("pub-body").addEventListener("click", e => {
     else if (c.tipo === "editado") ps[ps.indexOf(c.p)] = clon(porId(base.productos, c.p.id));
     else if (c.tipo === "quitado") ps.splice(Math.min(c.i, ps.length), 0, clon(c.p));
     else if (c.tipo === "cats") datos.categorias = clon(base.categorias);
+    else if (c.tipo === "banners") { if (base.banners) datos.banners = clon(base.banners); else delete datos.banners; }
     else if (c.tipo === "orden") { const pos = new Map(base.productos.map((p, i) => [p.id, i])); ps.sort((a, b) => (pos.has(a.id) ? pos.get(a.id) : 1e6) - (pos.has(b.id) ? pos.get(b.id) : 1e6)); }
     limpiarNuevas(); marcar(); pintarPublicar(); toast("Cambio deshecho."); return;
   }
@@ -1037,6 +1167,7 @@ $("pub-body").addEventListener("click", e => {
 function blobB64(blob) { return new Promise((res, rej) => { const r = new FileReader(); r.onload = () => res(String(r.result).split(",")[1]); r.onerror = rej; r.readAsDataURL(blob); }); }
 async function publicar(intento = 1) {
   const sinFoto = datos.productos.find(p => !p.imgs.length); if (sinFoto) { pubMsg = { tipo: "error", texto: `"${sinFoto.name}" no tiene fotos.` }; return pintarPublicar(); }
+  const bnSin = (datos.banners || []).findIndex(b => !b.img); if (bnSin >= 0) { pubMsg = { tipo: "error", texto: `El banner ${bnSin + 1} de la portada no tiene imagen.` }; return pintarPublicar(); }
   pubMsg = null; ocupado("Revisando el catálogo…");
   let combinado = false;
   try {
@@ -1055,7 +1186,7 @@ async function publicar(intento = 1) {
       tree.push({ path: `img/${subir[k]}.jpg`, mode: "100644", type: "blob", sha: b.sha });
     }
     // Fotos que dejaron de usarse (de productos quitados o fotos quitadas)
-    const antes = new Set(base.productos.flatMap(p => p.imgs));
+    const antes = new Set(fotosDe(base));
     const borrar = [...antes].filter(n => !usar.has(n) && !PROTEGIDAS.has(n) && imgsRepo.has(n));
     borrar.forEach(n => tree.push({ path: `img/${n}.jpg`, mode: "100644", type: "blob", sha: null }));
     ocupado("Guardando productos…");
