@@ -626,7 +626,32 @@
       "specs": [
         "Impreso en 3D"
       ],
-      "price": "$135.00"
+      "price": "$135.00",
+      "variantes": [
+        {
+          "id": "ojitos",
+          "nombre": "Ojitos",
+          "nota": "",
+          "imgs": [
+            "limon-5",
+            "limon-6",
+            "limon-7",
+            "limon-13"
+          ]
+        },
+        {
+          "id": "grunon",
+          "nombre": "Gruñon",
+          "nota": "",
+          "imgs": [
+            "limon-9",
+            "limon-10",
+            "limon-11",
+            "limon-12",
+            "limon-13"
+          ]
+        }
+      ]
     },
     {
       "id": "lavanda",
