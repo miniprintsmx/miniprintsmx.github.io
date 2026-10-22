@@ -620,6 +620,10 @@
         "limon-10",
         "limon-11",
         "limon-12",
+        "limon-1",
+        "limon-2",
+        "limon-4",
+        "limon-3",
         "limon-13"
       ],
       "desc": "El más fresco de la banda 🍋 Collar de hojitas, arete dorado y una mirada que dice “no me provoques”… aunque solo quiere sentarse a tu lado. Brilla en cualquier repisa.",
@@ -648,6 +652,18 @@
             "limon-10",
             "limon-11",
             "limon-12",
+            "limon-13"
+          ]
+        },
+        {
+          "id": "feroz",
+          "nombre": "Feroz",
+          "nota": "",
+          "imgs": [
+            "limon-1",
+            "limon-2",
+            "limon-4",
+            "limon-3",
             "limon-13"
           ]
         }
