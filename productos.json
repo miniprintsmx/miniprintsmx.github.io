@@ -32,8 +32,8 @@
     },
     {
       "id": "penholders",
-      "label": "Penholders",
-      "title": "Penholders",
+      "label": "Portalápices ",
+      "title": "Portalápices ",
       "sub": "Para tus plumas, plumones y colores: orden con estilo en tu escritorio."
     }
   ],
@@ -54,8 +54,7 @@
         "Llavero",
         "Articulada"
       ],
-      "price": "$35.00",
-      "was": "$45.00"
+      "price": "$45.00"
     },
     {
       "id": "cocodrilito-llavero",
@@ -73,8 +72,7 @@
         "Llavero",
         "Articulado"
       ],
-      "price": "$35.00",
-      "was": "$45.00"
+      "price": "$45.00"
     },
     {
       "id": "abejita",
@@ -110,8 +108,7 @@
         "Impreso en 3D",
         "Con argolla"
       ],
-      "price": "$35.00",
-      "was": "$45.00"
+      "price": ""
     },
     {
       "id": "stego",
@@ -129,8 +126,7 @@
       "specs": [
         "Articulada"
       ],
-      "price": "$45.00",
-      "was": "$55.00"
+      "price": "$45.00"
     },
     {
       "id": "unicornio",
@@ -147,8 +143,7 @@
       "specs": [
         "Articulada"
       ],
-      "price": "$45.00",
-      "was": "$55.00"
+      "price": "$55.00"
     },
     {
       "id": "cuellito",
@@ -167,7 +162,7 @@
         "Flexible",
         "Con argolla"
       ],
-      "price": "$45.00"
+      "price": ""
     },
     {
       "id": "tricerito",
@@ -186,7 +181,7 @@
         "Flexible",
         "Con argolla"
       ],
-      "price": "$45.00"
+      "price": ""
     },
     {
       "id": "calaverita-bunny",
@@ -202,8 +197,7 @@
       "specs": [
         "Articulado"
       ],
-      "price": "$45.00",
-      "was": "$55.00"
+      "price": "$55.00"
     },
     {
       "id": "cajita-cupcake",
@@ -618,11 +612,15 @@
       "badge": "Monstruitos",
       "c": "var(--lime)",
       "imgs": [
-        "limon-1",
-        "limon-2",
-        "limon-3",
-        "limon-4",
-        "banda"
+        "limon-5",
+        "limon-6",
+        "limon-7",
+        "limon-8",
+        "limon-9",
+        "limon-10",
+        "limon-11",
+        "limon-12",
+        "limon-13"
       ],
       "desc": "El más fresco de la banda 🍋 Collar de hojitas, arete dorado y una mirada que dice “no me provoques”… aunque solo quiere sentarse a tu lado. Brilla en cualquier repisa.",
       "specs": [
