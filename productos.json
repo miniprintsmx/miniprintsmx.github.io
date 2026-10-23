@@ -913,12 +913,12 @@
     {
       "id": "monstruitos",
       "tipo": "foto",
-      "img": "banda",
+      "img": "banner-2",
       "titulo": "La banda de monstruitos",
       "texto": "Rudos por fuera, apapachables por dentro.",
       "boton": "Conócelos",
       "enlace": "#/monstruitos",
-      "color": "#2bbfb3"
+      "color": "#1d1a2e"
     },
     {
       "id": "llaveros",
@@ -932,8 +932,8 @@
     },
     {
       "id": "banner-3",
-      "tipo": "foto",
-      "img": "banner-1",
+      "tipo": "imagen",
+      "img": "banner-3",
       "titulo": "Tus monstrito personalizado",
       "texto": "Selecciona el color, cabeza y cuerpo",
       "boton": "Personalizar",
