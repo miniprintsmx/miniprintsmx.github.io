@@ -929,16 +929,6 @@
       "boton": "Ver llaveros",
       "enlace": "#/llaveros",
       "color": "#f7a8c4"
-    },
-    {
-      "id": "banner-3",
-      "tipo": "imagen",
-      "img": "banner-3",
-      "titulo": "Tus monstrito personalizado",
-      "texto": "Selecciona el color, cabeza y cuerpo",
-      "boton": "Personalizar",
-      "enlace": "#/monstruitos",
-      "color": "#c8e62b"
     }
   ]
 }
