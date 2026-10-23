@@ -257,7 +257,7 @@ main{padding-block:28px 48px;scroll-margin-top:calc(env(safe-area-inset-top,0px)
   display:grid;place-items:center;background:var(--lime);color:var(--badge-ink)}
 .steps b{display:block;font-size:1.05rem}
 .steps span{opacity:.8}
-.phone{font-variant-numeric:tabular-nums;font-weight:800;user-select:all}
+.phone{font-variant-numeric:tabular-nums;font-weight:800;color:var(--wa);text-decoration:none}
 .how .btn-ghost{color:var(--bg);box-shadow:inset 0 0 0 2px var(--bg)}
 footer{padding-block:22px 92px;color:var(--muted);font-size:.9rem;text-align:center}
 
@@ -293,7 +293,7 @@ body{background-image:none;-webkit-font-smoothing:antialiased;letter-spacing:-.0
 .top-links{display:flex;gap:22px;font-size:.82rem;font-weight:600}
 .top-links a{color:var(--ink-2);text-decoration:none;padding:12px 0}
 .top-links a:hover{color:var(--ink)}
-@media (max-width:520px){.top-links a[href="#pedidos"]{display:none}.top-links{gap:16px}}
+@media (max-width:520px){.top-links{gap:16px}}
 
 /* Portada centrada */
 .hero{background:var(--surface);padding-block:64px 0;text-align:center;overflow:hidden}
@@ -354,11 +354,6 @@ main{padding-block:84px 40px;scroll-margin-top:calc(env(safe-area-inset-top,0px)
 #phoneLine{color:var(--muted)}
 .how .btn-ghost{color:var(--ink);box-shadow:inset 0 0 0 2px var(--ink)}
 
-/* Pedidos especiales */
-.custom{padding-block:48px 88px}
-.custom-in{background:#1d1a2e;color:#f6f4fb;border-radius:28px;padding:clamp(40px,6vw,72px) 24px;text-align:center}
-.custom h2{margin:0;font-weight:800;font-size:clamp(1.7rem,4vw,2.5rem);line-height:1.1;letter-spacing:-.02em}
-.custom p{margin:12px auto 26px;max-width:34ch;font-size:1.15rem;line-height:1.4;color:#c9c3de}
 
 /* Pie */
 footer{padding:0;text-align:left;border-top:1px solid var(--line)}
@@ -545,7 +540,6 @@ html.has-cart .to-top{bottom:calc(max(16px,env(safe-area-inset-bottom,0px)) + 70
 .mini-ph img{display:block;width:100%;height:auto;aspect-ratio:1;object-fit:cover;background:var(--photo)}
 .mini b{display:block;padding:10px 12px 0;font-size:.95rem;line-height:1.2;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 .mini .price{padding:2px 12px 12px;font-size:.92rem}
-.home + .custom,.how + .custom{padding-top:28px}
 .foot-cats{display:flex;flex-wrap:wrap;gap:6px 16px}
 
 /* Etiquetas sobre la foto: variantes y descuento */
@@ -609,14 +603,13 @@ html.has-cart .to-top{bottom:calc(max(16px,env(safe-area-inset-bottom,0px)) + 70
 </head>
 <body>
 
-<script>(function(){var d=document.documentElement,x=location.hash;d.dataset.v=/^#\/[a-z0-9-]+$/.test(x)||x==="#catalogo"||(/^#[a-z0-9-]+$/i.test(x)&&x!=="#inicio"&&x!=="#pedidos")?"cat":"home";})();document.documentElement.classList.add("js","intro");setTimeout(function(){document.documentElement.classList.remove("intro")},3200);</script>
+<script>(function(){var d=document.documentElement,x=location.hash;d.dataset.v=/^#\/[a-z0-9-]+$/.test(x)||x==="#catalogo"||(/^#[a-z0-9-]+$/i.test(x)&&x!=="#inicio"&&x!=="#como")?"cat":"home";})();document.documentElement.classList.add("js","intro");setTimeout(function(){document.documentElement.classList.remove("intro")},3200);</script>
 
 <header class="top">
   <nav class="top-in wrap" aria-label="Principal">
     <a class="top-logo" href="#/" aria-label="MiniPrints, inicio"><span class="m">Mini</span><span class="p">Prints</span><span class="dot">.</span></a>
     <div class="top-links">
       <a href="#/todos">Catálogo</a>
-      <a href="#pedidos">Pedidos especiales</a>
       <a class="js-wa" data-msg="¡Hola MiniPrints! 👋 Quiero información sobre sus figuras." href="#">Contacto</a>
     </div>
   </nav>
@@ -682,16 +675,6 @@ html.has-cart .to-top{bottom:calc(max(16px,env(safe-area-inset-bottom,0px)) + 70
       <li><div><b>Coordinamos</b><span>Te confirmamos disponibilidad, color y entrega por el chat.</span></div></li>
     </ol>
     <p id="phoneLine" hidden>Nuestro WhatsApp: <a class="phone js-wa" id="phone" data-msg="¡Hola MiniPrints! 👋" href="#"></a></p>
-  </div>
-</section>
-
-<section class="custom" id="pedidos">
-  <div class="wrap">
-    <div class="custom-in">
-      <h2>¿Buscas algo que no está aquí?</h2>
-      <p>Cuéntanos qué figura quieres y te cotizamos una pieza a tu medida.</p>
-      <a class="btn btn-light js-wa" data-msg="¡Hola MiniPrints! 👋 Quiero cotizar una figura personalizada." href="#">Hablar por WhatsApp</a>
-    </div>
   </div>
 </section>
 
@@ -982,8 +965,7 @@ function setCat(id, animate){
     const tot = cards.filter(el => coincide(el, q)).length;
     nr.innerHTML = (q ? `No encontramos <b>“${h(qInput.value.trim())}”</b>${c.id !== "all" ? ` en ${h(c.label)}` : ""}.` : "Aún no hay productos aquí.") +
       `<span class="nr-acts">${q && tot && c.id !== "all" ? `<button type="button" class="btn btn-ink" data-nr="all">Ver ${tot} en todo el catálogo</button>` : ""}` +
-      `${q ? `<button type="button" class="btn btn-soft" data-nr="clear">Borrar búsqueda</button>` : ""}` +
-      `<a class="btn-link" target="_blank" rel="noopener" href="${h(waLink("¡Hola MiniPrints! 👋 Busco una figura que no está en el catálogo" + (q ? `: ${qInput.value.trim()}` : ".")))}">${WA_ICON}¿Lo quieres a la medida? Pregúntanos</a></span>`;
+      `${q ? `<button type="button" class="btn btn-soft" data-nr="clear">Borrar búsqueda</button>` : ""}</span>`;
   }
   const token = ++fToken;
   cards.forEach(stop);
@@ -1352,7 +1334,7 @@ function route(){
   if (m) { if (!m[1]) ponerVista("home"); else ponerVista("cat", m[1] === "todos" ? "all" : CATS.some(c => c.id === m[1]) ? m[1] : "all"); }
   else if (hs === "#catalogo") ponerVista("cat", "all");
   else if (!vista || !hs || hs === "#" || hs === "#inicio") ponerVista("home");
-  // otras anclas (#pedidos, #como) se quedan en la vista actual
+  // otras anclas (#como) se quedan en la vista actual
 }
 addEventListener("hashchange", route);
 
