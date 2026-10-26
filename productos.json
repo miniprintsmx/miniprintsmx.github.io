@@ -907,6 +907,60 @@
         "Articulada"
       ],
       "price": "$55.00"
+    },
+    {
+      "id": "dona-huesos",
+      "name": "Doña Huesos",
+      "sub": "",
+      "cat": "figuras",
+      "badge": "Flores",
+      "c": "#f39a3c",
+      "imgs": [
+        "dona-huesos-1",
+        "dona-huesos-2",
+        "dona-huesos-3"
+      ],
+      "desc": "¡La flor más tétrica y tierna del jardín! 🌼💀 Su centro es una calaverita de ojotes negros, cada pétalo trae su propia carita asustada y su tallo es una columna de huesitos. Viene plantada en una macetita de calabaza naranja 🎃",
+      "specs": [
+        "Hallowen"
+      ],
+      "price": "$100.00"
+    },
+    {
+      "id": "tejedora",
+      "name": "Tejedora",
+      "sub": "",
+      "cat": "figuras",
+      "badge": "Flores",
+      "c": "var(--lilac)",
+      "imgs": [
+        "tejedora-1",
+        "tejedora-2",
+        "tejedora-3"
+      ],
+      "desc": "Sus pétalos morados forman una telaraña blanca y en el centro vive una arañita negra de ojotes y colmillitos 🕸️ Va plantada en una macetita de calavera blanca 💀 ¡Tierna y espeluznante a la vez!",
+      "specs": [
+        "Hallowen"
+      ],
+      "price": "$100.00"
+    },
+    {
+      "id": "calabacita",
+      "name": "Calabacita",
+      "sub": "",
+      "cat": "figuras",
+      "badge": "Flores",
+      "c": "#f39a3c",
+      "imgs": [
+        "calabacita-1",
+        "calabacita-2",
+        "calabacita-3"
+      ],
+      "desc": "Una flor naranja con pétalos de gajos de calabaza, ojotes negros y una sonrisita chimuela 😄 Va en una macetita morada rajada, como si estuviera a punto de escaparse 💜",
+      "specs": [
+        "Hallowen"
+      ],
+      "price": "$100.00"
     }
   ],
   "banners": [
