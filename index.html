@@ -1325,14 +1325,20 @@ function ponerVista(v, catId){
   else if (cambia) subir(posVista.home || 0);
   revisarArriba();
 }
+let deBusqueda = false;
 function route(){
   let hs = ""; try { hs = decodeURIComponent(location.hash); } catch(e) {}
   const id = hashId();
   if (id) { if (!vista) ponerVista("cat", byId[id].cat); if (!dlg.open || current !== id || closing) openProduct(id); return; }
   if (dlg.open) { pushed = false; closeProduct(); }
   const m = /^#\/([a-z0-9-]*)$/.exec(hs), mb = /^#\/buscar\/(.{1,60})$/.exec(hs);
-  if (mb) { qInput.value = mb[1]; ponerVista("cat", "all"); }   // enlace a una búsqueda (ej. desde un banner)
-  else if (m) { if (!m[1]) ponerVista("home"); else ponerVista("cat", m[1] === "todos" ? "all" : CATS.some(c => c.id === m[1]) ? m[1] : "all"); }
+  if (mb) { qInput.value = mb[1]; ponerVista("cat", "all"); deBusqueda = true; }   // enlace a una búsqueda (ej. desde un banner)
+  else if (m) {
+    // Entrar a otra sección (desde Inicio, el menú o saliendo de una búsqueda) empieza sin búsqueda;
+    // al cerrar un producto y volver a la misma categoría, se conserva lo que el cliente escribió.
+    const destino = !m[1] ? null : m[1] === "todos" ? "all" : m[1];
+    if (destino && (deBusqueda || vista !== "cat" || destino !== catActual)) qInput.value = "";
+    deBusqueda = false; if (!m[1]) ponerVista("home"); else ponerVista("cat", m[1] === "todos" ? "all" : CATS.some(c => c.id === m[1]) ? m[1] : "all"); }
   else if (hs === "#catalogo") ponerVista("cat", "all");
   else if (!vista || !hs || hs === "#" || hs === "#inicio") ponerVista("home");
   // otras anclas (#como) se quedan en la vista actual
