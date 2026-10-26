@@ -603,7 +603,7 @@ html.has-cart .to-top{bottom:calc(max(16px,env(safe-area-inset-bottom,0px)) + 70
 </head>
 <body>
 
-<script>(function(){var d=document.documentElement,x=location.hash;d.dataset.v=/^#\/[a-z0-9-]+$/.test(x)||x==="#catalogo"||(/^#[a-z0-9-]+$/i.test(x)&&x!=="#inicio"&&x!=="#como")?"cat":"home";})();document.documentElement.classList.add("js","intro");setTimeout(function(){document.documentElement.classList.remove("intro")},3200);</script>
+<script>(function(){var d=document.documentElement,x=location.hash;d.dataset.v=/^#\/[a-z0-9-]+(\/.+)?$/.test(x)||x==="#catalogo"||(/^#[a-z0-9-]+$/i.test(x)&&x!=="#inicio"&&x!=="#como")?"cat":"home";})();document.documentElement.classList.add("js","intro");setTimeout(function(){document.documentElement.classList.remove("intro")},3200);</script>
 
 <header class="top">
   <nav class="top-in wrap" aria-label="Principal">
@@ -779,7 +779,7 @@ fetch("productos.json", {cache: "no-cache"})
           .filter(v => v.imgs.length) }))
       .map(p => (p.variantes.length < 2 && (p.variantes = []), p))
       .filter(p => p.imgs.length);
-    const okEnlace = v => typeof v === "string" && (v === "" || v === "wa" || /^#\/[a-z0-9-]*$/.test(v) || /^#[a-z0-9-]{1,60}$/.test(v));
+    const okEnlace = v => typeof v === "string" && (v === "" || v === "wa" || /^#\/[a-z0-9-]*$/.test(v) || /^#\/buscar\/[A-Za-z0-9%._~-]{1,120}$/.test(v) || /^#[a-z0-9-]{1,60}$/.test(v));
     const okHex = v => typeof v === "string" && /^#[0-9a-fA-F]{6}$/.test(v);
     BANNERS = (Array.isArray(d.banners) ? d.banners : []).filter(b => b && (b.tipo === "foto" || b.tipo === "imagen") && typeof b.img === "string" && /^[a-zA-Z0-9_-]{1,80}$/.test(b.img))
       .map(b => ({ tipo: b.tipo, img: b.img, titulo: txt(b.titulo), texto: txt(b.texto), boton: txt(b.boton), enlace: okEnlace(b.enlace) ? b.enlace : "", color: okHex(b.color) ? b.color : "#2bbfb3" }));
@@ -1330,8 +1330,9 @@ function route(){
   const id = hashId();
   if (id) { if (!vista) ponerVista("cat", byId[id].cat); if (!dlg.open || current !== id || closing) openProduct(id); return; }
   if (dlg.open) { pushed = false; closeProduct(); }
-  const m = /^#\/([a-z0-9-]*)$/.exec(hs);
-  if (m) { if (!m[1]) ponerVista("home"); else ponerVista("cat", m[1] === "todos" ? "all" : CATS.some(c => c.id === m[1]) ? m[1] : "all"); }
+  const m = /^#\/([a-z0-9-]*)$/.exec(hs), mb = /^#\/buscar\/(.{1,60})$/.exec(hs);
+  if (mb) { qInput.value = mb[1]; ponerVista("cat", "all"); }   // enlace a una búsqueda (ej. desde un banner)
+  else if (m) { if (!m[1]) ponerVista("home"); else ponerVista("cat", m[1] === "todos" ? "all" : CATS.some(c => c.id === m[1]) ? m[1] : "all"); }
   else if (hs === "#catalogo") ponerVista("cat", "all");
   else if (!vista || !hs || hs === "#" || hs === "#inicio") ponerVista("home");
   // otras anclas (#como) se quedan en la vista actual

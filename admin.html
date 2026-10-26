@@ -1001,6 +1001,7 @@ function enlaceTexto(e) {
   if (e === "wa") return "Abre WhatsApp";
   if (e === "#/todos") return "Todo el catálogo";
   if (e === "#/ofertas") return "Ofertas";
+  if (e.startsWith("#/buscar/")) { let q = ""; try { q = decodeURIComponent(e.slice(9)); } catch (x) {} return `Búsqueda: “${q}”`; }
   if (e.startsWith("#/")) return "Categoría: " + catLabel(e.slice(2));
   const p = porId(datos.productos, e.slice(1)); return p ? "Producto: " + p.name : "Producto";
 }
@@ -1010,8 +1011,9 @@ function vistaBanner(b) {
   return `<div class="bnp"><div class="bnp-f" style="--bg-b:${esc(b.color)};--fg-b:${tinta(b.color)}"><div>${b.titulo ? `<b>${esc(b.titulo)}</b>` : ""}${b.texto ? `<p>${esc(b.texto)}</p>` : ""}${b.boton && b.enlace ? `<span class="b">${esc(b.boton)} →</span>` : ""}</div><div class="ph2"><img src="${esc(fotoUrl(b.img))}" alt=""></div></div></div>`;
 }
 function formBanner(b, i) {
-  const e = b.enlace || "", esProd = !!e && !e.startsWith("#/") && e !== "wa";
-  const opts = [["", "Sin enlace"], ["#/todos", "Todo el catálogo"], ["#/ofertas", "Ofertas"], ...datos.categorias.filter(c => c.id !== "all").map(c => ["#/" + c.id, "Categoría: " + c.label]), ["prod", "Un producto…"], ["wa", "Abrir WhatsApp"]];
+  const e = b.enlace || "", esProd = !!e && !e.startsWith("#/") && e !== "wa", esBus = e.startsWith("#/buscar/");
+  let qBus = ""; if (esBus) try { qBus = decodeURIComponent(e.slice(9)); } catch (x) {}
+  const opts = [["", "Sin enlace"], ["#/todos", "Todo el catálogo"], ["#/ofertas", "Ofertas"], ...datos.categorias.filter(c => c.id !== "all").map(c => ["#/" + c.id, "Categoría: " + c.label]), ["prod", "Un producto…"], ["buscar", "Una búsqueda…"], ["wa", "Abrir WhatsApp"]];
   return `<div class="bnc-ed">
     <span class="f">Tipo</span>
     <div class="seg" role="radiogroup" aria-label="Tipo de banner"><button type="button" role="radio" data-bt="foto" aria-checked="${b.tipo !== "imagen"}">Foto y texto</button><button type="button" role="radio" data-bt="imagen" aria-checked="${b.tipo === "imagen"}">Imagen completa</button></div>
@@ -1021,7 +1023,8 @@ function formBanner(b, i) {
     <label class="f" for="bt-${i}">Título</label><input class="in" id="bt-${i}" data-bk="titulo" maxlength="40" value="${esc(b.titulo)}" placeholder="Ej: Llaveros con actitud">
     ${b.tipo !== "imagen" ? `<label class="f" for="bx-${i}">Texto</label><input class="in" id="bx-${i}" data-bk="texto" maxlength="90" value="${esc(b.texto)}" placeholder="Una frase corta">` : `<p class="hint">En este tipo el título no se ve: sirve para lectores de pantalla y para el mensaje de WhatsApp. La imagen ya trae su diseño.</p>`}
     <label class="f" for="be-${i}">Al tocarlo lleva a</label>
-    <select class="in" id="be-${i}" data-bk="enlace">${opts.map(([v, t]) => `<option value="${esc(v)}" ${(v === "prod" ? esProd : v === e) ? "selected" : ""}>${esc(t)}</option>`).join("")}</select>
+    <select class="in" id="be-${i}" data-bk="enlace">${opts.map(([v, t]) => `<option value="${esc(v)}" ${(v === "prod" ? esProd : v === "buscar" ? esBus : v === e) ? "selected" : ""}>${esc(t)}</option>`).join("")}</select>
+    ${esBus ? `<input class="in" data-bk="enlace-q" style="margin-top:8px" maxlength="40" value="${esc(qBus)}" placeholder="Palabra a buscar, ej: flores" aria-label="Palabra a buscar"><p class="hint">Muestra en el catálogo los productos que coinciden con esa palabra (nombre, etiqueta o descripción).</p>` : ""}
     ${esProd ? `<select class="in" data-bk="enlace-prod" style="margin-top:8px" aria-label="Producto">${datos.productos.map(p => `<option value="#${esc(p.id)}" ${"#" + p.id === e ? "selected" : ""}>${esc(p.name)}</option>`).join("")}</select>` : ""}
     ${b.tipo !== "imagen" && e ? `<label class="f" for="bb-${i}">Texto del botón</label><input class="in" id="bb-${i}" data-bk="boton" maxlength="20" value="${esc(b.boton)}" placeholder="Ej: Ver llaveros">` : ""}
     ${b.tipo !== "imagen" ? `<span class="f">Color de fondo</span><div class="colors" role="radiogroup" aria-label="Color de fondo">${BN_COLORES.map(([hx, n]) => `<button type="button" class="sw" role="radio" style="--c:${hx}" data-bc="${hx}" aria-checked="${hx === b.color}" aria-label="${n}"></button>`).join("")}</div>` : ""}
@@ -1052,6 +1055,8 @@ $("bn-add").addEventListener("click", () => {
   $("bns").lastElementChild.scrollIntoView({ block: "start", behavior: "smooth" });
 });
 $("bns").addEventListener("input", e => {
+  const q = e.target.closest('[data-bk="enlace-q"]');
+  if (q) { const i = Number(q.closest("[data-bi]").dataset.bi), t = q.value.trim().slice(0, 40); bns()[i].enlace = t ? "#/buscar/" + encodeURIComponent(t) : "#/todos"; repintarBanner(i); marcar(); return; }
   const el = e.target.closest('[data-bk="titulo"],[data-bk="texto"],[data-bk="boton"]'); if (!el) return;
   const i = Number(el.closest("[data-bi]").dataset.bi); bns()[i][el.dataset.bk] = el.value; repintarBanner(i); marcar();
 });
@@ -1066,7 +1071,7 @@ $("bns").addEventListener("change", async e => {
     ocupado(""); limpiarNuevas(); pintarBanners(); marcar(); guardarBorrador(); return;
   }
   if (el.dataset.bk === "img-prod") { if (el.value) { b.img = el.value; limpiarNuevas(); pintarBanners(); marcar(); } return; }
-  if (el.dataset.bk === "enlace") { b.enlace = el.value === "prod" ? "#" + (datos.productos[0] || {}).id : el.value; if (b.enlace && !b.boton) b.boton = "Ver más"; pintarBanners(); marcar(); return; }
+  if (el.dataset.bk === "enlace") { b.enlace = el.value === "prod" ? "#" + (datos.productos[0] || {}).id : el.value === "buscar" ? "#/buscar/" + encodeURIComponent(b.titulo.replace(/[^\p{L}\p{N} ]/gu, "").trim().split(/\s+/)[0] || "nuevo") : el.value; if (b.enlace && !b.boton) b.boton = "Ver más"; pintarBanners(); marcar(); return; }
   if (el.dataset.bk === "enlace-prod") { b.enlace = el.value; repintarBanner(i); marcar(); }
 });
 $("bns").addEventListener("click", e => {

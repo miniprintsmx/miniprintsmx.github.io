@@ -965,6 +965,16 @@
   ],
   "banners": [
     {
+      "id": "halloween",
+      "tipo": "foto",
+      "img": "banner-halloween",
+      "titulo": "Flores de Halloween 🎃",
+      "texto": "Doña Huesos, Tejedora y Calabacita: tiernas y espeluznantes a la vez.",
+      "boton": "Ver flores",
+      "enlace": "#/buscar/flores",
+      "color": "#f39a3c"
+    },
+    {
       "id": "monstruitos",
       "tipo": "foto",
       "img": "banner-2",
