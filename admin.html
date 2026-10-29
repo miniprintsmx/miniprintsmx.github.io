@@ -516,6 +516,7 @@ let base = null;           // { categorias, productos } tal como está publicado
 let baseSha = "";          // versión publicada de productos.json (para detectar cambios hechos en otro lado)
 let datos = null;          // borrador
 let imgsRepo = new Set();  // nombres (sin .jpg) que existen en img/
+let minisRepo = new Set(); // nombres que ya tienen miniatura en img/m/
 const nuevas = new Map();  // nombre → { blob, url } fotos por subir
 let sucio = false;
 
@@ -525,7 +526,8 @@ const porId = (lista, id) => lista.find(p => p.id === id);
 const fotosDe = d => [...d.productos.flatMap(p => p.imgs), ...(d.banners || []).map(b => b.img).filter(Boolean)];
 const usadas = () => new Set(fotosDe(datos));
 const usadasNuevas = () => [...nuevas.keys()].filter(n => usadas().has(n));
-const fotoUrl = n => nuevas.has(n) ? nuevas.get(n).url : `img/${encodeURIComponent(n)}.jpg`;
+const fotoUrl = n => nuevas.has(n) ? nuevas.get(n).url : `img/m/${encodeURIComponent(n)}.jpg`;
+addEventListener("error", e => { const i = e.target; if (i instanceof HTMLImageElement && i.src.includes("/img/m/")) i.src = i.src.replace("/img/m/", "/img/"); }, true);
 const catLabel = id => ((datos || base).categorias.find(c => c.id === id) || {}).label || "Sin categoría";
 const aNumero = t => { let s = String(t ?? "").trim().replace(/[^0-9.,]/g, ""); if (/,\d{1,2}$/.test(s) && !s.includes(".")) s = s.replace(",", "."); s = s.replace(/,/g, ""); const n = parseFloat(s); return isFinite(n) && n >= 0 ? n : ""; };
 const aPrecio = n => n === "" || n == null ? "" : "$" + Number(n).toLocaleString("en-US", { minimumFractionDigits: 2, maximumFractionDigits: 2 });
@@ -624,6 +626,7 @@ async function leerRemoto() {
   const f = await gh(repo(`/contents/productos.json?ref=${BRANCH}`));
   const d = JSON.parse(b64ToText(f.content)); d.categorias = d.categorias || []; d.productos = d.productos || [];
   try { imgsRepo = new Set((await gh(repo(`/contents/img?ref=${BRANCH}`))).filter(x => x.type === "file" && /\.jpg$/i.test(x.name)).map(x => x.name.replace(/\.jpg$/i, ""))); } catch (e) { imgsRepo = new Set(); }
+  try { minisRepo = new Set((await gh(repo(`/contents/img/m?ref=${BRANCH}`))).filter(x => x.type === "file" && /\.jpg$/i.test(x.name)).map(x => x.name.replace(/\.jpg$/i, ""))); } catch (e) { minisRepo = new Set(); }
   return { d, sha: f.sha };
 }
 async function cargar() {
@@ -1169,6 +1172,17 @@ $("pub-body").addEventListener("click", e => {
 });
 
 /* ---------- publicar: un solo cambio en GitHub con todo ---------- */
+// Miniatura JPG de 480 px (lado mayor) a partir de la foto ya recortada
+async function miniatura(blob) {
+  const url = URL.createObjectURL(blob);
+  try {
+    const img = await new Promise((res, rej) => { const im = new Image(); im.onload = () => res(im); im.onerror = rej; im.src = url; });
+    const k = Math.min(1, 480 / Math.max(img.naturalWidth, img.naturalHeight));
+    const cv = document.createElement("canvas"); cv.width = Math.round(img.naturalWidth * k); cv.height = Math.round(img.naturalHeight * k);
+    const cx = cv.getContext("2d"); cx.imageSmoothingQuality = "high"; cx.fillStyle = "#fff"; cx.fillRect(0, 0, cv.width, cv.height); cx.drawImage(img, 0, 0, cv.width, cv.height);
+    return await new Promise((res, rej) => cv.toBlob(b => b ? res(b) : rej(new Error("toBlob")), "image/jpeg", 0.8));
+  } finally { URL.revokeObjectURL(url); }
+}
 function blobB64(blob) { return new Promise((res, rej) => { const r = new FileReader(); r.onload = () => res(String(r.result).split(",")[1]); r.onerror = rej; r.readAsDataURL(blob); }); }
 async function publicar(intento = 1) {
   const sinFoto = datos.productos.find(p => !p.imgs.length); if (sinFoto) { pubMsg = { tipo: "error", texto: `"${sinFoto.name}" no tiene fotos.` }; return pintarPublicar(); }
@@ -1189,11 +1203,14 @@ async function publicar(intento = 1) {
       ocupado(`Subiendo foto ${k + 1} de ${subir.length}…`);
       const b = await gh(repo("/git/blobs"), { method: "POST", body: JSON.stringify({ content: await blobB64(nuevas.get(subir[k]).blob), encoding: "base64" }) });
       tree.push({ path: `img/${subir[k]}.jpg`, mode: "100644", type: "blob", sha: b.sha });
+      // y su miniatura de 480 px para que el catálogo cargue rápido
+      try { const m = await gh(repo("/git/blobs"), { method: "POST", body: JSON.stringify({ content: await blobB64(await miniatura(nuevas.get(subir[k]).blob)), encoding: "base64" }) });
+        tree.push({ path: `img/m/${subir[k]}.jpg`, mode: "100644", type: "blob", sha: m.sha }); } catch (e) { if (e.status) throw e; }
     }
     // Fotos que dejaron de usarse (de productos quitados o fotos quitadas)
     const antes = new Set(fotosDe(base));
     const borrar = [...antes].filter(n => !usar.has(n) && !PROTEGIDAS.has(n) && imgsRepo.has(n));
-    borrar.forEach(n => tree.push({ path: `img/${n}.jpg`, mode: "100644", type: "blob", sha: null }));
+    borrar.forEach(n => { tree.push({ path: `img/${n}.jpg`, mode: "100644", type: "blob", sha: null }); if (minisRepo.has(n)) tree.push({ path: `img/m/${n}.jpg`, mode: "100644", type: "blob", sha: null }); });
     ocupado("Guardando productos…");
     const json = JSON.stringify(datos, null, 2) + "\n";
     const jb = await gh(repo("/git/blobs"), { method: "POST", body: JSON.stringify({ content: textToB64(json), encoding: "base64" }) });
@@ -1201,7 +1218,7 @@ async function publicar(intento = 1) {
     const t = await gh(repo("/git/trees"), { method: "POST", body: JSON.stringify({ base_tree: com.tree.sha, tree }) });
     const c = await gh(repo("/git/commits"), { method: "POST", body: JSON.stringify({ message: "Catálogo: cambios desde la administración", tree: t.sha, parents: [padre] }) });
     await gh(repo(`/git/refs/heads/${BRANCH}`), { method: "PATCH", body: JSON.stringify({ sha: c.sha, force: false }) });
-    subir.forEach(n => imgsRepo.add(n)); borrar.forEach(n => imgsRepo.delete(n));
+    subir.forEach(n => { imgsRepo.add(n); minisRepo.add(n); }); borrar.forEach(n => { imgsRepo.delete(n); minisRepo.delete(n); });
     base = clon(datos); baseSha = jb.sha;
     nuevas.forEach(v => URL.revokeObjectURL(v.url)); nuevas.clear();
     pubMsg = { tipo: "ok", texto: "El catálogo se actualiza en 1 o 2 minutos." + (combinado ? " Se combinaron con cambios publicados desde otro dispositivo." : "") };

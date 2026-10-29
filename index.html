@@ -451,6 +451,7 @@ footer a{color:var(--ink-2);text-decoration:none} footer a:hover{text-decoration
 .toast{position:fixed;left:50%;bottom:calc(max(16px,env(safe-area-inset-bottom,0px)) + 72px);transform:translateX(-50%);z-index:40;max-width:calc(100% - 32px);
   padding:10px 16px;border-radius:999px;background:var(--ink);color:var(--surface);font-weight:600;font-size:.92rem;box-shadow:0 10px 26px -10px var(--shadow);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 @media print{.cart-fab,.toast{display:none!important}}
+img.fallo{visibility:hidden}
 
 /* Portada: carrusel de banners */
 .hero{background:none;padding-block:16px 0;text-align:left}
@@ -755,14 +756,19 @@ const PLACEHOLDERS = {"banda": "data:image/jpeg;base64,/9j/4AAQSkZJRgABAQAAAQABA
 let CATS = [];   // categorías de productos.json
 let BANNERS = []; // banners de la portada (productos.json → banners)
 
-// Cualquier foto que falle (señal débil) se reintenta una vez antes de rendirse
+// Fotos que fallan: si falta la miniatura se usa la foto grande; si es la red, se reintenta
+// hasta 3 veces (cada vez esperando más) y mientras tanto no se muestra el ícono de foto rota.
 addEventListener("error", e => {
   const i = e.target;
-  if (!(i instanceof HTMLImageElement) || !i.src || i.dataset.retry === "2") return;
-  if (i.dataset.retry === "1") { i.dataset.retry = "2"; return; }
-  i.dataset.retry = "1";
-  setTimeout(() => { i.src = i.src.split("?")[0] + "?r=" + Date.now(); }, 1200);
+  if (!(i instanceof HTMLImageElement) || !i.src) return;
+  if (i.src.includes("/img/m/")) { i.src = i.src.replace("/img/m/", "/img/").split("?")[0]; return; }
+  const n = Number(i.dataset.retry || 0);
+  i.classList.add("fallo");
+  if (n >= 3) return;
+  i.dataset.retry = n + 1;
+  setTimeout(() => { i.src = i.src.split("?")[0] + "?r=" + Date.now(); }, 1500 * (n + 1));
 }, true);
+addEventListener("load", e => { if (e.target instanceof HTMLImageElement) e.target.classList.remove("fallo"); }, true);
 const waLink = msg => "https://wa.me/" + WHATSAPP + "?text=" + encodeURIComponent(msg);
 const WA_ICON = '<svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 2a10 10 0 0 0-8.6 15.1L2 22l5-1.3A10 10 0 1 0 12 2Zm0 18.2c-1.5 0-3-.4-4.2-1.2l-.3-.2-3 .8.8-2.9-.2-.3A8.2 8.2 0 1 1 12 20.2Zm4.5-6.1c-.2-.1-1.5-.7-1.7-.8-.2-.1-.4-.1-.6.1l-.8 1c-.1.2-.3.2-.5.1a6.7 6.7 0 0 1-3.3-2.9c-.2-.4.2-.4.7-1.3.1-.2 0-.3 0-.4l-.8-1.8c-.2-.5-.4-.4-.6-.4h-.5c-.2 0-.4.1-.7.3-.2.3-.9.9-.9 2.2s.9 2.5 1 2.7c.1.2 1.8 2.8 4.4 3.9 1.6.7 2.3.8 3.1.6.5-.1 1.5-.6 1.7-1.2.2-.6.2-1.1.2-1.2-.1-.1-.3-.2-.5-.3Z"/></svg>';
 const BAG_ICON = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5.5 8h13l-1 12h-11z"/><path d="M9 8V6.5a3 3 0 0 1 6 0V8"/><path d="M12 11.5v5M9.5 14h5"/></svg>';
@@ -811,6 +817,8 @@ const byId = Object.fromEntries(PRODUCTS.map(p => [p.id, p]));
 const fullName = p => p.name + ", " + p.sub;
 const waMsg = p => `¡Hola MiniPrints! 👋 Me interesa ${fullName(p)}. ¿Me das precio y disponibilidad?`;
 const imgSrc = s => `img/${s}.jpg`;
+// Miniatura ligera (480 px) para tarjetas, filas y carrito; la foto grande solo en la ficha
+const miniSrc = s => `img/m/${s}.jpg`;
 const altFor = (p, j) => fullName(p) + (p.imgs.length > 1 ? ` — foto ${j + 1} de ${p.imgs.length}` : "");
 const ZOOM_ICON = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M14 4h6v6M10 20H4v-6M20 4l-7 7M4 20l7-7"/></svg>';
 function placeholder(el, name){ const d = PLACEHOLDERS[name]; if (d) el.style.backgroundImage = `url("${d}")`; }
@@ -819,7 +827,7 @@ function whenLoaded(img){
   if (img.complete && img.naturalWidth) return done();
   img.addEventListener("load", done, {once:true});
   // El reintento lo hace el aviso general de fotos; aquí solo se deja de esperar si falla dos veces
-  img.addEventListener("error", function fin(){ if (img.dataset.retry === "2") { img.removeEventListener("error", fin); done(); } });
+  img.addEventListener("error", function fin(){ if (Number(img.dataset.retry || 0) >= 3) { img.removeEventListener("error", fin); done(); } });
 }
 const byDom = (a, b) => (a.compareDocumentPosition(b) & Node.DOCUMENT_POSITION_FOLLOWING) ? -1 : 1;
 
@@ -845,7 +853,7 @@ function card(p){
   const altC = j => nv ? `${fullName(p)}, ${p.variantes[j].nombre}` : altFor(p, j);
   el.innerHTML = `
     <div class="photo">
-      <div class="frames">${fotos.map((s,j) => `<img ${j ? "data-src" : "src"}="${h(imgSrc(s))}" alt="${h(altC(j))}" width="1000" height="1000"${j ? ' aria-hidden="true"' : ' loading="lazy" class="on"'} decoding="async">`).join("")}</div>
+      <div class="frames">${fotos.map((s,j) => `<img ${j ? "data-src" : "src"}="${h(miniSrc(s))}" alt="${h(altC(j))}" width="1000" height="1000"${j ? ' aria-hidden="true"' : ' loading="lazy" class="on"'} decoding="async">`).join("")}</div>
       ${etiquetas(p)}
       <a class="photo-link" href="#${p.id}" tabindex="-1" aria-hidden="true"></a>
       <span class="badge" style="--c:${p.c}">${h(p.badge)}</span>
@@ -857,7 +865,7 @@ function card(p){
       <h3 class="name"><a class="name-link" href="#${p.id}"><span class="nm">${h(p.name)}</span><small>${h(p.sub)}</small><span class="sr-only">: ver detalles y fotos</span></a></h3>
       <p class="desc">${h(p.desc)}</p>
       <ul class="specs">${p.specs.map(s=>`<li>${h(s)}</li>`).join("")}</ul>
-      ${nv ? `<p class="vsw">${p.variantes.slice(0, 4).map(v => `<img src="${h(imgSrc(v.imgs[0]))}" alt="" width="1000" height="1000" decoding="async">`).join("")}<span>${nv} variantes</span></p>` : ""}
+      ${nv ? `<p class="vsw">${p.variantes.slice(0, 4).map(v => `<img src="${h(miniSrc(v.imgs[0]))}" alt="" width="1000" height="1000" decoding="async">`).join("")}<span>${nv} variantes</span></p>` : ""}
       <div class="foot">
         <span class="price ${p.price ? "" : "ask"}">${priceHTML(p)}</span>
         <button type="button" class="btn btn-add" data-add="${p.id}" aria-label="Agregar ${h(p.name)} al pedido">${BAG_ICON}<span class="wa-t">${p.variantes.length ? "Elegir variante" : "Agregar al pedido"}</span><b class="add-n" hidden></b></button>
@@ -1113,7 +1121,7 @@ function pintarPedido(){
   const ids = Object.keys(pedido);
   document.getElementById("cartList").innerHTML = ids.map(id => { const it = partir(id), p = it.p, q = pedido[id], u = numPrecio(p);
     return `<li class="cart-it">
-      <img src="${h(imgSrc(it.img))}" alt="" width="1000" height="1000">
+      <img src="${h(miniSrc(it.img))}" alt="" width="1000" height="1000">
       <div class="cart-it-t"><b>${h(it.nombre)}</b><span>${u ? dinero(u) + " c/u" : "Precio por confirmar"}</span></div>
       <div class="cart-step" role="group" aria-label="Cantidad de ${h(it.nombre)}">
         <button type="button" data-q="-1" data-id="${h(id)}" aria-label="${q > 1 ? "Quitar uno" : "Quitar del pedido"}">${q > 1 ? "−" : '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" aria-hidden="true"><path d="M5 7h14M10 7V5h4v2M7 7l1 12h8l1-12"/></svg>'}</button>
@@ -1219,7 +1227,7 @@ function galeria(p, fotos){
   track.innerHTML = fotos.map((s, j) => `<div class="pd-slide" role="group" aria-roledescription="foto" aria-label="${j+1} de ${n}"><img src="${h(imgSrc(s))}" alt="${h(alt(j))}" width="1000" height="1000" decoding="async"></div>`).join("");
   [...track.children].forEach((sl, j) => placeholder(sl, fotos[j]));
   track.querySelectorAll("img").forEach(whenLoaded);
-  thumbs.innerHTML = n > 1 ? fotos.map((s, j) => `<button type="button" aria-label="Ver foto ${j+1} de ${n}" aria-current="${j===0}"><img src="${h(imgSrc(s))}" alt="" width="1000" height="1000" decoding="async"></button>`).join("") : "";
+  thumbs.innerHTML = n > 1 ? fotos.map((s, j) => `<button type="button" aria-label="Ver foto ${j+1} de ${n}" aria-current="${j===0}"><img src="${h(miniSrc(s))}" alt="" width="1000" height="1000" decoding="async"></button>`).join("") : "";
   thumbs.hidden = pdPrev.hidden = pdNext.hidden = pdCount.hidden = n < 2;
   track.scrollLeft = 0; setIdx(0);
 }
@@ -1240,7 +1248,7 @@ function fill(p){
   curVar = p.variantes[0] || null;
   pdVars.hidden = !p.variantes.length;
   document.getElementById("pdVarsT").innerHTML = `Elige tu variante <small>· ${p.variantes.length} opciones</small>`;
-  pdVars.querySelector(".vs").innerHTML = p.variantes.map((v, j) => `<button type="button" role="radio" data-v="${v.id}" aria-checked="${j === 0}" tabindex="${j ? -1 : 0}"><img src="${h(imgSrc(v.imgs[0]))}" alt="" width="1000" height="1000"><span><b>${h(v.nombre)}</b>${v.nota ? `<small>${h(v.nota)}</small>` : ""}</span></button>`).join("");
+  pdVars.querySelector(".vs").innerHTML = p.variantes.map((v, j) => `<button type="button" role="radio" data-v="${v.id}" aria-checked="${j === 0}" tabindex="${j ? -1 : 0}"><img src="${h(miniSrc(v.imgs[0]))}" alt="" width="1000" height="1000"><span><b>${h(v.nombre)}</b>${v.nota ? `<small>${h(v.nota)}</small>` : ""}</span></button>`).join("");
   galeria(p, curVar ? curVar.imgs : p.imgs);
   const badge = document.getElementById("pdBadge");
   badge.textContent = p.badge; badge.style.setProperty("--c", p.c);
@@ -1363,10 +1371,10 @@ addEventListener("hashchange", route);
 const portada = p => (p.variantes.length ? p.variantes[0].imgs : p.imgs)[0];
 document.getElementById("tiles").innerHTML = CATS.filter(c => c.id !== "all" && c.id !== "ofertas").map(c => {
   const ps = PRODUCTS.filter(p => p.cat === c.id); if (!ps.length) return "";
-  return `<a class="tile" href="#/${c.id}"><img src="${h(imgSrc(portada(ps[0])))}" alt="" width="1000" height="1000" loading="lazy"><span>${h(c.label)}<small>${ps.length}</small></span></a>`;
+  return `<a class="tile" href="#/${c.id}"><img src="${h(miniSrc(portada(ps[0])))}" alt="" width="1000" height="1000" loading="lazy"><span>${h(c.label)}<small>${ps.length}</small></span></a>`;
 }).join("") + `<a class="tile tile-all" href="#/todos"><span>Ver todo<small>${PRODUCTS.length} productos</small></span></a>`;
 function mini(p){
-  return `<a class="mini" href="#${p.id}" data-id="${p.id}"><span class="mini-ph"><img src="${h(imgSrc(portada(p)))}" alt="" width="1000" height="1000" decoding="async">${etiquetas(p)}</span><b>${h(p.name)}</b><span class="price ${p.price ? "" : "ask"}">${priceHTML(p)}</span></a>`;
+  return `<a class="mini" href="#${p.id}" data-id="${p.id}"><span class="mini-ph"><img src="${h(miniSrc(portada(p)))}" alt="" width="1000" height="1000" decoding="async">${etiquetas(p)}</span><b>${h(p.name)}</b><span class="price ${p.price ? "" : "ask"}">${priceHTML(p)}</span></a>`;
 }
 const tira = (t, ps, ver) => ps.length ? `<section class="strip"><div class="strip-h"><h2 class="h-title">${t}</h2>${ver ? `<a href="${ver}">Ver todo</a>` : ""}</div><div class="strip-row">${ps.map(mini).join("")}</div></section>` : "";
 const strips = document.getElementById("strips");
